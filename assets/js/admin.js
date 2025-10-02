@@ -1,0 +1,61 @@
+jQuery(function($){
+    $(document).on('click', '.cft-mark-review', function(e){
+        e.preventDefault();
+        var btn = $(this);
+        var post_id = btn.closest('tr').find('.post-title').attr('href').split('post=')[1].split('&')[0];
+        var id = btn.data('post-id');
+        if (!id){
+            alert('No ID Found');
+            return;
+        }
+
+        // btn.prop('disabled', true);
+        $.post(cft_ajax.ajax_url, {
+            action: 'cft_mark_reviewed',
+            nonce: cft_ajax.nonce,
+            post_id: id
+        }, function(resp){
+            if (resp && resp.success) {
+                var newBtn = $('<button class="btn btn-sm btn-warning cft-mark-unreview" data-post-id="' + id + '">' +
+                                '<i class="fas fa-undo me-1"></i> Unmark Reviewed' +
+                               '</button>');
+                btn.replaceWith(newBtn);
+                var row = newBtn.closest('tr');
+                var badge = row.find('.status-badge');
+                badge.text('Reviewed').removeClass('bg-danger-subtle text-danger').addClass('bg-success-subtle text-success');
+            } else {
+                btn.prop('disabled', false);
+                alert(resp && resp.data ? resp.data : 'Response Error');
+            }
+        });
+    });
+
+    $(document).on('click', '.cft-mark-unreview', function(e){
+        e.preventDefault();
+        var btn = $(this), id = btn.data('post-id');
+        if (!id){
+            alert('No ID Found');
+            return;
+        }
+
+        // btn.prop('disabled', true);
+        $.post(cft_ajax.ajax_url, {
+            action: 'cft_unmark_reviewed',
+            nonce: cft_ajax.nonce,
+            post_id: id
+        }, function(resp){
+            if (resp && resp.success) {
+                var newBtn = $('<button class="btn btn-sm btn-primary mark-reviewed-btn" data-post-id="' + id + '">' +
+                                '<i class="fas fa-check me-1"></i> Mark Reviewed' +
+                               '</button>');
+                btn.replaceWith(newBtn);
+                var row = newBtn.closest('tr');
+                var badge = row.find('.status-badge');
+                badge.text('Stale').removeClass('bg-success-subtle text-success').addClass('bg-danger-subtle text-danger');
+            } else {
+                btn.prop('disabled', false);
+                alert(resp && resp.data ? resp.data : 'Response Error');
+            }
+        });
+    });
+});

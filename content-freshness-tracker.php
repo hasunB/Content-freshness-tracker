@@ -33,7 +33,6 @@ register_deactivation_hook(__FILE__,array('CFT_Cron', 'deactivate'));  // It's c
 
 /* Init plugin */
 add_action( 'plugins_loaded', function() {
-    error_log("plugin loaded");
     // load_plugin_textdomain( 'content-freshness-tracker', false, dirname( plugin_basename( CFT_PLUGIN_FILE ) ) . '/languages' );
     if ( is_admin() ) {
         CFT_Admin::init();
