@@ -85,6 +85,7 @@ class CFT_admin {
                     'post_title'        => $post->post_title,
                     'post_author_id'    => $post->post_author,
                     'post_author_name'  => get_the_author_meta( 'display_name', $post->post_author ),
+                    'post_type'         => $post->post_type,
                     'post_date'         => $post->post_date,
                     'post_modified'     => $post->post_modified,
                     'reviewed'          => get_post_meta( $post->ID, '_cft_reviewed', true ) ? true : false,
@@ -105,21 +106,8 @@ class CFT_admin {
             
             <!-- Stats Cards -->
             <div class="row gx-3 my-0">
-                <!-- Total Posts -->
-                <div class="col-md-3">
-                    <div class="card shadow-sm stat-card h-80">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <div>
-                                    <h6 class="text-uppercase text-muted mb-0 fw-semibold small">Total Posts</h6>
-                                </div>
-                            </div>
-                            <h2 class="display-4 fw-light mb-0"><?php echo esc_html( $total_posts ); ?></h2>
-                        </div>
-                    </div>
-                </div>
                 <!-- Total Stale Posts -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card shadow-sm stat-card h-80">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
@@ -132,7 +120,7 @@ class CFT_admin {
                     </div>
                 </div>
                 <!-- Reviewed Posts -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card shadow-sm stat-card h-80">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
@@ -145,7 +133,7 @@ class CFT_admin {
                     </div>
                 </div>
                 <!-- Unreviewed Posts -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card shadow-sm stat-card h-80">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
@@ -170,11 +158,15 @@ class CFT_admin {
                             </h5>
                         </div>
                         <div class="col-md-6">
-                            <!-- <div class="btn-group float-md-end mt-2 mt-md-0" role="group">
-                                <button type="button" class="btn btn-sm btn-primary active" data-filter="all">All</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" data-filter="unreviewed">Unreviewed</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" data-filter="reviewed">Reviewed</button>
-                            </div> -->
+                            <div class="btn-group float-md-end mt-2 mt-md-0" role="group">
+                                <button type="button" class="btn btn-sm btn-secondary active" data-filter="all">All</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-filter="posts">Posts</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-filter="pages">Pages</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-filter="products">Products</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-filter="media">Media</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-filter="unreviewed">Unreviewed</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-filter="reviewed">Reviewed</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,12 +175,13 @@ class CFT_admin {
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="fw-semibold">Title</th>
-                                    <th class="fw-semibold">Author</th>
-                                    <th class="fw-semibold">Published Date</th>
-                                    <th class="fw-semibold">Last Modified Date</th>
-                                    <th class="fw-semibold">Status</th>
-                                    <th class="fw-semibold">Action</th>
+                                    <th class="fw-semibold text-start">Title</th>
+                                    <th class="fw-semibold text-center">Author</th>
+                                    <th class="fw-semibold text-center">Type</th>
+                                    <th class="fw-semibold text-center">Published Date</th>
+                                    <th class="fw-semibold text-center">Last Modified Date</th>
+                                    <th class="fw-semibold text-center">Status</th>
+                                    <th class="fw-semibold text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -197,19 +190,30 @@ class CFT_admin {
                                         <td>
                                             <a href="<?php echo esc_url( $post->edit_link ); ?>" class="post-title"><?php echo esc_html( $post->post_title ); ?></a>
                                         </td>
-                                        <td class="text-muted"><?php echo esc_html( $post->post_author_name ); ?></td>
-                                        <td class="text-muted small"><?php echo esc_html( $post->post_date ); ?></td>
-                                        <td class="text-muted small"><?php echo esc_html( $post->post_modified ); ?></td>
-                                        <td>
+                                        <td class="text-muted text-center"><?php echo esc_html( $post->post_author_name ); ?></td>
+                                        <td class="align-middle text-center">
+                                            <?php if ( $post->post_type == "post" ) : ?>
+                                                <span class="badge bg-success"><?php esc_html_e( 'Post', 'content-freshness-tracker' ); ?></span>
+                                            <?php elseif ( $post->post_type == "page" ) :?>
+                                                <span class="badge bg-primary"><?php esc_html_e( 'Page', 'content-freshness-tracker' ); ?></span>
+                                            <?php elseif ( $post->post_type == "product" ): ?>
+                                                <span class="badge bg-danger"><?php esc_html_e( 'Product', 'content-freshness-tracker' ); ?></span>
+                                            <?php else : ?>
+                                                <span class="badge bg-dark"><?php esc_html_e( 'Media', 'content-freshness-tracker' ); ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-muted small text-center"><?php echo esc_html( $post->post_date ); ?></td>
+                                        <td class="text-muted small text-center"><?php echo esc_html( $post->post_modified ); ?></td>
+                                        <td class="align-middle text-center">
                                             <?php if ( $post->reviewed ) : ?>
                                                 <span class="badge bg-success-subtle text-success status-badge"><?php esc_html_e( 'Reviewed', 'content-freshness-tracker' ); ?></span>
                                             <?php else : ?>
                                                 <span class="badge bg-danger-subtle text-danger status-badge"><?php esc_html_e( 'Stale', 'content-freshness-tracker' ); ?></span>
                                             <?php endif; ?>
                                         </td>
-                                        <td>
+                                        <td class="align-middle text-center">
                                             <?php if ( $post->reviewed ) : ?>
-                                                <button class="btn btn-sm btn-warning cft-mark-unreview">
+                                                <button class="btn btn-sm btn-warning cft-mark-unreview" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
                                                     <i class="fas fa-undo me-1"></i>
                                                     <?php esc_html_e( 'Unmark Reviewed', 'content-freshness-tracker' ); ?>
                                                 </button>
@@ -440,15 +444,15 @@ class CFT_admin {
     }
 
     public static function ajax_unmark_reviewed() {
+        check_ajax_referer('cft_nonce', 'nonce');
+        if (! current_user_can('edit_posts')) wp_send_json_error('no_permission');
+        
+        $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
+        if (! $post_id) wp_send_json_error('invalid_id');
+        
+        delete_post_meta($post_id, '_cft_reviewed');
+        wp_send_json_success(array('post_id' => $post_id));
         error_log('ajax_unmark_reviewed');
-        // check_ajax_referer('cft_nonce', 'nonce');
-        // if (! current_user_can('edit_posts')) wp_send_json_error('no_permission');
-
-        // $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
-        // if (! $post_id) wp_send_json_error('invalid_id');
-
-        // delete_post_meta($post_id, '_cft_reviewed');
-        // wp_send_json_success(array('post_id' => $post_id));
     }
 }
 
