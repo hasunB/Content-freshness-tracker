@@ -1,5 +1,5 @@
 jQuery(function($){
-    $(document).on('click', '.cft-mark-review', function(e){
+    $(document).on('click', '.fr-mark-review', function(e){
         e.preventDefault();
         var btn = $(this);
         var post_id = btn.closest('tr').find('.post-title').attr('href').split('post=')[1].split('&')[0];
@@ -10,13 +10,13 @@ jQuery(function($){
         }
 
         // btn.prop('disabled', true);
-        $.post(cft_ajax.ajax_url, {
-            action: 'cft_mark_reviewed',
-            nonce: cft_ajax.nonce,
+        $.post(fr_ajax.ajax_url, {
+            action: 'fr_mark_reviewed',
+            nonce: fr_ajax.nonce,
             post_id: id
         }, function(resp){
             if (resp && resp.success) {
-                var newBtn = $('<button class="btn btn-sm btn-warning cft-mark-unreview" data-post-id="' + id + '">' +
+                var newBtn = $('<button class="theme-btn bg-product fr-mark-unreview" data-post-id="' + id + '">' +
                                 '<i class="fas fa-undo me-1"></i> Unmark Reviewed' +
                                '</button>');
                 btn.replaceWith(newBtn);
@@ -30,7 +30,7 @@ jQuery(function($){
         });
     });
 
-    $(document).on('click', '.cft-mark-unreview', function(e){
+    $(document).on('click', '.fr-mark-unreview', function(e){
         e.preventDefault();
         var btn = $(this), id = btn.data('post-id');
         if (!id){
@@ -39,13 +39,13 @@ jQuery(function($){
         }
 
         // btn.prop('disabled', true);
-        $.post(cft_ajax.ajax_url, {
-            action: 'cft_unmark_reviewed',
-            nonce: cft_ajax.nonce,
+        $.post(fr_ajax.ajax_url, {
+            action: 'fr_unmark_reviewed',
+            nonce: fr_ajax.nonce,
             post_id: id
         }, function(resp){
             if (resp && resp.success) {
-                var newBtn = $('<button class="btn btn-sm btn-primary mark-reviewed-btn" data-post-id="' + id + '">' +
+                var newBtn = $('<button class="theme-btn bg-post fr-mark-review" data-post-id="' + id + '">' +
                                 '<i class="fas fa-check me-1"></i> Mark Reviewed' +
                                '</button>');
                 btn.replaceWith(newBtn);
