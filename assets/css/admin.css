@@ -29,13 +29,59 @@ body {
 .table-hover tbody tr:hover {
   background-color: #f6f7f7;
 }
-.cft-mark-review {
+.fr-mark-review {
   margin-left: 8px;
 }
 
 .my-card {
   background-color: #fff;
   background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.175);
+  border: 1px solid #9ac2bf;
+  border-radius: 0.375rem;
+}
+
+.theme-outline {
+  outline: 1.5px solid #9ac2bf;
+}
+
+.theme-badge {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  color: #fff;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem;
+}
+
+.bg-post {
+ background-color: #7b9b99;
+}
+
+.bg-page {
+  background-color: #5c7473;
+}
+
+.bg-product {
+  background-color: #3e4e4c;
+}
+
+.bg-media {
+  background-color: #1f2726;
+}
+
+.theme-btn {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  vertical-align: middle;
   border-radius: 0.375rem;
 }
