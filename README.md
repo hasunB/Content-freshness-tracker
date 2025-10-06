@@ -10,7 +10,7 @@
 <br>
 <div align="center">
     <a href="" target="_blank">
-      <img src="docs/images/freah-reminder-download.png" height="50px"/>
+      <img alt="fresh-reminder-download-image" src="docs/images/freah-reminder-download.png" height="50px"/>
     </a>
 </div>
 
@@ -67,9 +67,23 @@ fresh-reminder/
 <br>
 
 ## Screenshots
-1. Front-end post Widget
-2. Admin Dashboard
-3. Tracker settings
+### 1. Front-end post Widget
+<div align="center">
+    <img alt="fresh-reminder-admin-widget-screenshot" src="docs/images/fresh-reminder-admin-widget-screenshot.png"/>
+</div>
+<br>
+
+### 2. Admin Dashboard
+<div align="center">
+    <img alt="fresh-reminder-admin-dashboard-screenshot" src="docs/images/fresh-reminder-admin-dashboard-screenshot.png"/>
+</div>
+<br>
+
+### 3. Tracker settings
+<div align="center">
+    <img alt="fresh-reminder-settings-page-screenshot" src="docs/images/fresh-reminder-settings-page-screenshot.png"/>
+</div>
+<br>
 <br>
 
 ## Readmap
