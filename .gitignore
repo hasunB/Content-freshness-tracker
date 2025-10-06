@@ -1,0 +1,63 @@
+# ===============================
+# WordPress Plugin .gitignore
+# ===============================
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Node / build tools (if ever added)
+node_modules/
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+
+# Composer dependencies
+/vendor/
+/composer.lock
+
+# IDE / editor files
+*.code-workspace
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# System backup files
+*.bak
+*.tmp
+*.swp
+*.swo
+*~
+*.orig
+
+# Logs
+*.log
+debug.log
+
+# WordPress core and uploads (not part of plugin)
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/backup-*/
+
+# Ignore build or export zips
+*.zip
+
+# Ignore environment or config files
+.env
+.env.local
+.env.production
+.env.development
+
+# Ignore macOS metadata
+Icon?
+._*
+
+# Optional: ignore screenshots until final versions ready
+assets/screenshots/*.png
+assets/screenshots/*.jpg
+
+# Optional: ignore build artifacts
+/dist/
+/build/
