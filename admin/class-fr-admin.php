@@ -11,7 +11,6 @@ class FR_admin {
         add_action( 'wp_ajax_fr_unmark_reviewed', array( __CLASS__, 'ajax_unmark_reviewed' ) );
         // ensure cron handler attached when admin loads
         add_action( 'fr_check_event', array( 'FR_Cron', 'check_stale_posts' ) );
-        do_action('fr_check_event');
     }
 
     public static function add_admin_menu() {
