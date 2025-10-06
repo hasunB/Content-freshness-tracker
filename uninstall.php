@@ -3,19 +3,19 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
 
-delete_option( 'cft_settings' );
-delete_option( 'cft_stale_posts_cache' );
+delete_option( 'fr_settings' );
+delete_option( 'fr_stale_posts_cache' );
 
 // Remove review meta
 $posts = get_posts( array(
     'post_type'   => 'any',
-    'meta_key'    => '_cft_reviewed',
+    'meta_key'    => '_fr_reviewed',
     'numberposts' => -1,
     'fields'      => 'ids',
 ) );
 
 if ( $posts ) {
     foreach ( $posts as $id ) {
-        delete_post_meta( $id, '_cft_reviewed' );
+        delete_post_meta( $id, '_fr_reviewed' );
     }
 }
