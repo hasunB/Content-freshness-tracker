@@ -2,14 +2,21 @@
     <img alt="fresh-reminder-banner-image" src="docs/images/fresh-reminder-banner.png"/>
 </div>
 <br>
+
 <div align="center">
-    <a href="">Release</a> |
-    <a href="">Download</a> |
+    <img alt="fresh-reminder-banner-image" src="https://github.com/wp-graphql/wp-graphql/workflows/WordPress%20Coding%20Standards/badge.svg"/>
+    <img alt="fresh-reminder-banner-image" src="https://github.com/wp-graphql/wp-graphql/workflows/Code%20Quality/badge.svg"/>
+</div>
+<br>
+
+<div align="center">
+    <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.0.0">Release</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.0.0/fresh-reminder.zip">Download</a> |
     <a href="">Discussions</a>
 </div>
 <br>
 <div align="center">
-    <a href="" target="_blank">
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.0.0/fresh-reminder.zip" target="_blank">
       <img alt="fresh-reminder-download-image" src="docs/images/freah-reminder-download.png" height="50px"/>
     </a>
 </div>
@@ -52,7 +59,7 @@ fresh-reminder/
    ```bash
    git clone https://github.com/hasunB/fresh-reminder.git
    ```
-2. Upload the folder to your WordPress **wp-content/plugins/** directory. 
+2. Upload the folder to your WordPress `wp-content/plugins/` directory. 
 
 3. Activate Content Freshness Tracker from the WordPress Admin Dashboard → Plugins. 
 
