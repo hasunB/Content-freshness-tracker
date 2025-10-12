@@ -29,7 +29,7 @@ define( 'FR_CACHE_OPTION', 'fr_stale_posts_cache' );
 
 /* Includes */
 require_once FR_PLUGIN_DIR . 'includes/class-fr-cron.php';
-require_once FR_PLUGIN_DIR . 'admin/class-fr-admin.php';
+require_once FR_PLUGIN_DIR . 'src/Admin/class-fr-admin.php';
 
 /* Activation / Deactivation */
 register_activation_hook(__FILE__,array('FR_Cron', 'activate'));  // It's call the static "activate" method "FR_Cron" class
