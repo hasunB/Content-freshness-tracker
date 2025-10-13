@@ -105,6 +105,9 @@
 .theme-banner {
   width: 100%;
   height: 290px;
+  background-image: url(../images/fr-welcome-banner.webp);
+  background-size: cover;
+  background-position: center;
 }
 
 .theme-chart {
@@ -142,6 +145,9 @@
   width: 68px; 
   height: 68px; 
   border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stats-post{
@@ -175,6 +181,88 @@
 .stats-label {
   font-size: 20px;
   font-weight: 500;
+}
+
+.stats-icon-box img {
+  width: 32px; 
+  height: 36px; 
+}
+
+.theme-stale-content {
+  width: 100%;
+  height: auto;
+  padding: 22px 19px;
+  display: flex;
+  flex-direction: column;
+}
+
+.theme-filter-box {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.theme-content-box {
+  width: 100%;
+  height: auto;
+  margin-top: 25px;
+  border-radius: 12px;
+  background-color: #F5F7FB;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: auto auto;
+  gap: 10px;
+}
+
+.theme-content-box > div {
+  background-color: #ffffff;
+  font-size: 30px;
+  text-align: center;
+  height: 110px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.theme-pagination-box {
+  margin-top: 15px;
+  width: 100%;
+  height: 30px;
+  background-color: var(--background-color);
+}
+
+.theme-question-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-skin {
+  background-color: var(--background-color);
+  border: none;
+  border-radius: 20px;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 15px;
+  height: 100%;
+}
+
+.theme-review-btn {
+  padding: 4px 20px;
+}
+
+.theme-minimize-btn {
+ padding: 4px 10px;
 }
 
 .freshness-tracking {
