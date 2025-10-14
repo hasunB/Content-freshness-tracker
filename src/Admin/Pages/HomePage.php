@@ -151,16 +151,48 @@ $unreviewed_posts_count = $total_stale_posts - $reviewed_posts_count;
                 <!-- content -->
                 <div class="theme-content-box">
                     <?php
-                    for ($i = 0; $i < 8; $i++) {
+                    for ($i = 0; $i < 9; $i++) {
                         ?>
-                        <div>1</div>
+                            <div>
+                                <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
+                                    <div style="width: 35%; height: inherit;">
+                                        <div class="featured-image"></div>
+                                    </div>
+                                    <div style="width: 65%; height: inherit;">
+                                        <div style="height: 68%; width: 100%;">
+                                            <h5 class="fw-semibold text-start text-break text-cut" >Hello World Post PostPostPostPostPost</h5>
+                                            <p class="text-author">By <a href="#">@hasunbandara</a></p>
+                                        </div>
+                                        <div class="h-30 w-100 d-flex align-items-end justify-content-end">
+                                            <button type="button" class="pin-action-btn rotate-45">
+                                                <i class="fas fa-thumbtack"></i>
+                                            </button>
+                                            <button type="button" class="review-action-btn">
+                                                <i class="fa-solid fa-check"></i>&nbsp;&nbsp;review
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         <?php
                     }
                     ?>
                 </div>
 
                 <!-- pagination -->
-                <!-- <div class="theme-pagination-box"></div> -->
+                <div class="theme-pagination-box">
+                    <div class="demo-section">
+                        <div class="pagination-glass">
+                            <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-left"></i></a>
+                            <a class="page-link active" href="#">1</a>
+                            <a class="page-link" href="#">2</a>
+                            <a class="page-link" href="#">3</a>
+                            <a class="page-link" href="#">4</a>
+                            <a class="page-link" href="#">5</a>
+                            <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="spliter"></div>
 

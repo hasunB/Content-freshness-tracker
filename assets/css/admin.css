@@ -1,8 +1,8 @@
 :root {
-  --primary-color: #8238EF;
-  --secondary-color: #A874F4;
-  --background-color: #ECE9FF;
-  --font-family: 'Inter', sans-serif;
+  --primary-color: #8238ef;
+  --secondary-color: #a874f4;
+  --background-color: #ece9ff;
+  --font-family: "Inter", sans-serif;
 }
 
 #wpcontent {
@@ -13,9 +13,9 @@
   font-family: var(--font-family);
   background-color: var(--background-color);
   width: 100%;
-  height: auto; 
-  margin: 0; 
-  padding: 0px 20px 50px 0px; 
+  height: auto;
+  margin: 0;
+  padding: 0px 20px 50px 0px;
 }
 
 .navbar-custom {
@@ -40,16 +40,16 @@
   width: 48px;
   height: 48px;
   align-self: center;
-  background: #FFFFFF;
-  border: 2px solid #D6D5DA;
+  background: #ffffff;
+  border: 2px solid #d6d5da;
   color: var(--primary-color);
   border-radius: 75px;
   font-size: 19px;
 }
 
 .theme-action-btn:hover {
-  background: #F3E8FF;
-  border: 2px solid #A855F7;
+  background: #f3e8ff;
+  border: 2px solid #a855f7;
   box-shadow: 0px 4px 16px rgba(168, 85, 247, 0.24);
   color: var(--primary-color);
   transition-duration: 0.5s;
@@ -67,10 +67,10 @@
 }
 
 .theme-search-box .search-icon {
-  position: absolute; 
-  top: 50%; 
-  left: 15px; 
-  transform: translateY(-50%); 
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
   color: #aaa;
 }
 
@@ -82,13 +82,19 @@
   border-radius: 30px;
   font-size: 16px;
   color: #000000;
-  border: 2px solid #D8DADC;
+  border: 2px solid #d8dadc;
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
   line-height: 21.6px;
-  background: #FFFFFF;
+  background: #ffffff;
 }
+
+.theme-search-box input:focus {
+  outline: none;
+  border: 1.5px solid var(--primary-color);
+}
+
 .theme-search-box input::placeholder {
   color: #989898;
 }
@@ -99,7 +105,7 @@
 
 .widget-skin {
   border-radius: 30px;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .theme-banner {
@@ -142,39 +148,39 @@
 }
 
 .stats-icon-box {
-  width: 68px; 
-  height: 68px; 
+  width: 68px;
+  height: 68px;
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.stats-post{
-  background-color: #EBEAFC;
+.stats-post {
+  background-color: #ebeafc;
 }
 
-.stats-page{
-  background-color: #F8E9FC;
+.stats-page {
+  background-color: #f8e9fc;
 }
 
-.stats-product{
-  background-color: #E9F6FA;
+.stats-product {
+  background-color: #e9f6fa;
 }
 
 .stats-info-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: auto; 
-  height: 68px; 
-  gap: 2px; 
+  width: auto;
+  height: 68px;
+  gap: 2px;
   border-radius: 16px;
 }
 
 .stats-number {
   font-size: 16px;
-  color: #9B9B9B;
+  color: #9b9b9b;
   font-weight: 500;
 }
 
@@ -184,8 +190,8 @@
 }
 
 .stats-icon-box img {
-  width: 32px; 
-  height: 36px; 
+  width: 32px;
+  height: 36px;
 }
 
 .theme-stale-content {
@@ -203,50 +209,6 @@
   flex-direction: row;
 }
 
-.theme-content-box {
-  width: 100%;
-  height: auto;
-  margin-top: 25px;
-  border-radius: 12px;
-  background-color: #F5F7FB;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  grid-template-rows: auto auto;
-  gap: 10px;
-}
-
-.theme-content-box > div {
-  background-color: #ffffff;
-  font-size: 30px;
-  text-align: center;
-  height: 110px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.theme-pagination-box {
-  margin-top: 15px;
-  width: 100%;
-  height: 30px;
-  background-color: var(--background-color);
-}
-
-.theme-question-box {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid var(--primary-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .filter-skin {
   background-color: var(--background-color);
   border: none;
@@ -262,8 +224,157 @@
 }
 
 .theme-minimize-btn {
- padding: 4px 10px;
+  padding: 4px 10px;
 }
+
+.theme-content-box {
+  width: 100%;
+  height: auto;
+  margin-top: 25px;
+  border-radius: 12px;
+  background-color: #f5f7fb;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  gap: 12px;
+}
+
+.theme-content-box > div {
+  background-color: #ffffff;
+  font-size: 30px;
+  text-align: center;
+  height: 140px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 10px;
+}
+
+.theme-content-box > div:hover {
+  box-shadow: 0 8px 16px rgba(168, 85, 247, 0.15);
+}
+
+.theme-question-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.featured-image {
+  width: 75px;
+  height: 75px;
+  background-color: var(--background-color);
+  border-radius: 6px;
+}
+
+.text-cut {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 50px;
+  margin-top: 5px;
+}
+
+.text-author {
+  font-size: 10px;
+  font-weight: 400;
+  height: 15px;
+  text-align: start;
+  margin-top: -10px;
+}
+
+.review-action-btn {
+  background-color: var(--background-color);
+  border: none;
+  border-radius: 20px;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 15px;
+  padding: 5px 20px;
+  transition-duration: 0.5s;
+}
+
+.review-action-btn:hover {
+  background-color: rgba(208, 200, 255, 0.824);
+  cursor: pointer;
+}
+
+.pin-action-btn {
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 15px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+  transition-duration: 0.5s;
+}
+
+.pin-action-btn:hover {
+  background-color: #6b21a8;
+  cursor: pointer;
+}
+
+/* pagination */
+
+.theme-pagination-box {
+  margin-top: 25px;
+  width: 100%;
+  height: 30px;
+}
+
+.pagination-glass {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.pagination-glass .page-item {
+  list-style: none;
+}
+
+.pagination-glass .page-link {
+  width: 27px;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 17px;
+  background: var(--background-color);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.pagination-glass .page-link:hover {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+}
+
+.pagination-glass .page-link.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* generated */
 
 .freshness-tracking {
   background: white;
