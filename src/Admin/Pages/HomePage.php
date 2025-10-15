@@ -39,7 +39,9 @@ foreach ( $post_ids as $post_id ) {
             'post_date'         => $post->post_date,
             'post_modified'     => $post->post_modified,
             'reviewed'          => get_post_meta( $post->ID, '_fr_reviewed', true ) ? true : false,
+            'pined'             => get_post_meta( $post->ID, '_fr_pined', true ) ? true : false,
             'edit_link'         => get_edit_post_link( $post->ID ),
+            'featured_image'   => get_the_post_thumbnail_url( $post->ID, 'thumbnail' ) ? get_the_post_thumbnail_url( $post->ID, 'thumbnail' ) : FR_PLUGIN_URL . '/assets/images/logo/default-featured-'.$post->post_type.'.webp',
         );
     }
 }
@@ -47,6 +49,26 @@ foreach ( $post_ids as $post_id ) {
 $total_stale_posts = count( $posts_data );
 $reviewed_posts_count = count( array_filter( $posts_data, function( $post ) { return $post->reviewed; } ) );
 $unreviewed_posts_count = $total_stale_posts - $reviewed_posts_count;
+
+
+$categorized_posts = array();
+foreach ( $posts_data as $post ) {
+    $post_type = $post->post_type;
+    if ( ! isset( $categorized_posts[ $post_type ] ) ) {
+        $categorized_posts[ $post_type ] = array(
+            'reviewed' => 0,
+            'unreviewed' => 0,
+            'total' => 0,
+        );
+    }
+    if ( $post->reviewed ) {
+        $categorized_posts[ $post_type ]['reviewed']++;
+    } else {
+        $categorized_posts[ $post_type ]['unreviewed']++;
+    }
+    $categorized_posts[ $post_type ]['total']++;
+}
+
 
 ?>
 <div class="theme-container">
@@ -83,120 +105,128 @@ $unreviewed_posts_count = $total_stale_posts - $reviewed_posts_count;
 
             <!-- Stats Cards -->
             <div class="row">
-                <div class="col-md-4">
-                    <div class="stats-card widget-skin">
-                        <div class="stats-icon-box stats-post">
-                            <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-post-logo.webp'; ?>" alt="fresh reminder post icon">
-                        </div>
-                        <div class="stats-info-box">
-                            <span class="stats-number">2/8 reviewed</span>
-                            <span class="stats-label">Posts</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                     <div class="stats-card widget-skin">
-                        <div class="stats-icon-box stats-page">
-                            <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-page-logo.webp'; ?>" alt="fresh reminder page icon">
-                        </div>
-                        <div class="stats-info-box">
-                            <span class="stats-number">2/8 reviewed</span>
-                            <span class="stats-label">Pages</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                     <div class="stats-card widget-skin">
-                        <div class="stats-icon-box stats-product">
-                            <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-product-logo.webp'; ?>" alt="fresh reminder product icon">
-                        </div>
-                        <div class="stats-info-box">
-                            <span class="stats-number">2/8 reviewed</span>
-                            <span class="stats-label">Products</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="spliter"></div>
-
-            <!-- Posts Table -->
-            <div class="theme-stale-content widget-skin">
-                <!-- filters -->
-                <div class="theme-filter-box">
-                    <div class="col-4 d-flex align-items-center gap-2">
-                        <span class="fs-5 fw-semibold">Stale Posts</span>
-                        <div class="theme-question-box">
-                            <i class="fa-solid fa-exclamation fw-bold" style="font-size: 12px;"></i>
-                        </div>
-                    </div>
-                    <div class="col-8 align-items-center d-flex justify-content-end gap-2">
-                        <select class="filter-skin" style="background-color: var(--background-color);  
-                        border-radius: 20px; 
-                        color: var(--primary-color); 
-                        font-weight: 500; 
-                        font-size: 13px; 
-                        padding-right: 30px; 
-                        padding-left: 20px;"
-                        >
-                            <option value="0">Select Category</option>
-                        </select>
-                        <button class="filter-skin theme-review-btn" type="button" >Reviewed</button>
-                        <button class="filter-skin theme-review-btn" type="button" >Unreviewed</button>
-                        <button class="filter-skin theme-minimize-btn" type="button">
-                            <i class="fa-solid fa-angle-down"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- content -->
-                <div class="theme-content-box">
-                    <?php
-                    for ($i = 0; $i < 9; $i++) {
+                <?php
+                    foreach ( $categorized_posts as $post_type => $counts ) {
                         ?>
-                            <div>
-                                <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
-                                    <div style="width: 35%; height: inherit;">
-                                        <div class="featured-image">
-                                            <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/default-featured-post.webp'; ?>" alt="fresh reminder default featured post icon">
-                                        </div>
+                            <div class="col-md-4">
+                                <div class="stats-card widget-skin">
+                                    <div class="stats-icon-box stats-<?php echo esc_attr( $post_type ); ?>">
+                                        <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-' . esc_attr( $post_type ) . '-logo.webp'; ?>" alt="fresh reminder <?php echo esc_attr( $post_type ); ?> icon">
                                     </div>
-                                    <div style="width: 65%; height: inherit;">
-                                        <div style="height: 68%; width: 100%;">
-                                            <h5 class="fw-semibold text-start text-break text-cut" >Hello World Post PostPostPostPostPost</h5>
-                                            <p class="text-author">By <a href="#">@hasunbandara</a></p>
-                                        </div>
-                                        <div class="h-30 w-100 d-flex align-items-end justify-content-end">
-                                            <button type="button" class="pin-action-btn rotate-45">
-                                                <i class="fas fa-thumbtack"></i>
-                                            </button>
-                                            <button type="button" class="review-action-btn">
-                                                <i class="fa-solid fa-check"></i>&nbsp;&nbsp;review
-                                            </button>
-                                        </div>
+                                    <div class="stats-info-box">
+                                        <span class="stats-number"><?php echo esc_html( $counts['reviewed'] ); ?>/<?php echo esc_html( $counts['total'] ); ?> reviewed</span>
+                                        <span class="stats-label"><?php echo esc_html( ucfirst( $post_type ) ); ?>s</span>
                                     </div>
                                 </div>
                             </div>
                         <?php
                     }
-                    ?>
-                </div>
-
-                <!-- pagination -->
-                <div class="theme-pagination-box">
-                    <div class="demo-section">
-                        <div class="pagination-glass">
-                            <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-left"></i></a>
-                            <a class="page-link active" href="#">1</a>
-                            <a class="page-link" href="#">2</a>
-                            <a class="page-link" href="#">3</a>
-                            <a class="page-link" href="#">4</a>
-                            <a class="page-link" href="#">5</a>
-                            <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-right"></i></a>
-                        </div>
-                    </div>
-                </div>
+                ?>
             </div>
             <div class="spliter"></div>
+
+            <?php
+                 foreach ( $categorized_posts as $post_type => $counts ) {
+                    ?>
+                        <div class="theme-stale-content widget-skin">
+                            <!-- filters -->
+                            <div class="theme-filter-box">
+                                <div class="col-4 d-flex align-items-center gap-2">
+                                    <span class="fs-5 fw-semibold">Stale <?php echo esc_html( ucfirst( $post_type ) ); ?>s</span>
+                                    <div class="theme-question-box">
+                                        <i class="fa-solid fa-exclamation fw-bold" style="font-size: 12px;"></i>
+                                    </div>
+                                </div>
+                                <div class="col-8 align-items-center d-flex justify-content-end gap-2">
+                                    <select class="filter-skin" style="background-color: var(--background-color);  
+                                    border-radius: 20px; 
+                                    color: var(--primary-color); 
+                                    font-weight: 500; 
+                                    font-size: 13px; 
+                                    padding-right: 30px; 
+                                    padding-left: 20px;"
+                                    >
+                                        <option value="0">Select Category</option>
+                                    </select>
+                                    <button class="filter-skin theme-review-btn" type="button" >Reviewed</button>
+                                    <button class="filter-skin theme-review-btn" type="button" >Unreviewed</button>
+                                    <button class="filter-skin theme-minimize-btn" type="button">
+                                        <i class="fa-solid fa-angle-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- content -->
+                            <div class="theme-content-box">
+                                <?php
+                                foreach ( $posts_data as $post ) {
+                                    if ( $post->post_type !== $post_type ) {
+                                        continue;
+                                    } else {
+                                        ?>
+                                        <div>
+                                            <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
+                                                <div style="width: 35%; height: inherit;">
+                                                    <div class="featured-image">
+                                                        <img src="<?php echo esc_html( $post->featured_image ) ?>" alt="fresh reminder default featured post icon">
+                                                    </div>
+                                                </div>
+                                                <div style="width: 65%; height: inherit;">
+                                                    <div style="height: 68%; width: 100%;">
+                                                        <h5 class="fw-semibold text-start text-break text-cut" ><?php echo esc_html( $post->post_title ); ?></h5>
+                                                        <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
+                                                    </div>
+                                                    <div class="h-30 w-100 d-flex align-items-end justify-content-end">
+                                                        <button type="button" class="pin-action-btn rotate-45">
+                                                            <i class="fas fa-thumbtack"></i>
+                                                        </button>
+                                                        <?php
+                                                        if ( $post->reviewed ) {
+                                                            ?>
+                                                                <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                                    <i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;<?php esc_html_e( 'Reviewed', 'fresh-reminder' ); ?>
+                                                                </button>
+                                                            <?php
+                                                        } else {
+                                                            ?>
+                                                                <button type="button" class="review-action-btn btn-review" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                                    <i class="fa-solid fa-check"></i>&nbsp;&nbsp;<?php esc_html_e( 'Review', 'fresh-reminder' ); ?>
+                                                                </button>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+
+                            <!-- pagination -->
+                            <div class="theme-pagination-box">
+                                <div class="demo-section">
+                                    <div class="pagination-glass">
+                                        <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-left"></i></a>
+                                        <a class="page-link active" href="#">1</a>
+                                        <a class="page-link" href="#">2</a>
+                                        <a class="page-link" href="#">3</a>
+                                        <a class="page-link" href="#">4</a>
+                                        <a class="page-link" href="#">5</a>
+                                        <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="spliter"></div>
+                    <?php
+                }
+            ?>
+
+            <!-- Posts Table -->
+
 
             <!-- <div class="theme-stale-content widget-skin"></div>
             <div class="spliter"></div>
