@@ -156,7 +156,9 @@ $unreviewed_posts_count = $total_stale_posts - $reviewed_posts_count;
                             <div>
                                 <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
                                     <div style="width: 35%; height: inherit;">
-                                        <div class="featured-image"></div>
+                                        <div class="featured-image">
+                                            <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/default-featured-post.webp'; ?>" alt="fresh reminder default featured post icon">
+                                        </div>
                                     </div>
                                     <div style="width: 65%; height: inherit;">
                                         <div style="height: 68%; width: 100%;">
@@ -203,8 +205,74 @@ $unreviewed_posts_count = $total_stale_posts - $reviewed_posts_count;
         </div>
 
         <!-- Right Column -->
-        <div class="col-lg-4 d-flex justify-content-end">
+        <div class="col-lg-4 d-flex align-items-end flex-column">
+
+            <!-- chart-widget -->
+            <div class="theme-chart widget-skin">
+                <div class="w-100 h-100">
+                    <h5 class="chart-title">Freshness Tracking</h5>
+                    <p class="chart-description ps-5 pe-5" >Your saving continue to grow by 5.0% every month</p>
+                    <?php
+                        // Prepare data for the chart
+                        $chart_data = array(
+                            array('Status', 'Count'),
+                            array('Reviewed', 4),
+                            array('Unreviewed', 6),
+                        );
+
+                        // Enqueue Google Charts library
+                        wp_enqueue_script('google-charts', 'https://www.gstatic.com/charts/loader.js', array(), null, true);
+                        wp_add_inline_script('google-charts', '
+                            google.charts.load("current", {packages:["corechart"]});
+                            google.charts.setOnLoadCallback(drawChart);
+
+                            function drawChart() {
+                                var data = google.visualization.arrayToDataTable(' . json_encode($chart_data) . ');
+
+                                var options = {
+                                    legend: "none",
+                                    pieHole: 0.5,
+                                    backgroundColor	: "transparent",
+                                    colors: ["#ECE9FF", "#8238EF"] 
+                                };
+
+                                var chart = new google.visualization.PieChart(document.getElementById("fr_piechart"));
+                                chart.draw(data, options);
+                            }
+                        ');
+                    ?>
+                    <div id="fr_piechart" class="pie-chart"></div>
+                    <div class="w-100 chart-legend">
+                        <div class="w-50 h-100">
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                <span class="legend-percentage" >40%</span>
+                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                    <div class="legend-indicator indicator-reviewed"></div>
+                                    <span class="legend-label" >Reviewed</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-50 h-100">
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                <span class="legend-percentage" >60%</span>
+                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                    <div class="legend-indicator indicator-unreviewed"></div>
+                                    <span class="legend-label" >Unreviewed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="chart-muted ps-5 pe-5 mt-3">
+                        Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
+                    </p>
+                </div>
+
+            </div>
+            <div class="spliter"></div>
+
+            <!-- calendar-widget -->
             <div class="theme-chart widget-skin"></div>
         </div>
     </div>
 </div>
+
