@@ -138,18 +138,65 @@ foreach ( $posts_data as $post ) {
                                     </div>
                                 </div>
                                 <div class="col-8 align-items-center d-flex justify-content-end gap-2">
-                                    <select class="filter-skin" style="background-color: var(--background-color);  
-                                    border-radius: 20px; 
-                                    color: var(--primary-color); 
-                                    font-weight: 500; 
-                                    font-size: 13px; 
-                                    padding-right: 30px; 
-                                    padding-left: 20px;"
-                                    >
-                                        <option value="0">Select Category</option>
-                                    </select>
-                                    <button class="filter-skin theme-review-btn" type="button" >Reviewed</button>
-                                    <button class="filter-skin theme-review-btn" type="button" >Unreviewed</button>
+                                    <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
+                                    <?php
+                                    // Category filter dropdown - to be populated dynamically according to post type
+                                    $taxonomy_name = '';
+                                    if ( 'product' === $post_type ) {
+                                        $taxonomy_name = 'product_cat';
+                                    } else {
+                                        $taxonomies = get_object_taxonomies( $post_type, 'objects' );
+                                        foreach ( $taxonomies as $taxonomy ) {
+                                            if ( $taxonomy->hierarchical && $taxonomy->public ) {
+                                                $taxonomy_name = $taxonomy->name;
+                                                break; 
+                                            }
+                                        }
+                                    }
+
+                                    if ( ! empty( $taxonomy_name ) ) {
+                                        $taxonomy_obj = get_taxonomy( $taxonomy_name );
+                                        $categories = get_terms( array(
+                                            'taxonomy'   => $taxonomy_name,
+                                            'hide_empty' => false,
+                                        ) );
+                                        if ( ! empty( $categories ) ) {
+                                            ?>
+                                                <select class="filter-skin" style="background-color: var(--background-color);  
+                                                border-radius: 20px; 
+                                                color: var(--primary-color); 
+                                                font-weight: 500; 
+                                                font-size: 13px; 
+                                                padding-right: 30px; 
+                                                padding-left: 20px;"
+                                                >
+                                                    <option value="0">Select <?php echo esc_html( $taxonomy_obj->labels->singular_name ) ?></option>
+                                                    <?php
+                                                        foreach ( $categories as $category ) {
+                                                            echo '<option value="' . esc_attr( $category->term_id ) . '">' . esc_html( $category->name ) . '</option>';
+                                                        }
+                                                    ?>
+                                                </select>
+                                            <?php
+                                        } else {
+                                            ?>
+                                                <select class="filter-skin" style="background-color: var(--background-color);  
+                                                border-radius: 20px; 
+                                                color: var(--primary-color); 
+                                                font-weight: 500; 
+                                                font-size: 13px; 
+                                                padding-right: 30px; 
+                                                padding-left: 20px;"
+                                                >
+                                                    <option value="0">Select <?php echo esc_html( $taxonomy_obj->labels->singular_name ) ?></option>
+                                                </select>
+                                            <?php
+                                        }
+                                    }
+
+                                    ?>
+                                    <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
+                                    <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
                                     <button class="filter-skin theme-minimize-btn" type="button">
                                         <i class="fa-solid fa-angle-down"></i>
                                     </button>
@@ -158,51 +205,57 @@ foreach ( $posts_data as $post ) {
 
                             <!-- content -->
                             <div class="theme-content-box">
-                                <?php
-                                foreach ( $posts_data as $post ) {
-                                    if ( $post->post_type !== $post_type ) {
-                                        continue;
-                                    } else {
-                                        ?>
-                                        <div>
-                                            <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
-                                                <div style="width: 35%; height: inherit;">
-                                                    <div class="featured-image">
-                                                        <img src="<?php echo esc_html( $post->featured_image ) ?>" alt="fresh reminder default featured post icon">
+                                <div class="post-item-box">
+                                    <?php
+                                    foreach ( $posts_data as $post ) {
+                                        if ( $post->post_type !== $post_type ) {
+                                            continue;
+                                        } else {
+                                            $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
+                                            ?>
+                                            <div class="post-item <?php echo esc_attr( $reviewed_class ); ?>">
+                                                <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
+                                                    <div style="width: 35%; height: inherit;">
+                                                        <div class="featured-image">
+                                                            <img src="<?php echo esc_html( $post->featured_image ) ?>" alt="fresh reminder default featured post icon">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div style="width: 65%; height: inherit;">
-                                                    <div style="height: 68%; width: 100%;">
-                                                        <h5 class="fw-semibold text-start text-break text-cut" ><?php echo esc_html( $post->post_title ); ?></h5>
-                                                        <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
-                                                    </div>
-                                                    <div class="h-30 w-100 d-flex align-items-end justify-content-end">
-                                                        <button type="button" class="pin-action-btn rotate-45">
-                                                            <i class="fas fa-thumbtack"></i>
-                                                        </button>
-                                                        <?php
-                                                        if ( $post->reviewed ) {
-                                                            ?>
-                                                                <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
-                                                                    <i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;<?php esc_html_e( 'Reviewed', 'fresh-reminder' ); ?>
-                                                                </button>
+                                                    <div style="width: 65%; height: inherit;">
+                                                        <div style="height: 68%; width: 100%;">
+                                                            <h5 class="fw-semibold text-start text-break text-cut" ><?php echo esc_html( $post->post_title ); ?></h5>
+                                                            <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
+                                                        </div>
+                                                        <div class="h-30 w-100 d-flex align-items-end justify-content-end">
+                                                            <button type="button" class="pin-action-btn rotate-45">
+                                                                <i class="fas fa-thumbtack"></i>
+                                                            </button>
                                                             <?php
-                                                        } else {
+                                                            if ( $post->reviewed ) {
+                                                                ?>
+                                                                    <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                                        <i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;<?php esc_html_e( 'Reviewed', 'fresh-reminder' ); ?>
+                                                                    </button>
+                                                                <?php
+                                                            } else {
+                                                                ?>
+                                                                    <button type="button" class="review-action-btn btn-review" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                                        <i class="fa-solid fa-check"></i>&nbsp;&nbsp;<?php esc_html_e( 'Review', 'fresh-reminder' ); ?>
+                                                                    </button>
+                                                                <?php
+                                                            }
                                                             ?>
-                                                                <button type="button" class="review-action-btn btn-review" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
-                                                                    <i class="fa-solid fa-check"></i>&nbsp;&nbsp;<?php esc_html_e( 'Review', 'fresh-reminder' ); ?>
-                                                                </button>
-                                                            <?php
-                                                        }
-                                                        ?>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php
+                                        <?php
+                                        }
                                     }
-                                }
-                                ?>
+                                    ?>
+                                </div>
+                                <div class="no-posts-box">
+                                    <p class="fw-semibold fs-6"><?php esc_html_e( 'No posts found for this filter.', 'fresh-reminder' ); ?></p>
+                                </div>
                             </div>
 
                             <!-- pagination -->
@@ -224,14 +277,6 @@ foreach ( $posts_data as $post ) {
                     <?php
                 }
             ?>
-
-            <!-- Posts Table -->
-
-
-            <!-- <div class="theme-stale-content widget-skin"></div>
-            <div class="spliter"></div>
-
-            <div class="theme-stale-content widget-skin"></div> -->
         </div>
 
         <!-- Right Column -->
@@ -246,9 +291,14 @@ foreach ( $posts_data as $post ) {
                         // Prepare data for the chart
                         $chart_data = array(
                             array('Status', 'Count'),
-                            array('Reviewed', 4),
-                            array('Unreviewed', 6),
+                            array('Reviewed', $reviewed_posts_count),
+                            array('Unreviewed', $unreviewed_posts_count),
                         );
+
+                        //count percentages
+                        $total = $reviewed_posts_count + $unreviewed_posts_count;
+                        $reviewed_percentage = $total > 0 ? round(($reviewed_posts_count / $total) * 100) : 0;
+                        $unreviewed_percentage = $total > 0 ? round(($unreviewed_posts_count / $total) * 100) : 0;
 
                         // Enqueue Google Charts library
                         wp_enqueue_script('google-charts', 'https://www.gstatic.com/charts/loader.js', array(), null, true);
@@ -275,7 +325,7 @@ foreach ( $posts_data as $post ) {
                     <div class="w-100 chart-legend">
                         <div class="w-50 h-100">
                             <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage" >40%</span>
+                                <span class="legend-percentage" ><?php echo esc_html( $reviewed_percentage ); ?>%</span>
                                 <div class="d-flex flex-row align-items-center justify-content-center gap-2">
                                     <div class="legend-indicator indicator-reviewed"></div>
                                     <span class="legend-label" >Reviewed</span>
@@ -284,7 +334,7 @@ foreach ( $posts_data as $post ) {
                         </div>
                         <div class="w-50 h-100">
                             <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage" >60%</span>
+                                <span class="legend-percentage" ><?php echo esc_html( $unreviewed_percentage ); ?>%</span>
                                 <div class="d-flex flex-row align-items-center justify-content-center gap-2">
                                     <div class="legend-indicator indicator-unreviewed"></div>
                                     <span class="legend-label" >Unreviewed</span>

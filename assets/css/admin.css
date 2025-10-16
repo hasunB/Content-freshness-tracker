@@ -214,12 +214,28 @@
   height: 100%;
 }
 
-.theme-review-btn {
+.theme-filter-btn {
   padding: 4px 20px;
 }
 
 .theme-minimize-btn {
   padding: 4px 10px;
+}
+
+.theme-filter-btn.active, .theme-filter-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+}
+
+.filter-category {
+  background-color: var(--background-color);  
+  border-radius: 20px; 
+  color: var(--primary-color); 
+  font-weight: 500; 
+  font-size: 13px; 
+  padding-right: 30px; 
+  padding-left: 20px;
 }
 
 .theme-content-box {
@@ -230,13 +246,29 @@
   background-color: #f5f7fb;
   padding: 10px;
   padding-bottom: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-item-box {
+  width: 100%;
+  height: auto;
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-rows: auto auto auto;
   gap: 12px;
 }
 
-.theme-content-box > div {
+.no-posts-box {
+  display: none;
+  width: 100%;
+  height: 140px;
+  margin-top: -20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-item-box > div {
   background-color: #ffffff;
   font-size: 30px;
   text-align: center;
@@ -252,9 +284,9 @@
   width: fit-content;
 }
 
-.theme-content-box > div:hover {
+.post-item-box > div:hover {
   box-shadow: 0 8px 16px rgba(168, 85, 247, 0.15);
-}
+} 
 
 .theme-question-box {
   width: 16px;
