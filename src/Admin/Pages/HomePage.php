@@ -42,6 +42,7 @@ foreach ( $post_ids as $post_id ) {
             'pined'             => get_post_meta( $post->ID, '_fr_pined', true ) ? true : false,
             'edit_link'         => get_edit_post_link( $post->ID ),
             'featured_image'   => get_the_post_thumbnail_url( $post->ID, 'thumbnail' ) ? get_the_post_thumbnail_url( $post->ID, 'thumbnail' ) : FR_PLUGIN_URL . '/assets/images/logo/default-featured-'.$post->post_type.'.webp',
+            'category_ids'      => !empty(get_object_taxonomies($post->post_type)) ? wp_get_post_terms( $post->ID, get_object_taxonomies($post->post_type)[0], array( 'fields' => 'ids' ) ) : array(),
         );
     }
 }
@@ -86,11 +87,26 @@ foreach ( $posts_data as $post ) {
             </div>
             <div class="col-3 d-flex justify-content-end navbar-action-gap">
                 <div class="d-flex gap-3">
-                    <button class="theme-action-btn rotate-45"><i class="fas fa-thumbtack"></i></button>
-                    <button class="theme-action-btn"><i class="fas fa-cog"></i></button>
-                    <button class="theme-action-btn"><i class="fas fa-question"></i></button>
+                    <button class="theme-action-btn rotate-45 goto-check-bucket-page"><i class="fas fa-thumbtack"></i></button>
+                    <button class="theme-action-btn goto-settings-page"><i class="fas fa-cog"></i></button>
+                    <button class="theme-action-btn goto-help-page"><i class="fas fa-question"></i></button>
                 </div>
-                <div class="logo">HB</div>
+                <div class="logo">
+                    <?php
+                    $curent_user = wp_get_current_user();
+                    if ( $curent_user ) {
+                        //profile image
+                        $profile_image = get_avatar_url( $curent_user->ID, array( 'size' => 32 ) );
+                        if ( $profile_image ) {
+                            echo '<img src="' . esc_url( $profile_image ) . '" alt="User Avatar" class="user-avatar">';
+                        } else {
+                            echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                        }
+                    } else {
+                        echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                    }
+                    ?>
+                </div>
             </div>
         </div>
     </nav>
@@ -128,7 +144,7 @@ foreach ( $posts_data as $post ) {
             <?php
                  foreach ( $categorized_posts as $post_type => $counts ) {
                     ?>
-                        <div class="theme-stale-content widget-skin">
+                        <div class="theme-stale-content widget-skin" data-post-type="<?php echo esc_attr( $post_type ); ?>">
                             <!-- filters -->
                             <div class="theme-filter-box">
                                 <div class="col-4 d-flex align-items-center gap-2">
@@ -138,6 +154,7 @@ foreach ( $posts_data as $post ) {
                                     </div>
                                 </div>
                                 <div class="col-8 align-items-center d-flex justify-content-end gap-2">
+                                    <?php wp_nonce_field( 'fr_filter_posts_nonce', 'fr_filter_posts_nonce' ); ?>
                                     <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
                                     <?php
                                     // Category filter dropdown - to be populated dynamically according to post type
@@ -169,6 +186,7 @@ foreach ( $posts_data as $post ) {
                                                 font-size: 13px; 
                                                 padding-right: 30px; 
                                                 padding-left: 20px;"
+                                                data-taxonomy="<?php echo esc_attr( $taxonomy_name ); ?>"
                                                 >
                                                     <option value="0">Select <?php echo esc_html( $taxonomy_obj->labels->singular_name ) ?></option>
                                                     <?php
@@ -187,6 +205,7 @@ foreach ( $posts_data as $post ) {
                                                 font-size: 13px; 
                                                 padding-right: 30px; 
                                                 padding-left: 20px;"
+                                                disabled 
                                                 >
                                                     <option value="0">Select <?php echo esc_html( $taxonomy_obj->labels->singular_name ) ?></option>
                                                 </select>
@@ -205,15 +224,21 @@ foreach ( $posts_data as $post ) {
 
                             <!-- content -->
                             <div class="theme-content-box">
-                                <div class="post-item-box">
+                                <div class="post-item-box" id="post-item-box-<?php echo esc_attr( $post_type ); ?>">
                                     <?php
                                     foreach ( $posts_data as $post ) {
                                         if ( $post->post_type !== $post_type ) {
                                             continue;
                                         } else {
                                             $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
+                                            $category_classes = ' ';
+                                            if ( ! empty( $post->category_ids ) ) {
+                                                foreach ( $post->category_ids as $category_id ) {
+                                                    $category_classes .= ' category-' . $category_id;
+                                                }
+                                            }
                                             ?>
-                                            <div class="post-item <?php echo esc_attr( $reviewed_class ); ?>">
+                                            <div class="post-item <?php echo esc_attr( $reviewed_class ); ?><?php echo esc_attr( $category_classes ); ?>">
                                                 <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
                                                     <div style="width: 35%; height: inherit;">
                                                         <div class="featured-image">
@@ -262,13 +287,6 @@ foreach ( $posts_data as $post ) {
                             <div class="theme-pagination-box">
                                 <div class="demo-section">
                                     <div class="pagination-glass">
-                                        <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-left"></i></a>
-                                        <a class="page-link active" href="#">1</a>
-                                        <a class="page-link" href="#">2</a>
-                                        <a class="page-link" href="#">3</a>
-                                        <a class="page-link" href="#">4</a>
-                                        <a class="page-link" href="#">5</a>
-                                        <a class="page-link nav-btn" href="#"><i style="font-size: 13px;" class="fas fa-chevron-right"></i></a>
                                     </div>
                                 </div>
                             </div>

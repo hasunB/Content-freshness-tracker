@@ -69,6 +69,12 @@ class FR_admin {
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce'    => wp_create_nonce('fr_nonce'),
             ));
+            wp_localize_script('fr-admin-js', 'fr_admin_urls', array(
+                'check_bucket_page' => admin_url('admin.php?page=fr-checkbucket'),
+                'settings_page'    => admin_url('admin.php?page=fr-settings'),
+                'help_page'    => 'https://github.com/hasunB/fresh-reminder/discussions',
+            ));
+            // Enqueue CSS/JS
             wp_enqueue_style('fr-admin-css', FR_PLUGIN_URL . '/assets/css/admin.css', array(), FR_VERSION);
             // Enqueue Bootstrap CSS/JS
             wp_enqueue_style('bootstrap-css', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css', array(), '5.3.0');
