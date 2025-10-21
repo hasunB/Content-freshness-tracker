@@ -257,13 +257,13 @@ foreach ( $posts_data as $post ) {
                                                             <?php
                                                             if ( $post->reviewed ) {
                                                                 ?>
-                                                                    <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                                    <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr( $post->ID ); ?>" data-post-type="<?php echo esc_attr( $post_type ); ?>">
                                                                         <i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;<?php esc_html_e( 'Reviewed', 'fresh-reminder' ); ?>
                                                                     </button>
                                                                 <?php
                                                             } else {
                                                                 ?>
-                                                                    <button type="button" class="review-action-btn btn-review" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                                    <button type="button" class="review-action-btn btn-review" data-post-id="<?php echo esc_attr( $post->ID ); ?>" data-post-type="<?php echo esc_attr( $post_type ); ?>">
                                                                         <i class="fa-solid fa-check"></i>&nbsp;&nbsp;<?php esc_html_e( 'Review', 'fresh-reminder' ); ?>
                                                                     </button>
                                                                 <?php
@@ -306,44 +306,58 @@ foreach ( $posts_data as $post ) {
                     <h5 class="chart-title">Freshness Tracking</h5>
                     <p class="chart-description ps-5 pe-5" >Your saving continue to grow by 5.0% every month</p>
                     <?php
+
                         // Prepare data for the chart
-                        $chart_data = array(
-                            array('Status', 'Count'),
-                            array('Reviewed', $reviewed_posts_count),
-                            array('Unreviewed', $unreviewed_posts_count),
-                        );
+                        $chartjs_data = [
+                            'labels' => ['Reviewed', 'Unreviewed'],
+                            'datasets' => [
+                                [
+                                    'data' => [$reviewed_posts_count, $unreviewed_posts_count],
+                                    'backgroundColor' => ['#8238EF', '#ECE9FF'],
+                                    'hoverOffset' => 3,
+                                ],
+                            ],
+                        ];
 
                         //count percentages
                         $total = $reviewed_posts_count + $unreviewed_posts_count;
                         $reviewed_percentage = $total > 0 ? round(($reviewed_posts_count / $total) * 100) : 0;
                         $unreviewed_percentage = $total > 0 ? round(($unreviewed_posts_count / $total) * 100) : 0;
 
-                        // Enqueue Google Charts library
-                        wp_enqueue_script('google-charts', 'https://www.gstatic.com/charts/loader.js', array(), null, true);
-                        wp_add_inline_script('google-charts', '
-                            google.charts.load("current", {packages:["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
+                        // Enqueue Chart.js library
+                        wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array(), null, true);
+                        wp_add_inline_script('chartjs', '
+                            var fr_PieChart;
 
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable(' . json_encode($chart_data) . ');
-
-                                var options = {
-                                    legend: "none",
-                                    pieHole: 0.5,
-                                    backgroundColor	: "transparent",
-                                    colors: ["#ECE9FF", "#8238EF"] 
-                                };
-
-                                var chart = new google.visualization.PieChart(document.getElementById("fr_piechart"));
-                                chart.draw(data, options);
-                            }
+                            document.addEventListener("DOMContentLoaded", function() {
+                                var ctx = document.getElementById("fr_piechart_canvas").getContext("2d");
+                                fr_PieChart = new Chart(ctx, {
+                                    type: "doughnut",
+                                    data: ' . json_encode($chartjs_data) . ',
+                                    options: {
+                                        cutout: "50%",
+                                        responsive: true,
+                                        plugins: {
+                                            legend: { display: false },
+                                        },
+                                        animation: {
+                                            animateRotate: true,
+                                            duration: 1000,
+                                        },
+                                    },
+                                });
+                            });
                         ');
+
                     ?>
-                    <div id="fr_piechart" class="pie-chart"></div>
+                    
+                    <div class="pie-chart">
+                        <canvas id="fr_piechart_canvas"></canvas>
+                    </div>
                     <div class="w-100 chart-legend">
                         <div class="w-50 h-100">
                             <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage" ><?php echo esc_html( $reviewed_percentage ); ?>%</span>
+                                <span class="legend-percentage reviewed" ><?php echo esc_html( $reviewed_percentage ); ?>%</span>
                                 <div class="d-flex flex-row align-items-center justify-content-center gap-2">
                                     <div class="legend-indicator indicator-reviewed"></div>
                                     <span class="legend-label" >Reviewed</span>
@@ -352,7 +366,7 @@ foreach ( $posts_data as $post ) {
                         </div>
                         <div class="w-50 h-100">
                             <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage" ><?php echo esc_html( $unreviewed_percentage ); ?>%</span>
+                                <span class="legend-percentage unreviewed" ><?php echo esc_html( $unreviewed_percentage ); ?>%</span>
                                 <div class="d-flex flex-row align-items-center justify-content-center gap-2">
                                     <div class="legend-indicator indicator-unreviewed"></div>
                                     <span class="legend-label" >Unreviewed</span>
@@ -360,7 +374,7 @@ foreach ( $posts_data as $post ) {
                             </div>
                         </div>
                     </div>
-                    <p class="chart-muted ps-5 pe-5 mt-3">
+                    <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
                         Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
                     </p>
                 </div>

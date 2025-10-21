@@ -426,7 +426,7 @@
 
 .theme-chart {
   width: 400px;
-  height: 540px;
+  height: auto;
   padding: 32px 20px;
 }
 
@@ -446,17 +446,19 @@
 
 .pie-chart {
   width: 100%; 
-  height: 350px; 
-  margin-top: -55px; 
-  margin-bottom: 0px;
+  height: 270px;  
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .chart-legend {
-  height: 80px; 
-  margin-top: -30px; 
+  height: 80px;  
   display: flex; 
   flex-direction: row; 
   gap: 20px;
+  margin-top: 25px;
 }
 
 .chart-legend > div {
