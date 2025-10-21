@@ -141,7 +141,8 @@ class FR_admin {
                     backgroundColor	: "transparent",
                     legend: { alignment: "center", position: "bottom"},
                     chartArea: {top:30, bottom:70},
-                    colors: ["#E7C5A7", "#93BBB5"]
+                    colors: ["#E7C5A7", "#93BBB5"],
+                    
                 };
 
                 var chart = new google.visualization.PieChart(document.getElementById("fr_piechart"));

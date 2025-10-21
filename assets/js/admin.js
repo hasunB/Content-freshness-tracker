@@ -1,60 +1,5 @@
 jQuery(function($){
     const itemsPerPage = 3;
-    
-    function saveState(container) {
-        var postType = container.data('post-type');
-        if (!postType) return;
-
-        var activeStatusFilter = container.find('.theme-filter-btn.active').data('filter');
-        var activeCategoryFilter = container.find('select.filter-skin').val();
-        var currentPage = parseInt(container.find('.page-link.active').data('page')) || 1;
-
-        var state = {
-            status: activeStatusFilter,
-            category: activeCategoryFilter,
-            page: currentPage
-        };
-
-        sessionStorage.setItem('fr_state_' + postType, JSON.stringify(state));
-
-    }
-
-    function loadState(container) {
-        var postType = container.data('post-type');
-        if (!postType) return;
-
-        var stateStr = sessionStorage.getItem('fr_state_' + postType);
-        
-        if (stateStr) {
-            var state = JSON.parse(stateStr);
-
-            // Apply status filter
-            container.find('.theme-filter-btn').removeClass('active');
-            container.find('.theme-filter-btn[data-filter="' + state.status + '"]').addClass('active');
-            container.find('select.filter-skin').val(state.category);
-
-            container.find('.post-item').$removeClass('fr-visible');
-
-            var itemsToFilter = container.find('.post-item');
-            if (state.category && state.category !== '0') {
-                itemsToFilter = itemsToFilter.filter('.category-' + state.category);
-            }
-            
-            if (state.status && state.status !== 'all') {
-                itemsToFilter = itemsToFilter.filter('.fr-' + state.status);
-            }
-
-            itemsToFilter.addClass('fr-visible');
-
-            setupPagination(container, state.page);
-
-        } else {
-            // No saved state, show first page with default filters
-            container.find('.post-item').addClass('fr-visible'); // Initially mark all posts as visible
-            setupPagination(container, 1);
-        }
-
-    }
 
     function showPage(container, page) {
         var posts = container.find('.post-item.fr-visible');
@@ -68,11 +13,9 @@ jQuery(function($){
         container.find('.pagination-glass .page-link').removeClass('active');
         container.find('.pagination-glass .page-link[data-page="' + page + '"]').addClass('active');
 
-        saveState(container);
     }
 
-    function setupPagination(container, startPage) {
-        var showToPage = startPage || 1;
+    function setupPagination(container) {
         var posts = container.find('.post-item.fr-visible');
         var totalPosts = posts.length;
         var totalPages = Math.ceil(totalPosts / itemsPerPage);
@@ -83,7 +26,7 @@ jQuery(function($){
         paginationGlass.empty();
 
         if (totalPosts === 0) {
-            noPostsMessage.css('display', 'block');
+            noPostsMessage.css('display', 'flex');
             paginationBox.hide();
             container.find('.post-item').hide(); //hide all posts
             return;
@@ -108,7 +51,7 @@ jQuery(function($){
 
         paginationGlass.append('<a class="page-link nav-btn next" href="#"><i style="font-size: 13px;" class="fas fa-chevron-right"></i></a>');
 
-        showPage(container, showToPage);
+        showPage(container, 1);
 
         //used .off() .on() to prevent multiple bindings from event handlers
         paginationGlass.off('click', '.page-link').on('click', '.page-link', function(e){
@@ -135,9 +78,14 @@ jQuery(function($){
 
     $(document).on('click', '.btn-review', function(e){
         e.preventDefault();
-        var btn = $(this), id = btn.data('post-id');
+        var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
         if (!id){
             alert('No ID Found');
+            return;
+        }
+
+        if (!postType){
+            alert('No Post Type Found');
             return;
         }
 
@@ -147,13 +95,14 @@ jQuery(function($){
             post_id: id
         }, function(resp){
             if (resp && resp.success) {
-                var newBtn = $('<button class="review-action-btn btn-reviewed" data-post-id="' + id + '">' +
+                var newBtn = $('<button class="review-action-btn btn-reviewed" data-post-id="' + id + '" data-post-type="' + postType + '">' +
                                 '<i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;Reviewed' +
                                '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.removeClass('fr-unreviewed').addClass('fr-reviewed');
                 btn.replaceWith(newBtn);
                 setupPagination(postItem.closest('.theme-stale-content'));
+                refreshStatsCard(postType, true);
             } else {
                 btn.prop('disabled', false);
                 alert(resp && resp.data ? resp.data : 'Response Error');
@@ -163,9 +112,14 @@ jQuery(function($){
 
     $(document).on('click', '.btn-reviewed', function(e){
         e.preventDefault();
-        var btn = $(this), id = btn.data('post-id');
+        var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
         if (!id){
             alert('No ID Found');
+            return;
+        }
+
+        if (!postType){
+            alert('No Post Type Found');
             return;
         }
 
@@ -175,13 +129,14 @@ jQuery(function($){
             post_id: id
         }, function(resp){
             if (resp && resp.success) {
-                var newBtn = $('<button class="review-action-btn btn-review" data-post-id="' + id + '">' +
+                var newBtn = $('<button class="review-action-btn btn-review" data-post-id="' + id + '" data-post-type="' + postType + '">' +
                                 '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;Review' +
                                '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.removeClass('fr-reviewed').addClass('fr-unreviewed');
                 btn.replaceWith(newBtn);
                 setupPagination(postItem.closest('.theme-stale-content'));
+                refreshStatsCard(postType, false);
             } else {
                 btn.prop('disabled', false);
                 alert(resp && resp.data ? resp.data : 'Response Error');
@@ -208,7 +163,7 @@ jQuery(function($){
         }
 
         // Let pagination handle the show/hide
-        setupPagination(container, 1);
+        setupPagination(container);
 
     });
 
@@ -232,7 +187,7 @@ jQuery(function($){
         }
 
         // Let pagination handle the show/hide
-        setupPagination(container, 1);
+        setupPagination(container);
 
     });
 
@@ -251,6 +206,66 @@ jQuery(function($){
 
     // Initial setup
     $('.theme-stale-content').each(function(){
-        loadState($(this));
+        var container = $(this);
+        container.find('.post-item').addClass('fr-visible'); // Initially mark all posts as visible
+        setupPagination(container);
     });
+
+    //live dashboard updates
+    function refreshStatsCard(postType, reviewed) {
+        var statsCard = $('.stats-' + postType).closest('.stats-card');
+        var statsNumberElem = statsCard.find('.stats-number');
+
+        var currentStatsText = statsNumberElem.text();
+        var matches = currentStatsText.match(/(\d+)\/(\d+)/);
+
+        if (matches) {
+            var reviewedCount = parseInt(matches[1], 10);
+            var totalCount = parseInt(matches[2], 10);
+
+            if (reviewed) {
+                reviewedCount++; // Increment reviewed count
+            } else {
+                reviewedCount--; // Decrement reviewed count
+            }
+
+            // Update the stats number display
+            statsNumberElem.text(reviewedCount + '/' + totalCount + ' reviewed');
+        }
+
+        //update pie chart
+
+        if (typeof fr_PieChart !== 'undefined' && fr_PieChart) {
+
+            const chartDataSet = fr_PieChart.data.datasets[0];
+
+            let currentReviewed = chartDataSet.data[0];
+            let currentUnreviewed = chartDataSet.data[1];
+
+            if (reviewed) {
+                currentReviewed++;
+                currentUnreviewed--;
+            } else {
+                currentReviewed--;
+                currentUnreviewed++;
+            }
+
+            // Update the data table
+            chartDataSet.data[0] = currentReviewed;
+            chartDataSet.data[1] = currentUnreviewed;
+
+            // Redraw the chart with updated data
+            fr_PieChart.update();
+
+            var legendReviewed = $('.legend-percentage.reviewed');
+            var legendUnreviewed = $('.legend-percentage.unreviewed');
+
+            var totalPosts = currentReviewed + currentUnreviewed;
+            var newReviewedPercentage = Math.round((currentReviewed.getValue(0, 1) / totalPosts) * 100);
+            var newUnreviewedPercentage = Math.round((currentUnreviewed / totalPosts) * 100);
+
+            legendReviewed.text(newReviewedPercentage + '%');
+            legendUnreviewed.text(newUnreviewedPercentage + '%');
+        }
+    }
 });
