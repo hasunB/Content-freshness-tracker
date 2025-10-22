@@ -76,6 +76,7 @@ jQuery(function($){
 
     }
 
+    // Review/Unreview button handlers
     $(document).on('click', '.btn-review', function(e){
         e.preventDefault();
         var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
@@ -144,6 +145,72 @@ jQuery(function($){
         });
     });
 
+    // Pin/Unpin button handlers
+    $(document).on('click', '.btn-pin', function(e){
+        e.preventDefault();
+        var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
+        if (!id){
+            alert('No ID Found');
+            return;
+        }
+
+        if (!postType){
+            alert('No Post Type Found');
+            return;
+        }
+
+        $.post(fr_ajax.ajax_url, {
+            action: 'fr_mark_pined',
+            nonce: fr_ajax.nonce,
+            post_id: id
+        }, function(resp){
+            if (resp && resp.success) {
+                var newBtn = $('<button class="pin-action-btn rotate-45 btn-pined" data-post-id="' + id + '" data-post-type="' + postType + '">' +
+                                '<i class="fas fa-thumbtack"></i>' +
+                               '</button>');
+                var postItem = btn.closest('.post-item');
+                postItem.addClass('fr-pined');
+                btn.replaceWith(newBtn);
+            } else {
+                btn.prop('disabled', false);
+                alert(resp && resp.data ? resp.data : 'Response Error');
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-pined', function(e){
+        e.preventDefault();
+        var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
+        if (!id){
+            alert('No ID Found');
+            return;
+        }
+
+        if (!postType){
+            alert('No Post Type Found');
+            return;
+        }
+
+        $.post(fr_ajax.ajax_url, {
+            action: 'fr_unmark_pined',
+            nonce: fr_ajax.nonce,
+            post_id: id
+        }, function(resp){
+            if (resp && resp.success) {
+                var newBtn = $('<button class="pin-action-btn rotate-45 btn-pin" data-post-id="' + id + '" data-post-type="' + postType + '">' +
+                                '<i class="fas fa-thumbtack"></i>' +
+                               '</button>');
+                var postItem = btn.closest('.post-item');
+                postItem.removeClass('fr-pined');
+                btn.replaceWith(newBtn);
+            } else {
+                btn.prop('disabled', false);
+                alert(resp && resp.data ? resp.data : 'Response Error');
+            }
+        });
+    });
+
+    // Filter button handlers
     $(document).on('click', '.theme-filter-btn', function() {
         var filter = $(this).data('filter');
         var container = $(this) .closest('.theme-stale-content');
@@ -261,11 +328,43 @@ jQuery(function($){
             var legendUnreviewed = $('.legend-percentage.unreviewed');
 
             var totalPosts = currentReviewed + currentUnreviewed;
-            var newReviewedPercentage = Math.round((currentReviewed.getValue(0, 1) / totalPosts) * 100);
+            var newReviewedPercentage = Math.round((currentReviewed / totalPosts) * 100);
             var newUnreviewedPercentage = Math.round((currentUnreviewed / totalPosts) * 100);
 
             legendReviewed.text(newReviewedPercentage + '%');
             legendUnreviewed.text(newUnreviewedPercentage + '%');
         }
     }
+
+    //search box handler
+    $(document).on('input', '.form-control', function(){
+        var input = $(this);
+        var query = input.val().toLowerCase();
+        // var container = input.closest('.theme-stale-content');
+        // var contentBox = container.find('.theme-content-box');
+        // var posts = contentBox.find('.post-item');
+
+        // // Reset status filters when search query changes
+        // container.find('.theme-filter-btn').removeClass('active');
+        // container.find('.theme-filter-btn[data-filter="all"]').addClass('active');
+        
+        // // Show/hide posts based on search query
+        // posts.each(function(){
+        //     var postItem = $(this);
+        //     var title = postItem.find('.post-title').text().toLowerCase();
+        //     var matches = title.indexOf(query) !== -1;
+        //     if (matches) {
+        //         postItem.show();
+        //     } else {
+        //         postItem.hide();
+        //     }
+        // });
+        
+        // // Let pagination handle the show/hide
+        // setupPagination(container);
+
+        alert('Search functionality coming soon!');
+    });
+
+    
 });

@@ -141,6 +141,7 @@ foreach ( $posts_data as $post ) {
             </div>
             <div class="spliter"></div>
 
+            <!-- Stale Posts -->
             <?php
                  foreach ( $categorized_posts as $post_type => $counts ) {
                     ?>
@@ -251,10 +252,21 @@ foreach ( $posts_data as $post ) {
                                                             <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
                                                         </div>
                                                         <div class="h-30 w-100 d-flex align-items-end justify-content-end">
-                                                            <button type="button" class="pin-action-btn rotate-45">
-                                                                <i class="fas fa-thumbtack"></i>
-                                                            </button>
                                                             <?php
+                                                            if( $post->pined ) {
+                                                                ?>
+                                                                    <button type="button" class="pin-action-btn rotate-45 btn-pined" data-post-id="<?php echo esc_attr( $post->ID ); ?>" data-post-type="<?php echo esc_attr( $post_type ); ?>">
+                                                                        <i class="fas fa-thumbtack"></i>
+                                                                    </button>
+                                                                <?php
+                                                            } else {
+                                                                ?>
+                                                                    <button type="button" class="pin-action-btn rotate-45 btn-pin" data-post-id="<?php echo esc_attr( $post->ID ); ?>" data-post-type="<?php echo esc_attr( $post_type ); ?>">
+                                                                        <i class="fas fa-thumbtack"></i>
+                                                                    </button>
+                                                                <?php
+                                                            }           
+
                                                             if ( $post->reviewed ) {
                                                                 ?>
                                                                     <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr( $post->ID ); ?>" data-post-type="<?php echo esc_attr( $post_type ); ?>">
@@ -295,6 +307,27 @@ foreach ( $posts_data as $post ) {
                     <?php
                 }
             ?>
+            
+            <!-- search result content -->
+            <div class="search-result-content widget-skin">
+                <h5 class="fw-semibold text-center ps-5 pe-5 mt-3">Search Result for : 
+                    <span class="search-query">hello world hello world</span>
+                </h5>
+                <div class="col-12 align-items-center d-flex justify-content-center gap-2 mt-2">
+                    <?php wp_nonce_field( 'fr_filter_posts_nonce', 'fr_filter_posts_nonce' ); ?>
+                    <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
+                    <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
+                    <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
+                </div>
+                <div class="search-result-box">
+                    <?php
+                        // Search results will be populated here via JavaScript
+                    ?>
+                </div>
+                <div class="no-search-results-box">
+                    <p class="fw-semibold fs-6"><?php esc_html_e( 'No posts found for this search.', 'fresh-reminder' ); ?></p>
+                </div>
+            </div>
         </div>
 
         <!-- Right Column -->

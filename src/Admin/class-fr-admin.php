@@ -9,6 +9,8 @@ class FR_admin {
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
         add_action( 'wp_ajax_fr_mark_reviewed', array( __CLASS__, 'ajax_mark_reviewed' ) );
         add_action( 'wp_ajax_fr_unmark_reviewed', array( __CLASS__, 'ajax_unmark_reviewed' ) );
+        add_action( 'wp_ajax_fr_mark_pined', array( __CLASS__, 'ajax_mark_pined' ) );
+        add_action( 'wp_ajax_fr_unmark_pined', array( __CLASS__, 'ajax_unmark_pined' ) );
         // ensure cron handler attached when admin loads
         add_action( 'fr_check_event', array( 'FR_Cron', 'check_stale_posts' ) );
         do_action('fr_check_event');
@@ -188,6 +190,8 @@ class FR_admin {
     <?php
     }
 
+    // AJAX Handlers
+    // Mark post as reviewed
     public static function ajax_mark_reviewed() {
         check_ajax_referer('fr_nonce', 'nonce');
         if (! current_user_can('edit_posts')) wp_send_json_error('no_permission');
@@ -208,6 +212,7 @@ class FR_admin {
         error_log('ajax_mark_reviewed'.$post_id);
     }
 
+    // Unmark post as reviewed
     public static function ajax_unmark_reviewed() {
         check_ajax_referer('fr_nonce', 'nonce');
         if (! current_user_can('edit_posts')) wp_send_json_error('no_permission');
@@ -218,6 +223,33 @@ class FR_admin {
         delete_post_meta($post_id, '_fr_reviewed');
         wp_send_json_success(array('post_id' => $post_id));
         error_log('ajax_unmark_reviewed');
+    }
+
+    // Mark post as pined
+    public static function ajax_mark_pined() {
+        check_ajax_referer('fr_nonce', 'nonce');
+        if (! current_user_can('edit_posts')) wp_send_json_error('no_permission');
+        
+        $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
+        if (! $post_id) wp_send_json_error('invalid_id');
+
+        update_post_meta($post_id, '_fr_pined', true);
+        
+        wp_send_json_success(array('post_id' => $post_id));
+        error_log('ajax_mark_pined'.$post_id);
+    }
+
+    // Unmark post as pined
+    public static function ajax_unmark_pined() {
+        check_ajax_referer('fr_nonce', 'nonce');
+        if (! current_user_can('edit_posts')) wp_send_json_error('no_permission');
+        
+        $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
+        if (! $post_id) wp_send_json_error('invalid_id');
+        
+        delete_post_meta($post_id, '_fr_pined');
+        wp_send_json_success(array('post_id' => $post_id));
+        error_log('ajax_unmark_pined');
     }
 }
 
