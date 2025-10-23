@@ -1,4 +1,7 @@
 <?php
+
+if (!defined('ABSPATH')) exit;
+
 if ( ! current_user_can( 'edit_posts' ) ) {
     echo '<p>' . esc_html__( 'No permission to view.', 'fresh-reminder' ) . '</p>';
     return;
@@ -81,7 +84,7 @@ foreach ( $posts_data as $post ) {
                     <div class="logo">FR</div>
                     <div class="theme-search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control" placeholder="Search your content......">
+                        <input type="text" class="form-control" data-target="#searchable-content-box" placeholder="Search your content......">
                     </div>
                 </div>
             </div>
@@ -120,7 +123,7 @@ foreach ( $posts_data as $post ) {
             <div class="spliter"></div> -->
 
             <!-- Stats Cards -->
-            <div class="row">
+            <div class="row stats-cards-box">
                 <?php
                     foreach ( $categorized_posts as $post_type => $counts ) {
                         ?>
@@ -139,7 +142,7 @@ foreach ( $posts_data as $post ) {
                     }
                 ?>
             </div>
-            <div class="spliter"></div>
+            <div class="spliter left"></div>
 
             <!-- Stale Posts -->
             <?php
@@ -248,7 +251,7 @@ foreach ( $posts_data as $post ) {
                                                     </div>
                                                     <div style="width: 65%; height: inherit;">
                                                         <div style="height: 68%; width: 100%;">
-                                                            <h5 class="fw-semibold text-start text-break text-cut" ><?php echo esc_html( $post->post_title ); ?></h5>
+                                                            <h5 class="fw-semibold text-start text-break text-cut post-title" ><?php echo esc_html( $post->post_title ); ?></h5>
                                                             <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
                                                         </div>
                                                         <div class="h-30 w-100 d-flex align-items-end justify-content-end">
@@ -303,29 +306,80 @@ foreach ( $posts_data as $post ) {
                                 </div>
                             </div>
                         </div>
-                        <div class="spliter"></div>
+                        <div class="spliter left"></div>
                     <?php
                 }
             ?>
             
             <!-- search result content -->
-            <div class="search-result-content widget-skin">
+            <div id="searchable-content-box" class="search-result-content widget-skin">
                 <h5 class="fw-semibold text-center ps-5 pe-5 mt-3">Search Result for : 
                     <span class="search-query">hello world hello world</span>
                 </h5>
-                <div class="col-12 align-items-center d-flex justify-content-center gap-2 mt-2">
-                    <?php wp_nonce_field( 'fr_filter_posts_nonce', 'fr_filter_posts_nonce' ); ?>
+                <!-- <div class="col-12 align-items-center d-flex justify-content-center gap-2 mt-2">
                     <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
                     <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
                     <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
-                </div>
-                <div class="search-result-box">
-                    <?php
-                        // Search results will be populated here via JavaScript
-                    ?>
-                </div>
-                <div class="no-search-results-box">
-                    <p class="fw-semibold fs-6"><?php esc_html_e( 'No posts found for this search.', 'fresh-reminder' ); ?></p>
+                </div> -->
+                <div class="theme-content-box">
+                    <div class="post-item-box">
+                        <?php
+                            foreach ( $posts_data as $post ) {
+                                $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
+                                ?>
+                                <div class="post-item <?php echo esc_attr( $reviewed_class ); ?>">
+                                    <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
+                                        <div style="width: 35%; height: inherit;">
+                                            <div class="featured-image">
+                                                <img src="<?php echo esc_html( $post->featured_image ) ?>" alt="fresh reminder default featured post icon">
+                                            </div>
+                                        </div>
+                                        <div style="width: 65%; height: inherit;">
+                                            <div style="height: 68%; width: 100%;">
+                                                <h5 class="fw-semibold text-start text-break text-cut post-title" ><?php echo esc_html( $post->post_title ); ?></h5>
+                                                <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
+                                            </div>
+                                            <div class="h-30 w-100 d-flex align-items-end justify-content-end">
+                                                <?php
+                                                if( $post->pined ) {
+                                                    ?>
+                                                        <button type="button" class="pin-action-btn rotate-45 btn-pined" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                            <i class="fas fa-thumbtack"></i>
+                                                        </button>
+                                                    <?php
+                                                } else {
+                                                    ?>
+                                                        <button type="button" class="pin-action-btn rotate-45 btn-pin" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                            <i class="fas fa-thumbtack"></i>
+                                                        </button>
+                                                    <?php
+                                                }           
+
+                                                if ( $post->reviewed ) {
+                                                    ?>
+                                                        <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                            <i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;<?php esc_html_e( 'Reviewed', 'fresh-reminder' ); ?>
+                                                        </button>
+                                                    <?php
+                                                } else {
+                                                    ?>
+                                                        <button type="button" class="review-action-btn btn-review" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                            <i class="fa-solid fa-check"></i>&nbsp;&nbsp;<?php esc_html_e( 'Review', 'fresh-reminder' ); ?>
+                                                        </button>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php
+                            }
+                        ?>
+                    </div>
+                    <div class="no-search-results-box">
+                        <p class="fw-semibold fs-6"><?php esc_html_e( 'No posts found for this search.', 'fresh-reminder' ); ?></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -338,59 +392,13 @@ foreach ( $posts_data as $post ) {
                 <div class="w-100 h-100">
                     <h5 class="chart-title">Freshness Tracking</h5>
                     <p class="chart-description ps-5 pe-5" >Your saving continue to grow by 5.0% every month</p>
-                    <?php
-
-                        // Prepare data for the chart
-                        $chartjs_data = [
-                            'labels' => ['Reviewed', 'Unreviewed'],
-                            'datasets' => [
-                                [
-                                    'data' => [$reviewed_posts_count, $unreviewed_posts_count],
-                                    'backgroundColor' => ['#8238EF', '#ECE9FF'],
-                                    'hoverOffset' => 3,
-                                ],
-                            ],
-                        ];
-
-                        //count percentages
-                        $total = $reviewed_posts_count + $unreviewed_posts_count;
-                        $reviewed_percentage = $total > 0 ? round(($reviewed_posts_count / $total) * 100) : 0;
-                        $unreviewed_percentage = $total > 0 ? round(($unreviewed_posts_count / $total) * 100) : 0;
-
-                        // Enqueue Chart.js library
-                        wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array(), null, true);
-                        wp_add_inline_script('chartjs', '
-                            var fr_PieChart;
-
-                            document.addEventListener("DOMContentLoaded", function() {
-                                var ctx = document.getElementById("fr_piechart_canvas").getContext("2d");
-                                fr_PieChart = new Chart(ctx, {
-                                    type: "doughnut",
-                                    data: ' . json_encode($chartjs_data) . ',
-                                    options: {
-                                        cutout: "50%",
-                                        responsive: true,
-                                        plugins: {
-                                            legend: { display: false },
-                                        },
-                                        animation: {
-                                            animateRotate: true,
-                                            duration: 1000,
-                                        },
-                                    },
-                                });
-                            });
-                        ');
-
-                    ?>
-                    
                     <div class="pie-chart">
                         <canvas id="fr_piechart_canvas"></canvas>
                     </div>
                     <div class="w-100 chart-legend">
                         <div class="w-50 h-100">
                             <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage reviewed" ><?php echo esc_html( $reviewed_percentage ); ?>%</span>
+                                <span class="legend-percentage reviewed" >0%</span>
                                 <div class="d-flex flex-row align-items-center justify-content-center gap-2">
                                     <div class="legend-indicator indicator-reviewed"></div>
                                     <span class="legend-label" >Reviewed</span>
@@ -399,7 +407,7 @@ foreach ( $posts_data as $post ) {
                         </div>
                         <div class="w-50 h-100">
                             <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage unreviewed" ><?php echo esc_html( $unreviewed_percentage ); ?>%</span>
+                                <span class="legend-percentage unreviewed" >0%</span>
                                 <div class="d-flex flex-row align-items-center justify-content-center gap-2">
                                     <div class="legend-indicator indicator-unreviewed"></div>
                                     <span class="legend-label" >Unreviewed</span>

@@ -65,8 +65,8 @@ class FR_admin {
     }
 
     public static function enqueue_assets($hook) {
-        if ('index.php' === $hook || 'toplevel_page_fr-home' === $hook || 'settings_page_fr-settings' === $hook) {
-            wp_enqueue_script('fr-admin-js', FR_PLUGIN_URL . '/assets/js/admin.js', array('jquery'), FR_VERSION, true);
+                        if ('index.php' === $hook || 'toplevel_page_fr-home' === $hook || 'fresh-reminder_page_fr-checkbucket' === $hook || 'settings_page_fr-settings' === $hook) {
+            wp_enqueue_script('fr-admin-js', FR_PLUGIN_URL . '/assets/js/admin/admin.js', array('jquery'), FR_VERSION, true);
             wp_localize_script('fr-admin-js', 'fr_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce'    => wp_create_nonce('fr_nonce'),
@@ -76,6 +76,31 @@ class FR_admin {
                 'settings_page'    => admin_url('admin.php?page=fr-settings'),
                 'help_page'    => 'https://github.com/hasunB/fresh-reminder/discussions',
             ));
+
+            // Enqueue Chart.js library
+            wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array(), null, true);
+            wp_enqueue_script('fr-charts-js', FR_PLUGIN_URL . '/assets/js/admin/charts.js', array('jquery'), FR_VERSION, true);
+
+            $cache = get_option(FR_CACHE_OPTION);
+            $stale_post_ids = isset($cache['post_ids']) ? array_unique($cache['post_ids']) : array();
+    
+            $reviewed_posts_count = 0;
+            $unreviewed_posts_count = 0;
+    
+            foreach ($stale_post_ids as $post_id) {
+                if (get_post_meta($post_id, '_fr_reviewed', true)) {
+                    $reviewed_posts_count++;
+                } else {
+                    $unreviewed_posts_count++;
+                }
+            }
+
+            $chartjs_data = array(
+                'reviewed' => $reviewed_posts_count,
+                'unreviewed' => $unreviewed_posts_count,
+            );
+            wp_localize_script('fr-charts-js', 'fr_chart_data', $chartjs_data);
+
             // Enqueue CSS/JS
             wp_enqueue_style('fr-admin-css', FR_PLUGIN_URL . '/assets/css/admin.css', array(), FR_VERSION);
             // Enqueue Bootstrap CSS/JS
