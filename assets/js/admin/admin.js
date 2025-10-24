@@ -1,5 +1,30 @@
 jQuery(function($){
-    const itemsPerPage = 3;
+
+    $(document).ready(function () {
+        $('.search-result-content').hide();
+
+        if (getCookie("fr_banner_closed") === "false" || getCookie("fr_banner_closed") === null) {
+            $('.theme-banner').css('display', 'flex');
+            $('.spliter.banner').css('display', 'block');
+        } else {
+            $('.theme-banner').hide();
+            $('.spliter.banner').hide()
+        }
+
+        const minimizedList = getMinimizedList();
+
+        minimizedList.forEach(function (postType) {
+            const box = $('.theme-stale-content[data-post-type="' + postType + '"]');
+            const btn = $('.theme-minimize-btn[data-post-type="' + postType + '"]');
+            if (box.length) {
+                box.addClass('minimized').css({ height: 75, overflow: 'hidden' });
+                btn.html('<i class="fas fa-plus"></i>');
+                filterBoxEnabled(box, false);
+            }
+        });
+    });
+
+    var itemsPerPage;
 
     function showPage(container, page) {
         var posts = container.find('.post-item.fr-visible');
@@ -202,6 +227,9 @@ jQuery(function($){
                                '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.removeClass('fr-pined');
+                if(postType === 'pined-post'){
+                    postItem.remove(); //remove from the list if we are unpinning from pinned posts list
+                }
                 btn.replaceWith(newBtn);
             } else {
                 btn.prop('disabled', false);
@@ -259,6 +287,10 @@ jQuery(function($){
     });
 
     //page navigation buttons
+    $(document).on('click', '.goto-home-page', function(){
+        window.location.href = fr_admin_urls.home_page;
+    });
+
     $(document).on('click', '.goto-check-bucket-page', function(){
         window.location.href = fr_admin_urls.check_bucket_page;
     });
@@ -274,6 +306,14 @@ jQuery(function($){
     // Initial setup
     $('.theme-stale-content').each(function(){
         var container = $(this);
+        var page = container.data('current-page') || 1;
+
+        if (page == 'check-bucket-page'){
+            itemsPerPage = 12;
+        } else {
+            itemsPerPage = 6;
+        }
+
         container.find('.post-item').addClass('fr-visible'); // Initially mark all posts as visible
         setupPagination(container);
     });
@@ -431,5 +471,111 @@ jQuery(function($){
             container.css('display', 'none');
         }, 60);
     }
+
+    //When user closes the banner
+    $(document).on('click', '.banner-close-btn', function () {
+        $('.theme-banner').hide();
+        $('.spliter.banner').hide();
+
+        // set a cookie to remember the banner is closed for 7 days
+        var d = new Date();
+        d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days
+        var expires = "expires=" + d.toUTCString();
+
+        //Set cookie for this page path (or you can use path=/ to make it global)
+        document.cookie = "fr_banner_closed=true;" + expires + ";path=/";
+    });
+
+    //content minize/maximize
+    $(document).on('click', '.theme-minimize-btn', function () {
+        var btn = $(this);
+        var postType = btn.data('post-type');
+        var contentBox = $('.theme-stale-content[data-post-type="' + postType + '"]');
+
+        let minimizedList = getMinimizedList();
+
+        if (contentBox.hasClass('minimized')) {
+            // EXPAND
+            var fullHeight = contentBox.get(0).scrollHeight; // actual full height
+            contentBox
+                .removeClass('minimized')
+                .animate({ height: fullHeight }, 300, function () {
+                    // after animation, reset to auto for flexibility
+                    contentBox.css('height', 'auto');
+                });
+            btn.html('<i class="fas fa-minus"></i>');
+            filterBoxEnabled(contentBox, true);
+
+            // Remove from cookie list
+            minimizedList = minimizedList.filter(item => item !== postType);
+
+        } else {
+            // MINIMIZE
+            var currentHeight = contentBox.outerHeight();
+            contentBox
+                .css('height', currentHeight) // fix current height to start animation
+                .animate({ height: 75 }, 300, function () {
+                    contentBox.addClass('minimized');
+                });
+            btn.html('<i class="fas fa-plus"></i>');
+            filterBoxEnabled(contentBox, false);
+
+            // Add to cookie list if not already there
+            if (!minimizedList.includes(postType)) {
+                minimizedList.push(postType);
+            }
+        }
+
+        //Update cookie
+        setCookie('fr_minimized_boxes', JSON.stringify(minimizedList), 7);
+    });
+
+    function filterBoxEnabled(contentBox, status) {
+        var filterButtons = contentBox.find('.theme-filter-btn');
+        var categorySelect = contentBox.find('select.filter-skin');
+
+        if (status) {
+            filterButtons.disabled = false;
+            filterButtons.removeClass('btn-disabled');
+            categorySelect.disabled = false;
+            categorySelect.removeClass('btn-disabled');
+        } else {
+            filterButtons.disabled = true;
+            filterButtons.addClass('btn-disabled');
+            categorySelect.disabled = true;
+            categorySelect.addClass('btn-disabled');
+        }
+    }
+
+    //Cookie Helper functions
+    //To set cookies
+    function setCookie(name, value, days) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    //To read cookies
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+        for (let i = 0; i < cookieArr.length; i++) {
+            let cookie = cookieArr[i].trim();
+            if (cookie.indexOf(name + "=") === 0) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+
+    function getMinimizedList() {
+        try {
+            const cookie = getCookie('fr_minimized_boxes');
+            return cookie ? JSON.parse(cookie) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
 
 });

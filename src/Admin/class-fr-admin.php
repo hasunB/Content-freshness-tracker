@@ -72,6 +72,7 @@ class FR_admin {
                 'nonce'    => wp_create_nonce('fr_nonce'),
             ));
             wp_localize_script('fr-admin-js', 'fr_admin_urls', array(
+                'home_page'        => admin_url('admin.php?page=fr-home'),
                 'check_bucket_page' => admin_url('admin.php?page=fr-checkbucket'),
                 'settings_page'    => admin_url('admin.php?page=fr-settings'),
                 'help_page'    => 'https://github.com/hasunB/fresh-reminder/discussions',

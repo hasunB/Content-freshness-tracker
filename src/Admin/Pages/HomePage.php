@@ -119,8 +119,22 @@ foreach ( $posts_data as $post ) {
         <!-- Left Column -->
         <div class="col-lg-8">
             <!-- Hero Section -->
-            <!-- <div class="theme-banner widget-skin"></div>
-            <div class="spliter"></div> -->
+            <div class="theme-banner widget-skin">
+                <div class="theme-banner-content-box">
+                    <div class="col-11 banner-text-box">
+                        <h5>Hello hasun bandara</h5>
+                        <h4>Welcome to</h4>
+                        <h3>Fresh Reminder</h3>
+                        <button type="button" class="goto-settings-page">Start Configure</button>
+                    </div>
+                    <div class="col-1 d-flex justify-content-end align-items-start">
+                        <button type="button" class="banner-close-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="spliter banner"></div>
 
             <!-- Stats Cards -->
             <div class="row stats-cards-box">
@@ -220,15 +234,15 @@ foreach ( $posts_data as $post ) {
                                     ?>
                                     <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
                                     <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
-                                    <button class="filter-skin theme-minimize-btn" type="button">
-                                        <i class="fa-solid fa-angle-down"></i>
+                                    <button class="filter-skin theme-minimize-btn" type="button" data-post-type="<?php echo esc_attr( $post_type ); ?>">
+                                        <i class="fa-solid fa-minus"></i>
                                     </button>
                                 </div>
                             </div>
 
                             <!-- content -->
                             <div class="theme-content-box">
-                                <div class="post-item-box" id="post-item-box-<?php echo esc_attr( $post_type ); ?>">
+                                <div class="post-item-box post-item-template" id="post-item-box-<?php echo esc_attr( $post_type ); ?>">
                                     <?php
                                     foreach ( $posts_data as $post ) {
                                         if ( $post->post_type !== $post_type ) {
@@ -322,7 +336,7 @@ foreach ( $posts_data as $post ) {
                     <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
                 </div> -->
                 <div class="theme-content-box">
-                    <div class="post-item-box">
+                    <div class="post-item-box search-item-template">
                         <?php
                             foreach ( $posts_data as $post ) {
                                 $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
@@ -424,7 +438,7 @@ foreach ( $posts_data as $post ) {
             <div class="spliter"></div>
 
             <!-- calendar-widget -->
-            <div class="theme-chart widget-skin"></div>
+            <!-- <div class="theme-chart widget-skin"></div> -->
         </div>
     </div>
 </div>

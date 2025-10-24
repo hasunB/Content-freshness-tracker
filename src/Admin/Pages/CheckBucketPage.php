@@ -60,7 +60,7 @@ foreach ($post_ids as $post_id) {
             </div>
             <div class="col-3 d-flex justify-content-end navbar-action-gap">
                 <div class="d-flex gap-3">
-                    <button class="theme-action-btn rotate-45 goto-check-bucket-page"><i class="fas fa-thumbtack"></i></button>
+                    <button class="theme-action-btn goto-home-page"><i class="fas fa-home"></i></button>
                     <button class="theme-action-btn goto-settings-page"><i class="fas fa-cog"></i></button>
                     <button class="theme-action-btn goto-help-page"><i class="fas fa-question"></i></button>
                 </div>
@@ -89,7 +89,7 @@ foreach ($post_ids as $post_id) {
         <!-- Left Column -->
         <div class="col-lg-8">
             <!-- Stale Posts -->
-            <div class="theme-stale-content widget-skin">
+            <div class="theme-stale-content widget-skin" data-current-page="check-bucket-page">
                 <!-- filters -->
                 <div class="theme-filter-box">
                     <div class="col-4 d-flex align-items-center gap-2">
@@ -107,7 +107,7 @@ foreach ($post_ids as $post_id) {
 
                 <!-- content -->
                 <div class="theme-content-box">
-                    <div class="post-item-box" id="post-item-box-<?php echo esc_attr($post_type); ?>">
+                    <div class="post-item-box search-item-template" id="post-item-box-<?php echo esc_attr($post_type); ?>">
                         <?php
                         foreach ($posts_data as $post) {
                                 $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
@@ -132,13 +132,7 @@ foreach ($post_ids as $post_id) {
                                                         <i class="fas fa-thumbtack"></i>
                                                     </button>
                                                 <?php
-                                                } else {
-                                                ?>
-                                                    <button type="button" class="pin-action-btn rotate-45 btn-pin" data-post-id="<?php echo esc_attr($post->ID); ?>" data-post-type="pined-post">
-                                                        <i class="fas fa-thumbtack"></i>
-                                                    </button>
-                                                <?php
-                                                }
+                                                } 
 
                                                 if ($post->reviewed) {
                                                 ?>
@@ -294,7 +288,7 @@ foreach ($post_ids as $post_id) {
             <div class="spliter"></div>
 
             <!-- calendar-widget -->
-            <div class="theme-chart widget-skin"></div>
+            <!-- <div class="theme-chart widget-skin"></div> -->
         </div>
     </div>
 </div>
