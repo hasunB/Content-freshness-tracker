@@ -25,7 +25,7 @@
 .logo {
   width: 60px;
   height: 60px;
-  overflow: hidden; 
+  overflow: hidden;
   border: 1px solid var(--primary-color);
   border-radius: 50%;
 }
@@ -124,7 +124,7 @@
 
 .theme-banner-content-box {
   width: 100%;
-  height: 100%; 
+  height: 100%;
   display: flex;
   padding-left: 15px;
 }
@@ -339,6 +339,16 @@
   padding: 4px 20px;
 }
 
+select.theme-filter-select {
+  background-color: var(--background-color);
+  border-radius: 20px;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 13px;
+  padding-right: 30px;
+  padding-left: 20px;
+}
+
 .btn-disabled {
   pointer-events: none;
   opacity: 0.6;
@@ -349,19 +359,20 @@
   padding: 4px 10px;
 }
 
-.theme-filter-btn.active, .theme-filter-btn:hover {
+.theme-filter-btn.active,
+.theme-filter-btn:hover {
   background-color: var(--primary-color);
   color: white;
   cursor: pointer;
 }
 
 .filter-category {
-  background-color: var(--background-color);  
-  border-radius: 20px; 
-  color: var(--primary-color); 
-  font-weight: 500; 
-  font-size: 13px; 
-  padding-right: 30px; 
+  background-color: var(--background-color);
+  border-radius: 20px;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 13px;
+  padding-right: 30px;
   padding-left: 20px;
 }
 
@@ -385,7 +396,7 @@
 
 .post-item-template {
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr ;
+  grid-template-rows: 1fr;
 }
 
 .search-item-template {
@@ -421,7 +432,7 @@
 
 .post-item:hover {
   box-shadow: 0 8px 16px rgba(168, 85, 247, 0.15);
-} 
+}
 
 .theme-question-box {
   width: 16px;
@@ -563,7 +574,6 @@
   color: white;
 }
 
-
 /* right column */
 /* chart */
 
@@ -588,8 +598,8 @@
 }
 
 .pie-chart {
-  width: 100%; 
-  height: 270px;  
+  width: 100%;
+  height: 270px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -597,27 +607,27 @@
 }
 
 .chart-legend {
-  height: 80px;  
-  display: flex; 
-  flex-direction: row; 
+  height: 80px;
+  display: flex;
+  flex-direction: row;
   gap: 20px;
   margin-top: 25px;
 }
 
 .chart-legend > div {
-  border: 2px solid rgba(0, 0, 0, 0.5); 
+  border: 2px solid rgba(0, 0, 0, 0.5);
   border-radius: 20px;
 }
 
 .legend-percentage {
-  font-size: 20px; 
+  font-size: 20px;
   color: #000000;
   font-weight: 700;
 }
 
 .legend-indicator {
-  width: 15px; 
-  height: 15px;  
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
 }
 
@@ -626,18 +636,18 @@
 }
 
 .indicator-unreviewed {
-  background-color: #ECE9FF;
+  background-color: #ece9ff;
 }
 
 .legend-label {
-  font-size: 14px; 
+  font-size: 14px;
   color: #686868;
   font-weight: 500;
 }
 
-.chart-muted{
-  font-size: 9px; 
-  color:  #686868;
+.chart-muted {
+  font-size: 9px;
+  color: #686868;
   text-align: center;
   font-weight: 500;
 }

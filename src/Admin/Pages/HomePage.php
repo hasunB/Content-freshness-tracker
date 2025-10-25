@@ -197,15 +197,7 @@ foreach ( $posts_data as $post ) {
                                         ) );
                                         if ( ! empty( $categories ) ) {
                                             ?>
-                                                <select class="filter-skin" style="background-color: var(--background-color);  
-                                                border-radius: 20px; 
-                                                color: var(--primary-color); 
-                                                font-weight: 500; 
-                                                font-size: 13px; 
-                                                padding-right: 30px; 
-                                                padding-left: 20px;"
-                                                data-taxonomy="<?php echo esc_attr( $taxonomy_name ); ?>"
-                                                >
+                                                <select class="theme-filter-select filter-skin" data-taxonomy="<?php echo esc_attr( $taxonomy_name ); ?>">
                                                     <option value="0">Select <?php echo esc_html( $taxonomy_obj->labels->singular_name ) ?></option>
                                                     <?php
                                                         foreach ( $categories as $category ) {
@@ -216,15 +208,7 @@ foreach ( $posts_data as $post ) {
                                             <?php
                                         } else {
                                             ?>
-                                                <select class="filter-skin" style="background-color: var(--background-color);  
-                                                border-radius: 20px; 
-                                                color: var(--primary-color); 
-                                                font-weight: 500; 
-                                                font-size: 13px; 
-                                                padding-right: 30px; 
-                                                padding-left: 20px;"
-                                                disabled 
-                                                >
+                                                <select class="theme-filter-select filter-skin" disabled >
                                                     <option value="0">Select <?php echo esc_html( $taxonomy_obj->labels->singular_name ) ?></option>
                                                 </select>
                                             <?php

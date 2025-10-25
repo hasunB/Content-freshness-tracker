@@ -65,7 +65,7 @@ class FR_admin {
     }
 
     public static function enqueue_assets($hook) {
-                        if ('index.php' === $hook || 'toplevel_page_fr-home' === $hook || 'fresh-reminder_page_fr-checkbucket' === $hook || 'settings_page_fr-settings' === $hook) {
+        if ('index.php' === $hook || 'toplevel_page_fr-home' === $hook || 'fresh-reminder_page_fr-checkbucket' === $hook || 'fresh-reminder_page_fr-settings' === $hook) {
             wp_enqueue_script('fr-admin-js', FR_PLUGIN_URL . '/assets/js/admin/admin.js', array('jquery'), FR_VERSION, true);
             wp_localize_script('fr-admin-js', 'fr_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
@@ -104,6 +104,7 @@ class FR_admin {
 
             // Enqueue CSS/JS
             wp_enqueue_style('fr-admin-css', FR_PLUGIN_URL . '/assets/css/admin.css', array(), FR_VERSION);
+            wp_enqueue_style('fr-settings-css', FR_PLUGIN_URL . '/assets/css/settings.css', array(), FR_VERSION);
             // Enqueue Bootstrap CSS/JS
             wp_enqueue_style('bootstrap-css', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css', array(), '5.3.0');
             //add font-awesome css
