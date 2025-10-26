@@ -4,74 +4,73 @@ if (! current_user_can('manage_options')) return;
 $defaults = FR_Cron::get_default();
 $settings = get_option(FR_OPTION_NAME, $defaults);
 
-if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) {
-    $months = isset($_POST['months']) ? absint($_POST['months']) : $defaults['months'];
-    $post_types = isset($_POST['post_types']) ? array_map('sanitize_text_field', array_keys($_POST['post_types'])) : array('post');
-    $schedule = isset($_POST['schedule']) && in_array($_POST['schedule'], array('hourly', 'twicedaily', 'daily')) ? $_POST['schedule'] : 'daily';
-    $email_notify = isset($_POST['email_notify']) ? 1 : 0;
-    $roles = isset($_POST['roles']) ? array_map('sanitize_text_field', array_keys($_POST['roles'])) : $defaults['roles'];
+if ( isset( $_POST['fr_save'] ) && check_admin_referer( 'fr_settings', 'fr_nonce' ) ) {
 
-    $new = compact('months', 'post_types', 'schedule', 'email_notify', 'roles');
-    update_option(FR_OPTION_NAME, $new);
+    // Stale duration fields
+    $stale_after_value = isset( $_POST['stale_after_value'] ) ? absint( $_POST['stale_after_value'] ) : $defaults['stale_after_value'];
+    $stale_after_unit  = isset( $_POST['stale_after_unit'] ) ? sanitize_text_field( $_POST['stale_after_unit'] ) : $defaults['stale_after_unit'];
 
-    // reschedule
-    wp_clear_scheduled_hook('fr_check_event');
-    wp_schedule_event(time(), $schedule, 'fr_check_event');
+    // Post types
+    $post_types = isset( $_POST['post_types'] )
+        ? array_map( 'sanitize_text_field', array_keys( $_POST['post_types'] ) )
+        : array( 'post' );
 
-    echo '<div class="updated"><p>' . esc_html__('Settings saved', 'fresh-reminder') . '</p></div>';
+    // Schedule (validate against allowed list)
+    $allowed_schedules = array( 'every_five_minutes', 'hourly', 'twicedaily', 'daily' );
+    $schedule = isset( $_POST['schedule'] ) && in_array( $_POST['schedule'], $allowed_schedules, true )
+        ? $_POST['schedule']
+        : 'every_five_minutes';
+
+    // Email notify checkbox
+    $email_notify = isset( $_POST['email_notify'] ) ? 1 : 0;
+
+    // Roles
+    $roles = isset( $_POST['roles'] )
+        ? array_map( 'sanitize_text_field', array_keys( $_POST['roles'] ) )
+        : $defaults['roles'];
+
+    // clear reviewed (never, daily, weekly, monthly)
+    $clear_reviewed = isset( $_POST['clear_reviewed'] )
+        ? sanitize_text_field( $_POST['clear_reviewed'] )
+        : 'never';
+
+    // Build settings array
+    $new = compact(
+        'stale_after_value',
+        'stale_after_unit',
+        'post_types',
+        'schedule',
+        'clear_reviewed',
+        'email_notify',
+        'roles'
+    );
+
+    // Save to DB
+    update_option( FR_OPTION_NAME, $new );
+
+    // Reschedule cron
+    wp_clear_scheduled_hook( 'fr_check_event' );
+    wp_schedule_event( time(), $schedule, 'fr_check_event' );
+
+    // Success message
+    ?>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                var successMsg = document.querySelector('.settings-msg.success');
+                if (successMsg) {
+                    successMsg.classList.add('msg-visible');
+                    setTimeout(function() {
+                        successMsg.classList.remove('msg-visible');
+                    }, 4000);
+                }
+            });
+        </script>
+    <?php
+
     $settings = $new;
 }
 
 ?>
-<!-- <div class="wrap">
-    <h1><?php esc_html_e('Content Freshness Tracker', 'fresh-reminder'); ?></h1>
-    <form method="post">
-        <?php wp_nonce_field('fr_settings', 'fr_nonce'); ?>
-        <table class="form-table">
-            <tr>
-                <th><label for="months"><?php esc_html_e('Stale after (months)', 'fresh-reminder'); ?></label></th>
-                <td><input type="number" name="months" id="months" value="<?php echo esc_attr($settings['months']); ?>" min="1" class="small-text" /></td>
-            </tr>
-            <tr>
-                <th><?php esc_html_e('Post types', 'fresh-reminder'); ?></th>
-                <td>
-                    <?php
-                    $types = get_post_types(array('public' => true), 'objects');
-                    foreach ($types as $type) {
-                        $checked = in_array($type->name, $settings['post_types']) ? 'checked' : '';
-                        echo '<label style="display:block"><input type="checkbox" name="post_types[' . esc_attr($type->name) . ']" value="1" ' . $checked . ' /> ' . esc_html($type->labels->singular_name) . '</label>';
-                    }
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <th><?php esc_html_e('Schedule', 'fresh-reminder'); ?></th>
-                <td>
-                    <label><input type="radio" name="schedule" value="hourly" <?php checked($settings['schedule'], 'hourly'); ?> /> Hourly</label><br />
-                    <label><input type="radio" name="schedule" value="twicedaily" <?php checked($settings['schedule'], 'twicedaily'); ?> /> Twice daily</label><br />
-                    <label><input type="radio" name="schedule" value="daily" <?php checked($settings['schedule'], 'daily'); ?> /> Daily</label>
-                </td>
-            </tr>
-            <tr>
-                <th><?php esc_html_e('Email digest', 'fresh-reminder'); ?></th>
-                <td><label style="color: gray;"><input disabled type="checkbox" name="email_notify" value="1" <?php checked($settings['email_notify'], 1); ?> /> <?php esc_html_e('Send digest to selected roles', 'fresh-reminder'); ?></label></td>
-            </tr>
-            <tr>
-                <th><?php esc_html_e('Notify roles', 'fresh-reminder'); ?></th>
-                <td>
-                    <?php
-                    $roles = wp_roles()->roles;
-                    foreach ($roles as $role_key => $role) {
-                        $checked = in_array($role_key, $settings['roles']) ? 'checked' : '';
-                        echo '<label style="display:block"><input type="checkbox" name="roles[' . esc_attr($role_key) . ']" value="1" ' . $checked . ' /> ' . esc_html($role['name']) . '</label>';
-                    }
-                    ?>
-                </td>
-            </tr>
-        </table>
-        <p class="submit"><input type="submit" name="fr_save" class="button button-primary" value="<?php esc_attr_e('Save Changes', 'fresh-reminder'); ?>" /></p>
-    </form>
-</div> -->
 
 <div class="theme-container">
     <!-- Navbar -->
@@ -134,24 +133,45 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                 <div class="tab-content theme-content-box" id="pills-tabContent">
                     <!-- Settings tab -->
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="fs-5 fw-semibold">Settings</span>
+                        <div class="d-flex">
+                            <div class="col-8">
+                                <span class="fs-5 fw-semibold">Settings</span>
+                            </div>
+                            <div class="col-4 d-flex justify-content-end align-items-center">
+                                <span class="settings-msg success">
+                                    <i class="fa-solid fa-circle-check"></i>&nbsp;&nbsp;Settings Saved
+                                </span>
+                                <span class="settings-msg error">
+                                    <i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;Error
+                                </span>
+                            </div>
                         </div>
                         <form method="post">
                             <?php wp_nonce_field('fr_settings', 'fr_nonce'); ?>
                             <table class="form-table">
                                 <tr>
                                     <th><?php esc_html_e('Stale after', 'fresh-reminder'); ?></th>
-                                    <!-- <td><input type="number" name="months" id="months" value="<?php echo esc_attr($settings['months']); ?>" min="1" class="small-text" /></td> -->
                                     <td>
-                                        <input class="settings-input filter-skin" type="number" name="stale_after_value" id="stale_after_value" value="1" min="1" />
+                                        <?php
+                                        
+                                            $stale_unit = $settings['stale_after_unit'] ?? 'months';
+                                            $stale_value = $settings['stale_after_value'] ?? 1;
+
+                                            $min_attr = 'min="1"';
+                                            $max_attr = '';
+                                            if ($stale_unit == 'minutes') {
+                                                $min_attr = 'min="5"';
+                                            } else if ($stale_unit == 'years') {
+                                                $max_attr = 'max="12"';
+                                            }
+
+                                        ?>
+                                        <input class="settings-input filter-skin" type="number" name="stale_after_value" id="stale_after_value" value="<?php echo esc_attr($stale_value); ?>" <?php echo $min_attr; ?> <?php echo $max_attr;?> min="1" />
                                         <select class="theme-filter-select filter-skin" name="stale_after_unit" id="stale_after_unit">
-                                            <option value="minutes">Minutes</option>
-                                            <option value="hours">Hours</option>
-                                            <option value="days">Days</option>
-                                            <option value="weeks">Weeks</option>
-                                            <option value="months">Months</option>
-                                            <option value="years">Years</option>
+                                            <option value="minutes" <?php selected($stale_unit, 'minutes'); ?>>Minutes</option>
+                                            <option value="hours" <?php selected($stale_unit, 'hours'); ?>>Hours</option>
+                                            <option value="days" <?php selected($stale_unit, 'days'); ?>>Days</option>
+                                            <option value="months" <?php selected($stale_unit, 'months'); ?>>Months</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -177,24 +197,41 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><?php esc_html_e('Schedule', 'fresh-reminder'); ?></th>
+                                    <th><?php esc_html_e( 'Schedule', 'fresh-reminder' ); ?></th>
                                     <td>
-                                        <select class="theme-filter-select filter-skin" name="schedule_after_unit" id="schedule_after_unit">
-                                            <option value="0">Every 5 Minutes</option>
-                                            <option value="1">Every 15 Minutes</option>
-                                            <option value="2">Hourly</option>
-                                            <option value="3">Daily</option>
+                                        <select class="theme-filter-select filter-skin" name="schedule" id="schedule">
+                                            <option value="every_five_minutes" <?php selected( $settings['schedule'], 'every_five_minutes' ); ?>>
+                                                <?php esc_html_e( 'Every 5 Minutes', 'fresh-reminder' ); ?>
+                                            </option>
+                                            <option value="every_fifteen_minutes" <?php selected( $settings['schedule'], 'every_fifteen_minutes' ); ?>>
+                                                <?php esc_html_e( 'Every 15 Minutes', 'fresh-reminder' ); ?>
+                                            </option>
+                                            <option value="hourly" <?php selected( $settings['schedule'], 'hourly' ); ?>>
+                                                <?php esc_html_e( 'Hourly', 'fresh-reminder' ); ?>
+                                            </option>
+                                            <option value="daily" <?php selected( $settings['schedule'], 'daily' ); ?>>
+                                                <?php esc_html_e( 'Daily', 'fresh-reminder' ); ?>
+                                            </option>
                                         </select>
                                     </td>
+
                                 </tr>
                                 <tr>
                                     <th><?php esc_html_e('Clear Reviewed', 'fresh-reminder'); ?><br><?php esc_html_e('Content', 'fresh-reminder'); ?><span class="reason-mark">*</span></th>
                                     <td>
-                                        <select class="theme-filter-select filter-skin" name="schedule_after_unit" id="schedule_after_unit">
-                                            <option value="0">Every 30 Minutes</option>
-                                            <option value="2">Hourly</option>
-                                            <option value="3">Daily</option>
-                                            <option value="4">Never</option>
+                                        <select class="theme-filter-select filter-skin" name="clear_reviewed" id="clear_reviewed">
+                                            <option value="every_30_minutes" <?php selected( $settings['clear_reviewed'] ?? 'never', 'every_30_minutes' ); ?>>
+                                                <?php esc_html_e( 'Every 30 Minutes', 'fresh-reminder' ); ?>
+                                            </option>
+                                            <option value="hourly" <?php selected( $settings['clear_reviewed'] ?? 'never', 'hourly' ); ?>>
+                                                <?php esc_html_e( 'Hourly', 'fresh-reminder' ); ?>
+                                            </option>
+                                            <option value="daily" <?php selected( $settings['clear_reviewed'] ?? 'never', 'daily' ); ?>>
+                                                <?php esc_html_e( 'Daily', 'fresh-reminder' ); ?>
+                                            </option>
+                                            <option value="never" <?php selected( $settings['clear_reviewed'] ?? 'never', 'never' ); ?>>
+                                                <?php esc_html_e( 'Never', 'fresh-reminder' ); ?>
+                                            </option>
                                         </select>
                                     </td>
                                 </tr>
@@ -215,7 +252,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                     </td>
                                 </tr>
                             </table>
-                            <p class="submit"><input type="submit" name="fr_save" class="button button-primary" value="<?php esc_attr_e('Save Changes', 'fresh-reminder'); ?>" /></p>
+                            <p class="submit"><input type="submit" name="fr_save" value="<?php esc_attr_e('Save Changes', 'fresh-reminder'); ?>" /></p>
                         </form> 
                     </div>
 
