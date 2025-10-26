@@ -249,7 +249,7 @@ foreach ( $posts_data as $post ) {
                                                     </div>
                                                     <div style="width: 65%; height: inherit;">
                                                         <div style="height: 68%; width: 100%;">
-                                                            <h5 class="fw-semibold text-start text-break text-cut post-title" ><?php echo esc_html( $post->post_title ); ?></h5>
+                                                            <h5 class="fw-semibold text-start text-break text-cut post-title" data-edit-url="<?php echo esc_attr( $post->edit_link );?>" ><?php echo esc_html( $post->post_title ); ?></h5>
                                                             <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
                                                         </div>
                                                         <div class="h-30 w-100 d-flex align-items-end justify-content-end">

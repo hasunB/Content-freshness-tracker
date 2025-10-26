@@ -13,7 +13,9 @@ class FR_admin {
         add_action( 'wp_ajax_fr_unmark_pined', array( __CLASS__, 'ajax_unmark_pined' ) );
         // ensure cron handler attached when admin loads
         add_action( 'fr_check_event', array( 'FR_Cron', 'check_stale_posts' ) );
-        do_action('fr_check_event');
+        add_action( 'fr_clear_reviewed_event', array( 'FR_Cron', 'remove_reviewed_content' ) );
+        // do_action('fr_check_event');
+        // do_action('fr_clear_reviewed_event');
     }
 
     public static function add_admin_menu() {
@@ -81,6 +83,7 @@ class FR_admin {
             // Enqueue Chart.js library
             wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array(), null, true);
             wp_enqueue_script('fr-charts-js', FR_PLUGIN_URL . '/assets/js/admin/charts.js', array('jquery'), FR_VERSION, true);
+            wp_enqueue_script('fr-settings-js', FR_PLUGIN_URL . '/assets/js/admin/settings.js', array('jquery'), FR_VERSION, true);
 
             $cache = get_option(FR_CACHE_OPTION);
             $stale_post_ids = isset($cache['post_ids']) ? array_unique($cache['post_ids']) : array();

@@ -238,6 +238,15 @@ jQuery(function($){
         });
     });
 
+    $(document).on('click', '.post-title', function(e){
+        e.preventDefault();
+        var postItem = $(this);
+        var editUrl = postItem.data('edit-url');
+        if (editUrl) {
+            window.open(editUrl, '_blank');
+        }
+    });
+
     // Filter button handlers
     $(document).on('click', '.theme-filter-btn', function() {
         var filter = $(this).data('filter');

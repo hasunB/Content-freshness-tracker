@@ -325,6 +325,12 @@
   flex-direction: row;
 }
 
+.post-title:hover{
+  color: var(--primary-color);
+  cursor: pointer;
+  transition-duration: 0.5s;
+}
+
 .filter-skin {
   background-color: var(--background-color);
   border: none;
