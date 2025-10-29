@@ -167,7 +167,6 @@ foreach ( $posts_data as $post ) {
                             <div class="theme-filter-box">
                                 <div>
                                     <span class="content-title">Stale <?php echo esc_html( ucfirst( $post_type ) ); ?>s</span>
-                                    <img class="theme-warning-img" src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-warning.png'; ?>" alt="fr-waring-icon">
                                 </div>
                                 <div class="col-8 align-items-center d-flex justify-content-end gap-2">
                                     <?php wp_nonce_field( 'fr_filter_posts_nonce', 'fr_filter_posts_nonce' ); ?>

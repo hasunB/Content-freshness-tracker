@@ -1,4 +1,4 @@
-jQuery(function($){
+jQuery(function ($) {
 
     $(document).ready(function () {
         $('.search-result-content').hide();
@@ -22,6 +22,10 @@ jQuery(function($){
                 filterBoxEnabled(box, false);
             }
         });
+
+        $('[data-bs-toggle="popover"]').each(function () {
+            new bootstrap.Popover($(this)[0]);
+        });
     });
 
     var itemsPerPage;
@@ -32,7 +36,7 @@ jQuery(function($){
         var endIndex = startIndex + itemsPerPage;
 
         // Hide all posts in the container first, the shw the paginated slice
-        container.find('.post-item').hide(); 
+        container.find('.post-item').hide();
         posts.slice(startIndex, endIndex).show();
 
         container.find('.pagination-glass .page-link').removeClass('active');
@@ -79,7 +83,7 @@ jQuery(function($){
         showPage(container, 1);
 
         //used .off() .on() to prevent multiple bindings from event handlers
-        paginationGlass.off('click', '.page-link').on('click', '.page-link', function(e){
+        paginationGlass.off('click', '.page-link').on('click', '.page-link', function (e) {
             e.preventDefault();
             var btn = $(this);
             var currentPage = parseInt(container.find('.page-link.active').data('page'));
@@ -102,15 +106,15 @@ jQuery(function($){
     }
 
     // Review/Unreview button handlers
-    $(document).on('click', '.btn-review', function(e){
+    $(document).on('click', '.btn-review', function (e) {
         e.preventDefault();
         var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
-        if (!id){
+        if (!id) {
             alert('No ID Found');
             return;
         }
 
-        if (!postType){
+        if (!postType) {
             alert('No Post Type Found');
             return;
         }
@@ -119,11 +123,11 @@ jQuery(function($){
             action: 'fr_mark_reviewed',
             nonce: fr_ajax.nonce,
             post_id: id
-        }, function(resp){
+        }, function (resp) {
             if (resp && resp.success) {
                 var newBtn = $('<button class="review-action-btn btn-reviewed" data-post-id="' + id + '" data-post-type="' + postType + '">' +
-                                '<i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;Reviewed' +
-                               '</button>');
+                    '<i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;Reviewed' +
+                    '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.removeClass('fr-unreviewed').addClass('fr-reviewed');
                 btn.replaceWith(newBtn);
@@ -136,15 +140,15 @@ jQuery(function($){
         });
     });
 
-    $(document).on('click', '.btn-reviewed', function(e){
+    $(document).on('click', '.btn-reviewed', function (e) {
         e.preventDefault();
         var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
-        if (!id){
+        if (!id) {
             alert('No ID Found');
             return;
         }
 
-        if (!postType){
+        if (!postType) {
             alert('No Post Type Found');
             return;
         }
@@ -153,11 +157,11 @@ jQuery(function($){
             action: 'fr_unmark_reviewed',
             nonce: fr_ajax.nonce,
             post_id: id
-        }, function(resp){
+        }, function (resp) {
             if (resp && resp.success) {
                 var newBtn = $('<button class="review-action-btn btn-review" data-post-id="' + id + '" data-post-type="' + postType + '">' +
-                                '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;Review' +
-                               '</button>');
+                    '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;Review' +
+                    '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.removeClass('fr-reviewed').addClass('fr-unreviewed');
                 btn.replaceWith(newBtn);
@@ -171,15 +175,15 @@ jQuery(function($){
     });
 
     // Pin/Unpin button handlers
-    $(document).on('click', '.btn-pin', function(e){
+    $(document).on('click', '.btn-pin', function (e) {
         e.preventDefault();
         var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
-        if (!id){
+        if (!id) {
             alert('No ID Found');
             return;
         }
 
-        if (!postType){
+        if (!postType) {
             alert('No Post Type Found');
             return;
         }
@@ -188,11 +192,11 @@ jQuery(function($){
             action: 'fr_mark_pined',
             nonce: fr_ajax.nonce,
             post_id: id
-        }, function(resp){
+        }, function (resp) {
             if (resp && resp.success) {
                 var newBtn = $('<button class="pin-action-btn rotate-45 btn-pined" data-post-id="' + id + '" data-post-type="' + postType + '">' +
-                                '<i class="fas fa-thumbtack"></i>' +
-                               '</button>');
+                    '<i class="fas fa-thumbtack"></i>' +
+                    '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.addClass('fr-pined');
                 btn.replaceWith(newBtn);
@@ -203,15 +207,15 @@ jQuery(function($){
         });
     });
 
-    $(document).on('click', '.btn-pined', function(e){
+    $(document).on('click', '.btn-pined', function (e) {
         e.preventDefault();
         var btn = $(this), id = btn.data('post-id'), postType = btn.data('post-type');
-        if (!id){
+        if (!id) {
             alert('No ID Found');
             return;
         }
 
-        if (!postType){
+        if (!postType) {
             alert('No Post Type Found');
             return;
         }
@@ -220,14 +224,14 @@ jQuery(function($){
             action: 'fr_unmark_pined',
             nonce: fr_ajax.nonce,
             post_id: id
-        }, function(resp){
+        }, function (resp) {
             if (resp && resp.success) {
                 var newBtn = $('<button class="pin-action-btn rotate-45 btn-pin" data-post-id="' + id + '" data-post-type="' + postType + '">' +
-                                '<i class="fas fa-thumbtack"></i>' +
-                               '</button>');
+                    '<i class="fas fa-thumbtack"></i>' +
+                    '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.removeClass('fr-pined');
-                if(postType === 'pined-post'){
+                if (postType === 'pined-post') {
                     postItem.remove(); //remove from the list if we are unpinning from pinned posts list
                 }
                 btn.replaceWith(newBtn);
@@ -238,7 +242,7 @@ jQuery(function($){
         });
     });
 
-    $(document).on('click', '.post-title', function(e){
+    $(document).on('click', '.post-title', function (e) {
         e.preventDefault();
         var postItem = $(this);
         var editUrl = postItem.data('edit-url');
@@ -248,11 +252,11 @@ jQuery(function($){
     });
 
     // Filter button handlers
-    $(document).on('click', '.theme-filter-btn', function() {
+    $(document).on('click', '.theme-filter-btn', function () {
         var filter = $(this).data('filter');
-        var container = $(this) .closest('.theme-stale-content');
+        var container = $(this).closest('.theme-stale-content');
         var contentBox = container.find('.theme-content-box');
-        var posts = contentBox. find('.post-item');
+        var posts = contentBox.find('.post-item');
 
         // Active button class
         container.find('.theme-filter-btn').removeClass('active');
@@ -263,7 +267,7 @@ jQuery(function($){
         if (filter === 'all') {
             posts.addClass('fr-visible');
         } else {
-            contentBox.find('.fr-'+ filter).addClass('fr-visible');
+            contentBox.find('.fr-' + filter).addClass('fr-visible');
         }
 
         // Let pagination handle the show/hide
@@ -271,12 +275,12 @@ jQuery(function($){
 
     });
 
-    $(document).on('change', 'select.filter-skin', function(){
+    $(document).on('change', 'select.filter-skin', function () {
         var select = $(this);
         var catId = select.val();
         var container = select.closest('.theme-stale-content');
-        var contentBox = container. find('.theme-content-box');
-        var posts = contentBox. find('.post-item');
+        var contentBox = container.find('.theme-content-box');
+        var posts = contentBox.find('.post-item');
 
         // Reset status filters when category changes
         container.find('.theme-filter-btn').removeClass('active');
@@ -284,7 +288,7 @@ jQuery(function($){
 
         // Add/remove a class to mark which posts should be visible
         posts.removeClass('fr-visible');
-        if ( catId === '0' ) {
+        if (catId === '0') {
             posts.addClass('fr-visible');
         } else {
             contentBox.find('.category-' + catId).addClass('fr-visible');
@@ -296,28 +300,28 @@ jQuery(function($){
     });
 
     //page navigation buttons
-    $(document).on('click', '.goto-home-page', function(){
+    $(document).on('click', '.goto-home-page', function () {
         window.location.href = fr_admin_urls.home_page;
     });
 
-    $(document).on('click', '.goto-check-bucket-page', function(){
+    $(document).on('click', '.goto-check-bucket-page', function () {
         window.location.href = fr_admin_urls.check_bucket_page;
     });
 
-    $(document).on('click', '.goto-settings-page', function(){
+    $(document).on('click', '.goto-settings-page', function () {
         window.location.href = fr_admin_urls.settings_page;
     });
 
-    $(document).on('click', '.goto-help-page', function(){
+    $(document).on('click', '.goto-help-page', function () {
         window.open(fr_admin_urls.help_page, '_blank');
     });
 
     // Initial setup
-    $('.theme-stale-content').each(function(){
+    $('.theme-stale-content').each(function () {
         var container = $(this);
         var page = container.data('current-page') || 1;
 
-        if (page == 'check-bucket-page'){
+        if (page == 'check-bucket-page') {
             itemsPerPage = 12;
         } else {
             itemsPerPage = 6;
@@ -357,9 +361,9 @@ jQuery(function($){
 
             $('.legend-percentage.reviewed').text(reviewedPct + '%');
             $('.legend-percentage.unreviewed').text(unreviewedPct + '%');
-        } 
+        }
 
-        if(postType == 'pined-post'){
+        if (postType == 'pined-post') {
             return; // Currently, stats card update is only for 'post' post type
         }
 
@@ -385,11 +389,11 @@ jQuery(function($){
             statsNumberElem.text(reviewedCount + '/' + totalCount + ' reviewed');
         }
 
-        
+
     }
 
     //search box handler
-    $(document).on('input', '.form-control[data-target]', function(){
+    $(document).on('input', '.form-control[data-target]', function () {
         var input = $(this);
         var query = input.val().toLowerCase();
 
@@ -413,7 +417,7 @@ jQuery(function($){
         var searchQueryDisplay = container.find('.search-query');
 
         // Update the search query display
-        
+
         if (query.length >= 3) {
             // If query is less than 3 characters, show all posts
             searchQueryDisplay.text(input.val());
@@ -428,7 +432,7 @@ jQuery(function($){
             container.find('.theme-filter-btn[data-filter="all"]').addClass('active');
 
             // Show/hide posts based on search query
-            posts.each(function(){
+            posts.each(function () {
                 var postItem = $(this);
                 var title = postItem.find('.post-title').text().toLowerCase();
                 if (title.includes(query)) {
@@ -446,7 +450,7 @@ jQuery(function($){
                 noPostsMessage.hide();
                 searchResultsBox.css('display', 'flex');
             }
-            
+
             // Let pagination handle the show/hide
             setupPagination(container);
         } else {
@@ -455,7 +459,7 @@ jQuery(function($){
             stalePostsContainer.show();
             statsCardBox.show();
             spliterBox.show();
-            
+
             // Reset search - show all posts
             posts.addClass('fr-visible');
             setupPagination(container);
@@ -469,14 +473,14 @@ jQuery(function($){
         container.addClass('fade-up-hidden');
         container.css('display', 'flex');
 
-        setTimeout(function(){
+        setTimeout(function () {
             container.addClass('is-visible');
         }, 60);
     }
 
     function animationOut(container) {
         container.removeClass('is-visible');
-        setTimeout(function(){
+        setTimeout(function () {
             container.css('display', 'none');
         }, 60);
     }
@@ -584,6 +588,13 @@ jQuery(function($){
         } catch (e) {
             return [];
         }
+    }
+
+    function popoverInit() {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
     }
 
 

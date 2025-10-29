@@ -771,6 +771,11 @@ select.theme-filter-select {
   padding-right: 20px;
 }
 
+.popover {
+  --bs-popover-bg: var(--background-color) !important;
+  --bs-popover-border-color: var(--secondary-color) !important;
+}
+
 @media only screen and (max-width: 767px) {
   .navbar-custom {
     display: none;
