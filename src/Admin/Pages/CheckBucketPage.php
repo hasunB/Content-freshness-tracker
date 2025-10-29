@@ -94,7 +94,13 @@ foreach ($post_ids as $post_id) {
                 <div class="theme-filter-box">
                     <div class="col-4 d-flex align-items-center gap-2">
                         <span class="content-title">Check Bucket</span>
-                        <img class="theme-warning-img" src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-warning.png'; ?>" alt="fr-waring-icon">
+                        <img class="theme-warning-img" 
+                        src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-warning.png'; ?>" 
+                        alt="fr-waring-icon" role="button" 
+                        data-bs-toggle="popover" 
+                        data-bs-trigger="hover" 
+                        data-bs-placement="right" 
+                        data-bs-content="Pin your most important posts here for quick access and to keep them prioritized.">
                     </div>
                     <div class="col-8 align-items-center d-flex justify-content-end gap-2">
                         <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
