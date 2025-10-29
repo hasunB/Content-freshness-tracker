@@ -105,22 +105,35 @@ class FR_Cron
 
         // Filter out posts that were reviewed AFTER last modification
         $filtered = array();
+        $current_time = time();
+        $stale_interval = strtotime("-{$stale_value} {$stale_unit}", $current_time);
 
         foreach ($ids as $id) {
-            $reviewed      = get_post_meta($id, 'fr_reviewed', true);
-            $post_modified = get_post_field('post_modified', $id);
+            $reviewed      = get_post_meta($id, '_fr_reviewed', true);
+            $post_modified = strtotime(get_post_field('post_modified', $id));
 
-            // If reviewed AFTER modification, skip it
-            if ($reviewed && intval($reviewed) >= strtotime($post_modified)) {
-                // Optionally delete the meta if you want to reset
-                delete_post_meta($id, 'fr_reviewed');
-                continue;
+            // If the post has been reviewed before
+            if ($reviewed) {
+                $reviewed_time = intval($reviewed);
+
+                // If post modified AFTER review → remove meta, mark stale
+                // if ( $post_modified > $reviewed_time ) {
+                //     delete_post_meta( $id, '_fr_reviewed' );
+                //     $filtered[] = $id;
+                //     continue;
+                // }
+
+                //If review is older than allowed stale time → remove meta, mark stale
+                if ($reviewed_time <= $stale_interval) {
+                    delete_post_meta($id, '_fr_reviewed');
+                    $filtered[] = $id;
+                    continue;
+                }
+            } else {
+                // No review meta → automatically stale
+                $filtered[] = $id;
             }
-
-            // Otherwise, this post is stale
-            $filtered[] = $id;
         }
-
 
         update_option(FR_CACHE_OPTION, array('timestamp' => time(), 'post_ids' => $filtered), false);
 
@@ -131,42 +144,46 @@ class FR_Cron
         error_log("checked stale posts");
     }
 
-    public static function remove_reviewed_content()
-    {
-        // remove the reviewved content if it's not pined
-        $args = array(
-            'post_type'      => 'any',
-            'post_status'    => 'publish',
-            'fields'         => 'ids',
-            'posts_per_page' => -1,
-            'meta_query'     => array(
-                'relation' => 'AND',
-                array(
-                    'key'     => '_fr_reviewed',
-                    'compare' => 'EXISTS',
-                ),
-                array(
-                    'key'     => '_fr_pined',
-                    'compare' => 'NOT EXISTS',
-                ),
-            ),
-        );
+    public static function remove_reviewed_content() {
+        // Get current cache
+        $cache = get_option(FR_CACHE_OPTION);
 
-        $q = new WP_Query($args);
-        $reviewed_unpined_posts = $q->posts ? $q->posts : array();
-
-        foreach ($reviewed_unpined_posts as $post_id) {
-            delete_post_meta($post_id, '_fr_reviewed');
+        if (empty($cache) || !isset($cache['post_ids']) || !is_array($cache['post_ids'])) {
+            error_log('No cache found or invalid cache structure.');
+            return;
         }
 
-        //romove from the cache
-        $cache = get_option(FR_CACHE_OPTION);
-        $stale_post_ids = isset($cache['post_ids']) ? array_unique($cache['post_ids']) : array();
-        $updated_stale_post_ids = array_diff($stale_post_ids, $reviewed_unpined_posts);
-        update_option(FR_CACHE_OPTION, array('timestamp' => time(), 'post_ids' => $updated_stale_post_ids), false);
+        $stale_ids = $cache['post_ids'];
+        $updated_ids = array();
 
-        error_log("removed reviewed content");
+        foreach ($stale_ids as $post_id) {
+            $is_reviewed = get_post_meta($post_id, '_fr_reviewed', true);
+            $is_pinned   = get_post_meta($post_id, '_fr_pined', true);
+
+            // Keep in cache only if not reviewed or pinned
+            if (empty($is_reviewed) || !empty($is_pinned)) {
+                $updated_ids[] = $post_id;
+            } else {
+                // Reviewed and not pinned → remove review tag and exclude from cache
+                delete_post_meta($post_id, '_fr_reviewed');
+                error_log("Removed reviewed unpinned post ID: {$post_id}");
+            }
+        }
+
+        // Update cache only if it changed
+        if ($updated_ids !== $stale_ids) {
+            update_option(FR_CACHE_OPTION, array(
+                'timestamp' => time(),
+                'post_ids'  => array_values($updated_ids)
+            ), false);
+
+            error_log('Cache updated — reviewed unpinned posts removed.');
+        } else {
+            error_log('No reviewed unpinned posts to remove from cache.');
+        }
     }
+
+
 
     public static function send_email_digest($post_ids, $settings)
     {

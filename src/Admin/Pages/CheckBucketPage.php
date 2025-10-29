@@ -85,7 +85,7 @@ foreach ($post_ids as $post_id) {
     </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid d-flex">
+    <div class="container-fluid main-content-box">
         <!-- Left Column -->
         <div class="col-lg-8">
             <!-- Stale Posts -->
@@ -93,10 +93,8 @@ foreach ($post_ids as $post_id) {
                 <!-- filters -->
                 <div class="theme-filter-box">
                     <div class="col-4 d-flex align-items-center gap-2">
-                        <span class="fs-5 fw-semibold">Bucket Items</span>
-                        <div class="theme-question-box">
-                            <i class="fa-solid fa-exclamation fw-bold" style="font-size: 12px;"></i>
-                        </div>
+                        <span class="content-title">Check Bucket</span>
+                        <img class="theme-warning-img" src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-warning.png'; ?>" alt="fr-waring-icon">
                     </div>
                     <div class="col-8 align-items-center d-flex justify-content-end gap-2">
                         <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
@@ -289,6 +287,12 @@ foreach ($post_ids as $post_id) {
 
             <!-- calendar-widget -->
             <!-- <div class="theme-chart widget-skin"></div> -->
+        </div>
+    </div>
+    <!-- mobile responsive filter div -->
+    <div class="mobile-responsive-filter-box">
+        <div>
+            <p>This page is best viewed on a desktop or tablet device for full functionality.</p>
         </div>
     </div>
 </div>
