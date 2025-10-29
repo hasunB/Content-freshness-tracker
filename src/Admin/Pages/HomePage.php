@@ -89,7 +89,7 @@ foreach ( $posts_data as $post ) {
                 </div>
             </div>
             <div class="col-3 d-flex justify-content-end navbar-action-gap">
-                <div class="d-flex gap-3">
+                <div class="d-flex theme-action-box">
                     <button class="theme-action-btn rotate-45 goto-check-bucket-page"><i class="fas fa-thumbtack"></i></button>
                     <button class="theme-action-btn goto-settings-page"><i class="fas fa-cog"></i></button>
                     <button class="theme-action-btn goto-help-page"><i class="fas fa-question"></i></button>
@@ -115,9 +115,9 @@ foreach ( $posts_data as $post ) {
     </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid d-flex">
+    <div class="container-fluid main-content-box">
         <!-- Left Column -->
-        <div class="col-lg-8">
+        <div class="theme-left-column">
             <!-- Hero Section -->
             <div class="theme-banner widget-skin">
                 <div class="theme-banner-content-box">
@@ -165,11 +165,9 @@ foreach ( $posts_data as $post ) {
                         <div class="theme-stale-content widget-skin" data-post-type="<?php echo esc_attr( $post_type ); ?>">
                             <!-- filters -->
                             <div class="theme-filter-box">
-                                <div class="col-4 d-flex align-items-center gap-2">
-                                    <span class="fs-5 fw-semibold">Stale <?php echo esc_html( ucfirst( $post_type ) ); ?>s</span>
-                                    <div class="theme-question-box">
-                                        <i class="fa-solid fa-exclamation fw-bold" style="font-size: 12px;"></i>
-                                    </div>
+                                <div>
+                                    <span class="content-title">Stale <?php echo esc_html( ucfirst( $post_type ) ); ?>s</span>
+                                    <img class="theme-warning-img" src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-warning.png'; ?>" alt="fr-waring-icon">
                                 </div>
                                 <div class="col-8 align-items-center d-flex justify-content-end gap-2">
                                     <?php wp_nonce_field( 'fr_filter_posts_nonce', 'fr_filter_posts_nonce' ); ?>
@@ -248,7 +246,7 @@ foreach ( $posts_data as $post ) {
                                                         </div>
                                                     </div>
                                                     <div style="width: 65%; height: inherit;">
-                                                        <div style="height: 68%; width: 100%;">
+                                                        <div class="post-title-box">
                                                             <h5 class="fw-semibold text-start text-break text-cut post-title" data-edit-url="<?php echo esc_attr( $post->edit_link );?>" ><?php echo esc_html( $post->post_title ); ?></h5>
                                                             <p class="text-author">By <a href="#"><?php echo esc_html( $post->post_author_name ); ?></a></p>
                                                         </div>
@@ -383,8 +381,7 @@ foreach ( $posts_data as $post ) {
         </div>
 
         <!-- Right Column -->
-        <div class="col-lg-4 d-flex align-items-end flex-column">
-
+        <div class="theme-right-column">
             <!-- chart-widget -->
             <div class="theme-chart widget-skin">
                 <div class="w-100 h-100">
@@ -425,5 +422,12 @@ foreach ( $posts_data as $post ) {
             <!-- <div class="theme-chart widget-skin"></div> -->
         </div>
     </div>
+    <!-- mobile responsive filter div -->
+    <div class="mobile-responsive-filter-box">
+        <div>
+            <p>This page is best viewed on a desktop or tablet device for full functionality.</p>
+        </div>
+    </div>
 </div>
+
 

@@ -231,13 +231,6 @@ class FR_admin {
 
         update_post_meta($post_id, '_fr_reviewed', time());
         
-        // remove from cache so widget updates quickly
-        $cache = get_option(FR_CACHE_OPTION);
-        if ($cache && ! empty($cache['post_ids'])) {
-            $cache['post_ids'] = array_values(array_diff($cache['post_ids'], array($post_id)));
-            update_option(FR_CACHE_OPTION, $cache);
-        }
-        
         wp_send_json_success(array('post_id' => $post_id));
         error_log('ajax_mark_reviewed'.$post_id);
     }

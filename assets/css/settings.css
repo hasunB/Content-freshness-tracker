@@ -55,10 +55,16 @@
   color: #ffffff !important;
 }
 
-.theme-content-box {
+.theme-settings-content-box {
   margin-top: 10px;
   height: auto;
   padding: 15px 15px 15px 20px;
+  width: 100%;
+  border-radius: 12px;
+  background-color: #f5f7fb;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 input.settings-input {
@@ -72,10 +78,17 @@ input.settings-input {
   border: 1px solid var(--secondary-color);
 }
 
-select.theme-filter-select {
+select.theme-settings-filter-select {
   border: 1px solid var(--secondary-color);
   margin-left: 10px;
   margin-top: -3px;
+  background-color: var(--background-color);
+  border-radius: 20px;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 13px;
+  padding-right: 30px;
+  padding-left: 20px;
 }
 
 /* style the checkboxes */
