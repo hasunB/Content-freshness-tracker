@@ -78,7 +78,9 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
         <div class="container-fluid d-flex align-items-center justify-content-center">
             <div class="col-9">
                 <div class="d-flex align-items-center navbar-action-gap">
-                    <div class="logo">FR</div>
+                    <div class="logo" style="border: none;">
+                        <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-main-logo.png'; ?>" alt="">
+                    </div>
                     <div class="d-flex justify-content-start align-items-center mt-1">
                         <h3 class="plugin-name italic">Fresh Reminder
                             <span>v<?php echo esc_html(FR_VERSION); ?>

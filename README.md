@@ -1,5 +1,5 @@
 <div align="center">
-    <img alt="fresh-reminder-banner-image" src="docs/images/fresh-reminder-banner.png"/>
+    <img alt="fresh-reminder-banner-image" src="docs/images/fr-banner.png"/>
 </div>
 <br>
 
@@ -17,7 +17,7 @@
 <br>
 <div align="center">
     <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.0.0/fresh-reminder.zip" target="_blank">
-      <img alt="fresh-reminder-download-image" src="docs/images/freah-reminder-download.png" height="50px"/>
+      <img alt="fresh-reminder-download-image" src="docs/images/fr-download.png" height="50px"/>
     </a>
 </div>
 
@@ -29,29 +29,68 @@ Stay on top of your content updates and keep your site relevant for readers and 
 <br>
 
 ## Features
-- Automatically shows **freshness status** (Stale, Reviewed) on each post. 
+- **Content Freshness Tracking**: The plugin tracks the last updated date of your posts to determine their **freshness.** 
 
-- Adds a **dashboard page** listing all posts with freshness indicators.  
-
-- Highlights posts based on last update date:
+- **Status Indicators**: It assigns a status to each post, which is visible in the admin dashboard and on the post itself (as a widget). The primary statuses are: 
   - 🟢 **Reviewd** (Already Reviewed)    
-  - 🔴 **Stale** (not updated for given months)  
+  - 🔴 **Unreviewd** (not updated for given months)  
 - Click-to-edit links directly from the dashboard.
 
-- Works out-of-the-box, no setup required.  
+- **Dashboard Overview**
+  - Displays a complete overview of all posts and their freshness status.
+  - Allows quick post editing and updating directly from the dashboard.
+  - Dynamic refresh ensures real-time updates after any change.
+
+- **Frontend Widget**: A widget is displayed on the frontend of your site, showing the freshness status of each post to your visitors.
+
+- **Settings Page**: The plugin includes a settings page where you can customize the "unreviewed" threshold (e.g., how many months without an update until a post is marked as unreviewed).
+
+- **Category & Status Filtering**
+  - Admins can filter posts by:
+  - Post category (e.g., News, Guides, Tutorials).
+  - Freshness status (Stale, Reviewed, Unreviwed).
+  - Helps quickly isolate content needing updates in specific topics.
+
+- **Search Function**
+  - Built-in search bar for quickly locating posts by title, category, or tag.
+  - Supports AJAX live search for instant results.
+
+- **Pin to “CheckBucket”**
+  - Users can pin specific posts that need manual review or extra attention.
+  - Pinned posts are stored in a special collection called the “CheckBucket.”
+  - The CheckBucket acts like a temporary bin — perfect for managing content you want to recheck later.
+  - Posts can be easily added or removed from the CheckBucket with one click.
+
+- Works out-of-the-box, **no setup required**.  
 <br>
 
 ## Plugin Structure
 ```bash
 fresh-reminder/
-│── fresh-reminder.php # Main plugin file
-│── includes/
-│ └── class-fr-admin.php # Admin dashboard logic
-│ └── class-fr-tracker.php # Frontend freshness tracker
 │── assets/
-│ └── css/admin.css # Admin styles
-│ └── js/admin.js # Admin scripts 
-  └── assets/logo.png # plugin logo
+│ └── css/
+│ └── images/
+│ └── js/
+│── includes/
+│ └── class-fr-cron.php # Cron job scheduler
+│── languages/
+│── src/
+│ └── Admin/
+│   └── pages/
+│   └── class-fr-admin.php # Admin dashboard logic
+│ └── API/
+│ └── Database/
+│ └── Frontend/
+│ └── Utils/
+│── templates/
+│── vendor/
+│── .gitignore
+│── CHANGELOG.md
+│── fresh-reminder.php # Main plugin file
+│── LICENSE
+│── README.md
+│── readme.txt
+│── uninstall.php
 ```
 <br>
 
@@ -76,19 +115,19 @@ fresh-reminder/
 ## Screenshots
 ### 1. Front-end post Widget
 <div align="center">
-    <img alt="fresh-reminder-admin-widget-screenshot" src="docs/images/fresh-reminder-admin-widget-screenshot.png"/>
+    <img alt="fresh-reminder-admin-widget-screenshot" src="docs/images/fr-admin-home-screenshot.png"/>
 </div>
 <br>
 
-### 2. Admin Dashboard
+### 2. Check Bucket
 <div align="center">
-    <img alt="fresh-reminder-admin-dashboard-screenshot" src="docs/images/fresh-reminder-admin-dashboard-screenshot.png"/>
+    <img alt="fresh-reminder-admin-dashboard-screenshot" src="docs/images/fr-admin-check-bucket-screenshot.png"/>
 </div>
 <br>
 
-### 3. Tracker settings
+### 3. Settings
 <div align="center">
-    <img alt="fresh-reminder-settings-page-screenshot" src="docs/images/fresh-reminder-settings-page-screenshot.png"/>
+    <img alt="fresh-reminder-settings-page-screenshot" src="docs/images/fr-admin-settings-screenshot.png"/>
 </div>
 <br>
 <br>
