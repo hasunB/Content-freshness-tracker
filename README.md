@@ -11,12 +11,12 @@
 
 <div align="center">
     <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.0.0">Release</a> |
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.0.0/fresh-reminder.zip">Download</a> |
-    <a href="">Discussions</a>
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.0/fresh-reminder-v1.1.0.zip">Download</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/discussions">Discussions</a>
 </div>
 <br>
 <div align="center">
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.0.0/fresh-reminder.zip" target="_blank">
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.0/fresh-reminder-v1.1.0.zip" target="_blank">
       <img alt="fresh-reminder-download-image" src="docs/images/fr-download.png" height="50px"/>
     </a>
 </div>
@@ -33,7 +33,7 @@ Stay on top of your content updates and keep your site relevant for readers and 
 
 - **Status Indicators**: It assigns a status to each post, which is visible in the admin dashboard and on the post itself (as a widget). The primary statuses are: 
   - 🟢 **Reviewd** (Already Reviewed)    
-  - 🔴 **Unreviewd** (not updated for given months)  
+  - 🔴 **Unreviewed** (not updated for given months)  
 - Click-to-edit links directly from the dashboard.
 
 - **Dashboard Overview**
