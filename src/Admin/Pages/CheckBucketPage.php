@@ -51,7 +51,9 @@ foreach ($post_ids as $post_id) {
         <div class="container-fluid d-flex align-items-center justify-content-center">
             <div class="col-9">
                 <div class="d-flex align-items-center navbar-action-gap">
-                    <div class="logo">FR</div>
+                    <div class="logo" style="border: none;">
+                        <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-main-logo.png'; ?>" alt="">
+                    </div>
                     <div class="theme-search-box">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" class="form-control" data-target="#searchable-content-box" placeholder="Search your content......">
@@ -111,7 +113,7 @@ foreach ($post_ids as $post_id) {
 
                 <!-- content -->
                 <div class="theme-content-box">
-                    <div class="post-item-box search-item-template" id="post-item-box-<?php echo esc_attr($post_type); ?>">
+                    <div class="post-item-box search-item-template">
                         <?php
                         foreach ($posts_data as $post) {
                                 $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';

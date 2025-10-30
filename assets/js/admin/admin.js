@@ -195,7 +195,7 @@ jQuery(function ($) {
         }, function (resp) {
             if (resp && resp.success) {
                 var newBtn = $('<button class="pin-action-btn rotate-45 btn-pined" data-post-id="' + id + '" data-post-type="' + postType + '">' +
-                    '<i class="fas fa-thumbtack"></i>' +
+                    '<i class="fas fa-thumbtack-slash"></i>' +
                     '</button>');
                 var postItem = btn.closest('.post-item');
                 postItem.addClass('fr-pined');

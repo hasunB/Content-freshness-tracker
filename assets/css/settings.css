@@ -175,3 +175,39 @@ input[type="submit"]:hover {
 .msg-visible {
   display: block;
 }
+
+.admin-widget-btn-box {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-widget-btn-box > p {
+  width: 150px;
+  height: 40px;
+  background-color: var(--primary-color);
+  font-weight: 600;
+  color: #ffffff;
+  border-radius: 30px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition-duration: 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.admin-widget-btn-box > p:hover {
+  box-shadow: 0px 4px 16px rgba(168, 85, 247, 0.24);
+}
+
+.admin-widget-btn-box > p > a {
+  text-decoration: none;
+  color: inherit;
+}
+
+

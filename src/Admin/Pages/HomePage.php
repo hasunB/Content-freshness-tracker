@@ -81,7 +81,9 @@ foreach ( $posts_data as $post ) {
         <div class="container-fluid d-flex align-items-center justify-content-center">
             <div class="col-9">
                 <div class="d-flex align-items-center navbar-action-gap">
-                    <div class="logo">FR</div>
+                    <div class="logo" style="border: none;">
+                        <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-main-logo.png'; ?>" alt="">
+                    </div>
                     <div class="theme-search-box">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" class="form-control" data-target="#searchable-content-box" placeholder="Search your content......">
@@ -122,7 +124,18 @@ foreach ( $posts_data as $post ) {
             <div class="theme-banner widget-skin">
                 <div class="theme-banner-content-box">
                     <div class="col-11 banner-text-box">
-                        <h5>Hello hasun bandara</h5>
+                        <h5>Hello 
+                            <?php
+                            $curent_user = wp_get_current_user();
+                            if ( $curent_user ) {
+                                if ( $curent_user->first_name && $curent_user->last_name ) {
+                                    echo $curent_user->first_name . ' ' . $curent_user->last_name;
+                                } else {
+                                    echo $curent_user->display_name;
+                                }
+                            }
+                            ?>
+                        </h5>
                         <h4>Welcome to</h4>
                         <h3>Fresh Reminder</h3>
                         <button type="button" class="goto-settings-page">Start Configure</button>
@@ -254,13 +267,13 @@ foreach ( $posts_data as $post ) {
                                                             if( $post->pined ) {
                                                                 ?>
                                                                     <button type="button" class="pin-action-btn rotate-45 btn-pined" data-post-id="<?php echo esc_attr( $post->ID ); ?>" data-post-type="<?php echo esc_attr( $post_type ); ?>">
-                                                                        <i class="fas fa-thumbtack"></i>
+                                                                        <i class="fas fa-thumbtack-slash"></i>
                                                                     </button>
                                                                 <?php
                                                             } else {
                                                                 ?>
                                                                     <button type="button" class="pin-action-btn rotate-45 btn-pin" data-post-id="<?php echo esc_attr( $post->ID ); ?>" data-post-type="<?php echo esc_attr( $post_type ); ?>">
-                                                                        <i class="fas fa-thumbtack"></i>
+                                                                        <i class="fa-solid fa-thumbtack"></i>
                                                                     </button>
                                                                 <?php
                                                             }           
@@ -413,7 +426,6 @@ foreach ( $posts_data as $post ) {
                         Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
                     </p>
                 </div>
-
             </div>
             <div class="spliter"></div>
 
