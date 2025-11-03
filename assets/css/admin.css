@@ -2,6 +2,7 @@
   --primary-color: #8238ef;
   --secondary-color: #a874f4;
   --background-color: #ece9ff;
+  --content-box-background-color: #f5f7fb;
   --font-family: "Inter", sans-serif;
 }
 
@@ -111,6 +112,32 @@
 .widget-skin {
   border-radius: 30px;
   background: #ffffff;
+}
+
+.no-post-found-msg {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.no-post-found-msg > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--content-box-background-color);
+  border-radius: 10px;
+}
+
+.no-post-found-msg > div > div {
+  width: 150px;
+  height: 150px;
+  background: url(../images/fr-no-data-image.webp);
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 15px;
 }
 
 .theme-banner {
@@ -284,7 +311,7 @@
   height: 140px;
   align-items: center;
   justify-content: center;
-  background-color: #f5f7fb;
+  background-color: var(--content-box-background-color);
   border-radius: 12px;
 }
 
@@ -384,7 +411,7 @@ select.theme-filter-select {
   height: auto;
   margin-top: 25px;
   border-radius: 12px;
-  background-color: #f5f7fb;
+  background-color: var(--content-box-background-color);
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -631,126 +658,25 @@ select.theme-filter-select {
   font-weight: 500;
 }
 
-.calendar-section {
-  background: white;
-  border-radius: 15px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.calendar-header h4 {
-  font-weight: 700;
-  color: #1f2937;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.calendar-day-header {
-  text-align: center;
-  font-weight: 600;
-  color: #6b7280;
-  font-size: 0.875rem;
-  padding: 0.5rem;
-}
-
-.calendar-date {
-  aspect-ratio: 1;
-  display: flex;
+.no-chart-content-box {
+  background-color: var(--content-box-background-color);
+  height: 420px;
+  margin-top: 30px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  background: #f3f4f6;
-  font-size: 0.875rem;
-  color: #1f2937;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.2s;
+  border-radius: 12px;
+  margin-bottom: -10px;
 }
 
-.calendar-date:hover {
-  background: #e5e7eb;
-}
-
-.calendar-date.active {
-  background: #f3e8ff;
-  font-weight: 600;
-}
-
-.date-dots {
-  display: flex;
-  gap: 2px;
-  margin-top: 2px;
-}
-
-.dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-}
-
-.dot-posts {
-  background-color: #a855f7;
-}
-.dot-pages {
-  background-color: #ef4444;
-}
-.dot-products {
-  background-color: #10b981;
-}
-
-.legend {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  font-size: 0.875rem;
-  margin-top: 1rem;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.mobile-responsive-filter-box {
-  display: none;
-  width: 100%;
-  height: 90vh;
-  padding: 40px 0px 0px 10px;
-}
-
-.mobile-responsive-filter-box > div {
-  width: 100%;
-  height: 100%;
-  border: 2px solid var(--secondary-color);
-  border-radius: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-color: #f5f7fb;
-  text-align: center;
-  padding-left: 20px;
-  padding-right: 20px;
+.no-chart-content-box > div {
+  width: 80px;
+  height: 100px;
+  background: url(../images/fr-no-chart-data-image.webp);
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+  margin-bottom: 13px;
 }
 
 .popover {

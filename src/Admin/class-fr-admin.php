@@ -93,21 +93,26 @@ class FR_admin
             $cache = get_option(FR_CACHE_OPTION);
             $stale_post_ids = isset($cache['post_ids']) ? array_unique($cache['post_ids']) : array();
 
+            $total_stale_posts = count($stale_post_ids);
             $reviewed_posts_count = 0;
             $unreviewed_posts_count = 0;
 
-            foreach ($stale_post_ids as $post_id) {
-                if (get_post_meta($post_id, '_fr_reviewed', true)) {
-                    $reviewed_posts_count++;
-                } else {
-                    $unreviewed_posts_count++;
+            if($total_stale_posts > 0){
+                foreach ($stale_post_ids as $post_id) {
+                    if (get_post_meta($post_id, '_fr_reviewed', true)) {
+                        $reviewed_posts_count++;
+                    } else {
+                        $unreviewed_posts_count++;
+                    }
                 }
             }
-
+            
             $chartjs_data = array(
+
                 'reviewed' => $reviewed_posts_count,
                 'unreviewed' => $unreviewed_posts_count,
             );
+            
             wp_localize_script('fr-charts-js', 'fr_chart_data', $chartjs_data);
 
             // Enqueue CSS/JS
