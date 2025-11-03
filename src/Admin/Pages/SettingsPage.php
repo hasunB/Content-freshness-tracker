@@ -5,7 +5,8 @@ $defaults = FR_Cron::get_default();
 $settings = get_option(FR_OPTION_NAME, $defaults);
 
 if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) {
-
+     
+    error_log("save settings triggerd");
     // Stale duration fields
     $stale_after_value = isset($_POST['stale_after_value']) ? absint($_POST['stale_after_value']) : $defaults['stale_after_value'];
     $stale_after_unit  = isset($_POST['stale_after_unit']) ? sanitize_text_field($_POST['stale_after_unit']) : $defaults['stale_after_unit'];
@@ -20,6 +21,8 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
     $schedule = isset($_POST['schedule']) && in_array($_POST['schedule'], $allowed_schedules, true)
         ? $_POST['schedule']
         : 'every_five_minutes';
+
+    error_log("schedule: {$schedule}");
 
     // Email notify checkbox
     $email_notify = isset($_POST['email_notify']) ? 1 : 0;
@@ -68,6 +71,8 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
 <?php
 
     $settings = $new;
+} else {
+    error_log("else save settings not trigered");
 }
 
 ?>
@@ -163,7 +168,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                         $max_attr = '';
                                         if ($stale_unit == 'minutes') {
                                             $min_attr = 'min="5"';
-                                        } else if ($stale_unit == 'years') {
+                                        } else if ($stale_unit == 'months') {
                                             $max_attr = 'max="12"';
                                         }
 
@@ -299,39 +304,43 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
             <div class="theme-chart widget-skin">
                 <div class="w-100 h-100">
                     <h5 class="chart-title">Freshness Tracking</h5>
-                    <p class="chart-description ps-5 pe-5">Your saving continue to grow by 5.0% every month</p>
-                    <!-- chart -->
-                    <div class="pie-chart">
-                        <canvas id="fr_piechart_canvas"></canvas>
-                    </div>
-                    <!-- legend -->
-                    <div class="w-100 chart-legend">
-                        <div class="w-50 h-100">
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage reviewed">0%</span>
-                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
-                                    <div class="legend-indicator indicator-reviewed"></div>
-                                    <span class="legend-label">Reviewed</span>
+                    <!-- content-box -->
+                    <div class="w-100 h-100 chart-content-box" style="display: none;">
+                        <p class="chart-description ps-5 pe-5">Your saving continue to grow by 5.0% every month</p>
+                        <div class="pie-chart">
+                            <canvas id="fr_piechart_canvas"></canvas>
+                        </div>
+                        <div class="w-100 chart-legend">
+                            <div class="w-50 h-100">
+                                <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                    <span class="legend-percentage reviewed">0%</span>
+                                    <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                        <div class="legend-indicator indicator-reviewed"></div>
+                                        <span class="legend-label">Reviewed</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-50 h-100">
+                                <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                    <span class="legend-percentage unreviewed">0%</span>
+                                    <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                        <div class="legend-indicator indicator-unreviewed"></div>
+                                        <span class="legend-label">Unreviewed</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="w-50 h-100">
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage unreviewed">0%</span>
-                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
-                                    <div class="legend-indicator indicator-unreviewed"></div>
-                                    <span class="legend-label">Unreviewed</span>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
+                            Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
+                        </p>
                     </div>
-                    <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
-                        Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
-                    </p>
+                    <!-- no-content-box -->
+                    <div class="w-100 no-chart-content-box" style="display: none;">
+                        <div></div>
+                        <h5>No Data Found</h5>
+                    </div>
                 </div>
-
             </div>
-            <div class="spliter"></div>
 
             <!-- calendar-widget -->
             <!-- <div class="theme-chart widget-skin"></div> -->

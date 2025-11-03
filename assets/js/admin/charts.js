@@ -7,46 +7,59 @@ jQuery(function ($) {
     });
 
     function buildChartWidget(reviewed, unreviewed) {
-        var ctx = document.getElementById("fr_piechart_canvas");
-        let fr_PieChart = null;
 
-        if (ctx) {
-            var chartData = {
-                labels: ['Reviewed', 'Unreviewed'],
-                datasets: [{
-                    data: [reviewed, unreviewed],
-                    backgroundColor: ['#8238EF', '#ECE9FF'],
-                    hoverOffset: 3,
-                }]
-            };
-
-            fr_PieChart = new Chart(ctx.getContext('2d'), {
-                type: "doughnut",
-                data: chartData,
-                options: {
-                    cutout: "50%",
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
+        var chartContentBox = $('.chart-content-box');
+        var NoChartContentBox = $('.no-chart-content-box');
+        
+        if (reviewed > 0 | unreviewed > 0){
+            chartContentBox.css('display', 'flex');
+            chartContentBox.css('flex-direction', 'column');
+            
+            var ctx = document.getElementById("fr_piechart_canvas");
+            let fr_PieChart = null;
+            
+            if (ctx) {
+                var chartData = {
+                    labels: ['Reviewed', 'Unreviewed'],
+                    datasets: [{
+                        data: [reviewed, unreviewed],
+                        backgroundColor: ['#8238EF', '#ECE9FF'],
+                        hoverOffset: 3,
+                    }]
+                };
+    
+                fr_PieChart = new Chart(ctx.getContext('2d'), {
+                    type: "doughnut",
+                    data: chartData,
+                    options: {
+                        cutout: "50%",
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                        },
+                        animation: {
+                            animateRotate: true,
+                            duration: 1000,
+                        },
                     },
-                    animation: {
-                        animateRotate: true,
-                        duration: 1000,
-                    },
-                },
-            });
+                });
+            }
+    
+            const currentReviewed = parseInt(reviewed);
+            const currentUnreviewed = parseInt(unreviewed);
+            const total = currentReviewed + currentUnreviewed;
+            const reviewedPct = Math.round((currentReviewed / total) * 100);
+            const unreviewedPct = Math.round((currentUnreviewed / total) * 100);
+            
+            $('.legend-percentage.reviewed').text(reviewedPct + '%');
+            $('.legend-percentage.unreviewed').text(unreviewedPct + '%');
+            
+            //Return the chart instance and percentages
+            return { chartInstance: fr_PieChart };
+        } else {
+            NoChartContentBox.css('display', 'flex');
+            return { chartInstance: null };
         }
 
-        const currentReviewed = parseInt(reviewed);
-        const currentUnreviewed = parseInt(unreviewed);
-        const total = currentReviewed + currentUnreviewed;
-        const reviewedPct = Math.round((currentReviewed / total) * 100);
-        const unreviewedPct = Math.round((currentUnreviewed / total) * 100);
-
-        $('.legend-percentage.reviewed').text(reviewedPct + '%');
-        $('.legend-percentage.unreviewed').text(unreviewedPct + '%');
-
-        //Return the chart instance and percentages
-        return { chartInstance: fr_PieChart };
     }
 });

@@ -259,39 +259,43 @@ foreach ($post_ids as $post_id) {
             <div class="theme-chart widget-skin">
                 <div class="w-100 h-100">
                     <h5 class="chart-title">Freshness Tracking</h5>
-                    <p class="chart-description ps-5 pe-5">Your saving continue to grow by 5.0% every month</p>
-                    <!-- chart -->
-                    <div class="pie-chart">
-                        <canvas id="fr_piechart_canvas"></canvas>
-                    </div>
-                    <!-- legend -->
-                    <div class="w-100 chart-legend">
-                        <div class="w-50 h-100">
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage reviewed">0%</span>
-                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
-                                    <div class="legend-indicator indicator-reviewed"></div>
-                                    <span class="legend-label">Reviewed</span>
+                    <!-- content-box -->
+                    <div class="w-100 h-100 chart-content-box" style="display: none;">
+                        <p class="chart-description ps-5 pe-5">Your saving continue to grow by 5.0% every month</p>
+                        <div class="pie-chart">
+                            <canvas id="fr_piechart_canvas"></canvas>
+                        </div>
+                        <div class="w-100 chart-legend">
+                            <div class="w-50 h-100">
+                                <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                    <span class="legend-percentage reviewed">0%</span>
+                                    <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                        <div class="legend-indicator indicator-reviewed"></div>
+                                        <span class="legend-label">Reviewed</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-50 h-100">
+                                <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                    <span class="legend-percentage unreviewed">0%</span>
+                                    <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                        <div class="legend-indicator indicator-unreviewed"></div>
+                                        <span class="legend-label">Unreviewed</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="w-50 h-100">
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <span class="legend-percentage unreviewed">0%</span>
-                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
-                                    <div class="legend-indicator indicator-unreviewed"></div>
-                                    <span class="legend-label">Unreviewed</span>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
+                            Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
+                        </p>
                     </div>
-                    <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
-                        Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
-                    </p>
+                    <!-- no-content-box -->
+                    <div class="w-100 no-chart-content-box" style="display: none;">
+                        <div></div>
+                        <h5>No Data Found</h5>
+                    </div>
                 </div>
-
             </div>
-            <div class="spliter"></div>
 
             <!-- calendar-widget -->
             <!-- <div class="theme-chart widget-skin"></div> -->
