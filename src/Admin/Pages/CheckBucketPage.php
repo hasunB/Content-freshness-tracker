@@ -52,21 +52,20 @@ foreach ($post_ids as $post_id) {
             <div class="col-9">
                 <div class="d-flex align-items-center navbar-action-gap">
                     <div class="logo" style="border: none;">
-                        <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-main-logo.png'; ?>" alt="">
                     </div>
                     <div class="theme-search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control" data-target="#searchable-content-box" placeholder="Search your content......">
+                        <input type="text" class="form-control" data-target="#searchable-content-box" placeholder="Search your content...">
                     </div>
                 </div>
             </div>
             <div class="col-3 d-flex justify-content-end navbar-action-gap">
                 <div class="d-flex gap-3">
-                    <button class="theme-action-btn goto-home-page"><i class="fas fa-home"></i></button>
-                    <button class="theme-action-btn goto-settings-page"><i class="fas fa-cog"></i></button>
-                    <button class="theme-action-btn goto-help-page"><i class="fas fa-question"></i></button>
+                    <button class="theme-action-btn goto-home-page" title="Home"><i class="fas fa-home"></i></button>
+                    <button class="theme-action-btn goto-settings-page" title="Settings"><i class="fas fa-cog"></i></button>
+                    <button class="theme-action-btn goto-help-page" title="help"><i class="fas fa-question"></i></button>
                 </div>
-                <div class="logo">
+                <div class="logo" style="background: none;">
                     <?php
                     $curent_user = wp_get_current_user();
                     if ($curent_user) {
@@ -97,7 +96,7 @@ foreach ($post_ids as $post_id) {
                     <div class="col-4 d-flex align-items-center gap-2">
                         <span class="content-title">Check Bucket</span>
                         <img class="theme-warning-img" 
-                        src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-warning.png'; ?>" 
+                        src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-exclamation.png'; ?>" 
                         alt="fr-waring-icon" role="button" 
                         data-bs-toggle="popover" 
                         data-bs-trigger="hover" 
@@ -135,7 +134,7 @@ foreach ($post_ids as $post_id) {
                                                 if ($post->pined) {
                                                 ?>
                                                     <button type="button" class="pin-action-btn rotate-45 btn-pined" data-post-id="<?php echo esc_attr($post->ID); ?>" data-post-type="pined-post">
-                                                        <i class="fas fa-thumbtack"></i>
+                                                        <i class="fas fa-thumbtack-slash"></i>
                                                     </button>
                                                 <?php
                                                 } 
@@ -212,17 +211,10 @@ foreach ($post_ids as $post_id) {
                                             if ($post->pined) {
                                             ?>
                                                 <button type="button" class="pin-action-btn rotate-45 btn-pined" data-post-id="<?php echo esc_attr($post->ID); ?>">
-                                                    <i class="fas fa-thumbtack"></i>
+                                                    <i class="fas fa-thumbtack-slash"></i>
                                                 </button>
                                             <?php
-                                            } else {
-                                            ?>
-                                                <button type="button" class="pin-action-btn rotate-45 btn-pin" data-post-id="<?php echo esc_attr($post->ID); ?>">
-                                                    <i class="fas fa-thumbtack"></i>
-                                                </button>
-                                            <?php
-                                            }
-
+                                            } 
                                             if ($post->reviewed) {
                                             ?>
                                                 <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr($post->ID); ?>">

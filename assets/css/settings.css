@@ -58,11 +58,10 @@
 .theme-settings-content-box {
   margin-top: 10px;
   height: auto;
-  padding: 15px 15px 15px 20px;
+  padding: 20px;
   width: 100%;
   border-radius: 12px;
   background-color: #f5f7fb;
-  padding: 10px;
   display: flex;
   flex-direction: column;
 }
@@ -92,8 +91,7 @@ select.theme-settings-filter-select {
 }
 
 /* style the checkboxes */
-input[type="checkbox"],
-input[type="radio"] {
+input.fr-settings-input {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -102,32 +100,25 @@ input[type="radio"] {
   border: 1px solid rgb(174, 174, 174);
 }
 
-input[type="checkbox"]:hover {
+input.fr-settings-input:hover {
   border: 1px solid var(--primary-color);
 }
 
-input[type="checkbox"]:checked {
-  border: 1px solid var(--primary-color);
-  background-color: var(--background-color);
-}
-
-input[type="radio"]:checked {
+input.fr-settings-input:checked {
   border: 1px solid var(--primary-color);
   background-color: var(--background-color);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
 }
 
-label {
+label.fr-settings-label {
   font-size: 14px;
   color: var(--primary-color);
   font-weight: 400;
   margin-left: 8px;
   margin-bottom: 5px;
+  display:block
 }
 
-label:hover {
+label.fr-settings-label:hover {
   color: var(--primary-color);
 }
 
@@ -140,7 +131,7 @@ label:hover {
   margin-top: 5px;
 }
 
-input[type="submit"] {
+input.fr-settings-save-btn {
   width: 150px;
   height: 40px;
   background-color: var(--primary-color);
@@ -153,7 +144,7 @@ input[type="submit"] {
   transition-duration: 0.5s;
 }
 
-input[type="submit"]:hover {
+input.fr-settings-save-btn:hover {
   box-shadow: 0px 4px 16px rgba(168, 85, 247, 0.24);
 }
 
@@ -184,9 +175,15 @@ input[type="submit"]:hover {
   align-items: center;
 }
 
+.sttings-btn-box {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 40px;
+}
+
 .admin-widget-btn-box > p {
   width: 150px;
-  height: 40px;
   background-color: var(--primary-color);
   font-weight: 600;
   color: #ffffff;
@@ -199,6 +196,7 @@ input[type="submit"]:hover {
   justify-content: center;
   align-items: center;
   margin-top: 10px;
+  height: 40px;
 }
 
 .admin-widget-btn-box > p:hover {
@@ -209,5 +207,6 @@ input[type="submit"]:hover {
   text-decoration: none;
   color: inherit;
 }
+
 
 

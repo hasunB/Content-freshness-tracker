@@ -84,7 +84,6 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
             <div class="col-9">
                 <div class="d-flex align-items-center navbar-action-gap">
                     <div class="logo" style="border: none;">
-                        <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-main-logo.png'; ?>" alt="">
                     </div>
                     <div class="d-flex justify-content-start align-items-center mt-1">
                         <h3 class="plugin-name italic">Fresh Reminder
@@ -96,9 +95,9 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
             </div>
             <div class="col-3 d-flex justify-content-end navbar-action-gap">
                 <div class="d-flex gap-3">
-                    <button class="theme-action-btn goto-home-page"><i class="fas fa-home"></i></button>
-                    <button class="theme-action-btn goto-check-bucket-page rotate-45"><i class="fas fa-thumbtack"></i></button>
-                    <button class="theme-action-btn goto-help-page"><i class="fas fa-question"></i></button>
+                    <button class="theme-action-btn goto-home-page" title="Home"><i class="fas fa-home"></i></button>
+                    <button class="theme-action-btn goto-check-bucket-page" title="Check Bucket" ><i class="fas fa-bucket"></i></button>
+                    <button class="theme-action-btn goto-help-page" title="Help"><i class="fas fa-question"></i></button>
                 </div>
                 <div class="logo">
                     <?php
@@ -142,7 +141,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="d-flex">
                             <div class="col-8">
-                                <span class="fs-5 fw-semibold">Settings</span>
+                                <span class="fs-5 fw-semibold">General</span>
                             </div>
                             <div class="col-4 d-flex justify-content-end align-items-center">
                                 <span class="settings-msg success">
@@ -194,8 +193,8 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                         foreach ($types as $type) {
                                             if (in_array($type->name, $allowed_types, true)) {
                                                 $checked = in_array($type->name, $settings['post_types']) ? 'checked' : '';
-                                                echo '<label style="display:block">
-                                                        <input type="checkbox" name="post_types[' . esc_attr($type->name) . ']" value="1" ' . $checked . ' />
+                                                echo '<label class="fr-settings-label">
+                                                        <input class="fr-settings-input" type="checkbox" name="post_types[' . esc_attr($type->name) . ']" value="1" ' . $checked . ' />
                                                         ' . esc_html($type->labels->singular_name) . '
                                                     </label>';
                                             }
@@ -253,13 +252,15 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                         $roles = wp_roles()->roles;
                                         foreach ($roles as $role_key => $role) {
                                             $checked = in_array($role_key, $settings['roles']) ? 'checked' : '';
-                                            echo '<label style="display:block"><input type="checkbox" name="roles[' . esc_attr($role_key) . ']" value="1" ' . $checked . ' /> ' . esc_html($role['name']) . '</label>';
+                                            echo '<label class="fr-settings-label"><input class="fr-settings-input" type="checkbox" name="roles[' . esc_attr($role_key) . ']" value="1" ' . $checked . ' /> ' . esc_html($role['name']) . '</label>';
                                         }
                                         ?>
                                     </td>
                                 </tr>
                             </table>
-                            <p class="submit"><input type="submit" name="fr_save" value="<?php esc_attr_e('Save Changes', 'fresh-reminder'); ?>" /></p>
+                            <div class="sttings-btn-box">
+                                <p class="submit"><input class="fr-settings-save-btn" type="submit" name="fr_save" value="<?php esc_attr_e('Save Changes', 'fresh-reminder'); ?>" /></p>
+                            </div>
                         </form>
                     </div>
 
@@ -276,15 +277,15 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                 </tr>
                                 <tr>
                                     <th>Version</th>
-                                    <td>1.1.0</td>
+                                    <td>1.1.1</td>
                                 </tr>
                                 <tr>
-                                    <th>Auther</th>
+                                    <th>Author</th>
                                     <td>Hasun Akash Bandara</td>
                                 </tr>
                                 <tr>
                                     <th>License</th>
-                                    <td>GPLv2 or later</td>
+                                    <td><a href="https://github.com/hasunB/fresh-reminder?tab=GPL-3.0-1-ov-file#readme" target="_blank">GPLv2</a> or later</td>
                                 </tr>
                                 <tr>
                                     <th>GitHub</th>

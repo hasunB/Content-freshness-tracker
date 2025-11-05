@@ -81,10 +81,7 @@ class FR_Cron
     }
 
 
-    public static function check_stale_posts()
-    {
-        error_log("check stale posts method start");
-
+    public static function check_stale_posts() {
         // Load settings or defaults)
         $settings = get_option(FR_OPTION_NAME, self::get_default());
         $stale_value = max(1, intval($settings['stale_after_value']));
@@ -93,7 +90,6 @@ class FR_Cron
 
         // Calculate cutoff date dynamically
         $before = date('Y-m-d H:i:s', strtotime("-{$stale_value} {$stale_unit}"));
-        error_log("cutoff date: {$before}");
 
         $args = array(
             'post_type'      => $post_types,
