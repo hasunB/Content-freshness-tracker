@@ -4,12 +4,6 @@
 <br>
 
 <div align="center">
-    <img alt="fresh-reminder-banner-image" src="https://github.com/wp-graphql/wp-graphql/workflows/WordPress%20Coding%20Standards/badge.svg"/>
-    <img alt="fresh-reminder-banner-image" src="https://github.com/wp-graphql/wp-graphql/workflows/Code%20Quality/badge.svg"/>
-</div>
-<br>
-
-<div align="center">
     <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.0.0">Release</a> |
     <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.0/fresh-reminder-v1.1.0.zip">Download</a> |
     <a href="https://github.com/hasunB/fresh-reminder/discussions">Discussions</a>
