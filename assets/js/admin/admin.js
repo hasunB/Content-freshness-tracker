@@ -448,7 +448,7 @@ jQuery(function ($) {
                 searchResultsBox.css('display', 'none');
             } else {
                 noPostsMessage.hide();
-                searchResultsBox.css('display', 'flex');
+                searchResultsBox.css('display', 'grid');
             }
 
             // Let pagination handle the show/hide
@@ -465,13 +465,11 @@ jQuery(function ($) {
             setupPagination(container);
         }
 
-
-
     });
 
     function animationIn(container) {
         container.addClass('fade-up-hidden');
-        container.css('display', 'flex');
+        container.css('display', 'grid');
 
         setTimeout(function () {
             container.addClass('is-visible');

@@ -6,6 +6,10 @@
   --font-family: "Inter", sans-serif;
 }
 
+#wpwrap {
+  background-color: var(--background-color);
+}
+
 #wpcontent {
   background-color: var(--background-color);
 }
@@ -27,7 +31,6 @@
   width: 100%;
   height: auto;
   margin: 0;
-  padding: 0px 20px 50px 0px;
 }
 
 .navbar-custom {
@@ -38,9 +41,13 @@
   overflow: hidden;
   border: 1px solid var(--primary-color);
   border-radius: 50%;
+  background: url(../images/logo/fr-main-logo.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
-.logo > img {
+.logo img {
   width: 100%;
   height: 100%;
 }
@@ -626,7 +633,7 @@ select.theme-filter-select {
 }
 
 .chart-legend > div {
-  border: 2px solid rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   border-radius: 20px;
 }
 
@@ -679,12 +686,41 @@ select.theme-filter-select {
   margin-bottom: 13px;
 }
 
+.mobile-responsive-filter-box {
+  display: none;
+  width: 100%;
+  height: auto;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+.mobile-responsive-filter-box > div {
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: red;
+  border-radius: 30px;
+  padding: 0px 20px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  background-color: var(--background-color);
+  border: 2px solid var(--secondary-color);
+}
+
 .popover {
   --bs-popover-bg: var(--background-color) !important;
   --bs-popover-border-color: var(--secondary-color) !important;
 }
 
 @media only screen and (max-width: 767px) {
+  .theme-container {
+    padding: 0;
+  }
+
   .navbar-custom {
     display: none;
   }
@@ -703,6 +739,10 @@ select.theme-filter-select {
 }
 
 @media only screen and (min-width: 767px) {
+  .theme-container {
+    padding: 0;
+  }
+
   .navbar-custom {
     display: none;
   }
@@ -721,6 +761,10 @@ select.theme-filter-select {
 }
 
 @media only screen and (min-width: 880px) {
+  .theme-container {
+    padding: 0px 20px 50px 0px;
+  }
+
   .navbar-custom {
     display: block;
   }
@@ -832,8 +876,8 @@ select.theme-filter-select {
   }
 
   .theme-warning-img {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
   }
 
   .filter-skin {
@@ -961,6 +1005,10 @@ select.theme-filter-select {
 }
 
 @media only screen and (min-width: 1024px) {
+  .theme-container {
+    padding: 0px 20px 50px 0px;
+  }
+
   .theme-search-box {
     max-width: 450px;
     height: 45px;
@@ -1060,8 +1108,8 @@ select.theme-filter-select {
   }
 
   .theme-warning-img {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
   }
 
   .filter-skin {
@@ -1112,7 +1160,7 @@ select.theme-filter-select {
 
   .search-item-template {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
   }
 
   .featured-image {
@@ -1189,6 +1237,10 @@ select.theme-filter-select {
 }
 
 @media only screen and (min-width: 1200px) {
+  .theme-container {
+    padding: 0px 20px 50px 0px;
+  }
+
   .theme-search-box {
     max-width: 500px;
     height: 45px;
@@ -1288,8 +1340,8 @@ select.theme-filter-select {
   }
 
   .theme-warning-img {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
   }
 
   .filter-skin {
@@ -1340,7 +1392,7 @@ select.theme-filter-select {
 
   .search-item-template {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
   }
 
   .featured-image {
@@ -1417,6 +1469,10 @@ select.theme-filter-select {
 }
 
 @media only screen and (min-width: 1366px) {
+  .theme-container {
+    padding: 0px 20px 50px 0px;
+  }
+
   .container-fluid {
     max-width: 1366px;
   }
@@ -1520,8 +1576,8 @@ select.theme-filter-select {
   }
 
   .theme-warning-img {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
   }
 
   .stats-card {
@@ -1572,7 +1628,7 @@ select.theme-filter-select {
 
   .search-item-template {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
   }
 
   .featured-image {

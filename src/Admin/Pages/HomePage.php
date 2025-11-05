@@ -84,21 +84,20 @@ foreach ($posts_data as $post) {
             <div class="col-9">
                 <div class="d-flex align-items-center navbar-action-gap">
                     <div class="logo" style="border: none;">
-                        <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-main-logo.png'; ?>" alt="">
                     </div>
                     <div class="theme-search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control" data-target="#searchable-content-box" placeholder="Search your content......">
+                        <input type="text" class="form-control" data-target="#searchable-content-box" placeholder="Search your content...">
                     </div>
                 </div>
             </div>
             <div class="col-3 d-flex justify-content-end navbar-action-gap">
                 <div class="d-flex theme-action-box">
-                    <button class="theme-action-btn rotate-45 goto-check-bucket-page"><i class="fas fa-thumbtack"></i></button>
-                    <button class="theme-action-btn goto-settings-page"><i class="fas fa-cog"></i></button>
-                    <button class="theme-action-btn goto-help-page"><i class="fas fa-question"></i></button>
+                    <button class="theme-action-btn goto-check-bucket-page" title="Check Bucket"><i class="fas fa-bucket"></i></button>
+                    <button class="theme-action-btn goto-settings-page" title="Settings"><i class="fas fa-cog"></i></button>
+                    <button class="theme-action-btn goto-help-page" title="Help"><i class="fas fa-question"></i></button>
                 </div>
-                <div class="logo">
+                <div class="logo" style="background: none;">
                     <?php
                     $curent_user = wp_get_current_user();
                     if ($curent_user) {
@@ -365,7 +364,7 @@ foreach ($posts_data as $post) {
                                                 if ($post->pined) {
                                                 ?>
                                                     <button type="button" class="pin-action-btn rotate-45 btn-pined" data-post-id="<?php echo esc_attr($post->ID); ?>">
-                                                        <i class="fas fa-thumbtack"></i>
+                                                        <i class="fas fa-thumbtack-slash"></i>
                                                     </button>
                                                 <?php
                                                 } else {

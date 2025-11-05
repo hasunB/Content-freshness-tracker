@@ -23,6 +23,8 @@ class FR_admin
     public static function add_admin_menu()
     {
 
+        //base 64 svg icon
+        $icon_base64_icon = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjI4IiBoZWlnaHQ9IjIzMCIgdmlld0JveD0iMCAwIDIyOCAyMzAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xNi45OTM0IDU0Ljg4NDZMMjIuMDMxOCA1MC45MzlDNDYuMTM4OSAzMi4wMzY2IDc4LjU2NjQgMzQuMjM1IDg5LjQ4NzUgNTUuNTE4MkM5NS42MTk4IDY3LjQ3OTggOTMuMTkxOCA3NC4wODQ2IDgyLjY2NDIgNzQuMDg0NkM2MC44Nzk1IDc0LjA4NDYgNDYuMDE0MSAxMDMuNjUzIDUzLjQ1MTYgMTMyLjE4NEM2NC4xNjE2IDE3My4yNTMgMTE5LjMxNCAxOTMuNDg5IDE1My4wOTUgMTY4LjczMUMxNjAuOTY0IDE2Mi45NjEgMTYwLjc5MiAxNjIuMDY5IDE1MS45ODIgMTYyLjkwNEMxMzUuNDI3IDE2NC40NDkgMTIwLjYxOSAxNTQuNDA4IDExNC42NDEgMTM3LjU2OUMxMTAuMTY5IDEyNC45NTUgMTEwLjkxNyAxMTQuNTI5IDExNy41ODcgOTYuNDkxQzEyMy4zMjYgODAuOTY3OCAxMjMuNzk2IDc1Ljk3NTggMTIwLjU3MSA2NC40MTc0QzExNC43ODUgNDMuNjIzOCA5OC4xOTE4IDIyLjI2MzggNzEuNjk1MSA3Ljg0NDY0QzEwNy4xMDcgLTUuNDAzMzYgMTQzLjY2MSAtMS4yNDY1NiAxNzEuODU3IDE1LjYxMUMyMzcuODU0IDU1LjA2NyAyNDcuMTM0IDE0Ny4zMDQgMTkwLjM1IDE5OS4yNzhDMTIwLjI5MyAyNjMuMzk3IDguODE3IDIxOS4xMzEgMC4zNzE4MzMgMTIzLjg1MUMtMS42MDUxIDEwMS41MzEgNC40Njk2NiA3My41NjYyIDE0LjU4NDcgNTguNDg0NkwxNi45OTM0IDU0Ljg4NDZaTTEzMi42ODMgOTcuNTI3OEMxMTQuMzUzIDExNS40NyAxMTguODkyIDE0NC43NDEgMTQxLjA4IDE1MS42OTFDMTQzLjAzNyAxNTIuMzA1IDE0Ni4xOTUgMTUyLjgwNSAxNDguMTE0IDE1Mi44MDVDMTUwLjAzNCAxNTIuODA1IDE1My45NDkgMTUxLjkxMiAxNTYuODE4IDE1MC44MDhDMTcwLjMxMiAxNDUuNjYyIDE3Ni4yMDQgMTMxLjM5NyAxNzMuMDA4IDExMS42NTlDMTY5LjQzOCA4OS43MzI2IDE3MC4yMTYgODUuNDc5OCAxNzguNDY5IDgxLjczNThDMTgyLjUzOCA3OS44ODMgMTgyLjUzOCA3OS44ODMgMTc3LjEzNSA3OS44NjM4QzE2My4xMjQgNzkuODA2MiAxNDIuMzU2IDg4LjA2MjIgMTMyLjY4MyA5Ny41Mjc4WiIgZmlsbD0iIzlDQTJBNyIvPgo8L3N2Zz4K";
         //add admin pages
         add_menu_page(
             __('Home', 'fresh-reminder'),
@@ -30,7 +32,7 @@ class FR_admin
             'manage_options',
             'fr-home',
             array(__CLASS__, 'home_page'),
-            'dashicons-tide',
+            $icon_base64_icon,
             25
         );
 
@@ -72,7 +74,7 @@ class FR_admin
 
     public static function enqueue_assets($hook)
     {
-        if ('index.php' === $hook || 'toplevel_page_fr-home' === $hook || 'fresh-reminder_page_fr-checkbucket' === $hook || 'fresh-reminder_page_fr-settings' === $hook) {
+        if ('toplevel_page_fr-home' === $hook || 'fresh-reminder_page_fr-checkbucket' === $hook || 'fresh-reminder_page_fr-settings' === $hook) {
             wp_enqueue_script('fr-admin-js', FR_PLUGIN_URL . '/assets/js/admin/admin.js', array('jquery'), FR_VERSION, true);
             wp_localize_script('fr-admin-js', 'fr_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
@@ -97,7 +99,7 @@ class FR_admin
             $reviewed_posts_count = 0;
             $unreviewed_posts_count = 0;
 
-            if($total_stale_posts > 0){
+            if ($total_stale_posts > 0) {
                 foreach ($stale_post_ids as $post_id) {
                     if (get_post_meta($post_id, '_fr_reviewed', true)) {
                         $reviewed_posts_count++;
@@ -106,13 +108,13 @@ class FR_admin
                     }
                 }
             }
-            
+
             $chartjs_data = array(
 
                 'reviewed' => $reviewed_posts_count,
                 'unreviewed' => $unreviewed_posts_count,
             );
-            
+
             wp_localize_script('fr-charts-js', 'fr_chart_data', $chartjs_data);
 
             // Enqueue CSS/JS
@@ -168,38 +170,46 @@ class FR_admin
 ?>
         <div class="fr-dashboard-widget-content">
             <div class="w-100 h-100 p-3">
-                <div class="pie-chart">
-                    <canvas id="fr_piechart_canvas"></canvas>
+                <!-- content-box -->
+                <div class="w-100 h-100 chart-content-box" style="display: none;">
+                    <div class="pie-chart">
+                        <canvas id="fr_piechart_canvas"></canvas>
+                    </div>
+                    <div class="w-100 chart-legend">
+                        <div class="w-50 h-100">
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                <span class="legend-percentage"><?php echo esc_html($reviewed_posts_count); ?></span>
+                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                    <div class="legend-indicator indicator-reviewed"></div>
+                                    <span class="legend-label">Reviewed</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-50 h-100">
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                <span class="legend-percentage"><?php echo esc_html($unreviewed_posts_count); ?></span>
+                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                    <div class="legend-indicator indicator-unreviewed"></div>
+                                    <span class="legend-label">Unreviewed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100 chart-legend">
+                        <div class="w-100 h-100">
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                <span class="legend-percentage"><?php echo esc_html($total_stale_posts); ?></span>
+                                <div class="d-flex flex-row align-items-center justify-content-center gap-2">
+                                    <span class="legend-label">Total Stale Posts</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="w-100 chart-legend">
-                    <div class="w-50 h-100">
-                        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                            <span class="legend-percentage"><?php echo esc_html($reviewed_posts_count); ?></span>
-                            <div class="d-flex flex-row align-items-center justify-content-center gap-2">
-                                <div class="legend-indicator indicator-reviewed"></div>
-                                <span class="legend-label">Reviewed</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-50 h-100">
-                        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                            <span class="legend-percentage"><?php echo esc_html($unreviewed_posts_count); ?></span>
-                            <div class="d-flex flex-row align-items-center justify-content-center gap-2">
-                                <div class="legend-indicator indicator-unreviewed"></div>
-                                <span class="legend-label">Unreviewed</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="w-100 chart-legend">
-                    <div class="w-100 h-100">
-                        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                            <span class="legend-percentage"><?php echo esc_html($total_stale_posts); ?></span>
-                            <div class="d-flex flex-row align-items-center justify-content-center gap-2">
-                                <span class="legend-label">Total Stale Posts</span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- no-content-box -->
+                <div class="w-100 no-chart-content-box" style="display: none;">
+                    <div></div>
+                    <h5>No Data Found</h5>
                 </div>
             </div>
 
