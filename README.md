@@ -2,15 +2,14 @@
     <img alt="fresh-reminder-banner-image" src="docs/images/fr-banner.png"/>
 </div>
 <br>
-
 <div align="center">
     <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.0.0">Release</a> |
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.0/fresh-reminder-v1.1.0.zip">Download</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip">Download</a> |
     <a href="https://github.com/hasunB/fresh-reminder/discussions">Discussions</a>
 </div>
 <br>
 <div align="center">
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.0/fresh-reminder-v1.1.0.zip" target="_blank">
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip" target="_blank">
       <img alt="fresh-reminder-download-image" src="docs/images/fr-download.png" height="50px"/>
     </a>
 </div>
