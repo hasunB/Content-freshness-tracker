@@ -2,21 +2,22 @@
     <img alt="fresh-reminder-banner-image" src="docs/images/fr-banner.png"/>
 </div>
 <br>
-
-<div align="center">
-    <img alt="fresh-reminder-banner-image" src="https://github.com/wp-graphql/wp-graphql/workflows/WordPress%20Coding%20Standards/badge.svg"/>
-    <img alt="fresh-reminder-banner-image" src="https://github.com/wp-graphql/wp-graphql/workflows/Code%20Quality/badge.svg"/>
-</div>
-<br>
-
 <div align="center">
     <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.0.0">Release</a> |
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.0.0/fresh-reminder.zip">Download</a> |
-    <a href="">Discussions</a>
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip">Download</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/discussions">Discussions</a>
 </div>
 <br>
 <div align="center">
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.0.0/fresh-reminder.zip" target="_blank">
+    <img alt="Static Badge" src="https://img.shields.io/badge/version-v1.1.1-blue">
+    <img alt="Static Badge" src="https://img.shields.io/badge/dependencies-up_to_date-brightgreen">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Official_Repository-8A2BE2">
+    <img alt="Static Badge" src="https://img.shields.io/badge/downloads-10+-brightgreen">
+    <img alt="Static Badge" src="https://img.shields.io/badge/ratings-4.9-yellow">
+</div>
+<br>
+<div align="center">
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip" target="_blank">
       <img alt="fresh-reminder-download-image" src="docs/images/fr-download.png" height="50px"/>
     </a>
 </div>
@@ -33,7 +34,7 @@ Stay on top of your content updates and keep your site relevant for readers and 
 
 - **Status Indicators**: It assigns a status to each post, which is visible in the admin dashboard and on the post itself (as a widget). The primary statuses are: 
   - 🟢 **Reviewd** (Already Reviewed)    
-  - 🔴 **Unreviewd** (not updated for given months)  
+  - 🔴 **Unreviewed** (not updated for given months)  
 - Click-to-edit links directly from the dashboard.
 
 - **Dashboard Overview**

@@ -10,7 +10,7 @@
  * Domain Path: /languages
  * Author URI: https://github.com/hasunB
  * Plugin URI: https://github.com/hasunB/fresh-reminder
- * Requires at least: 5.0
+ * Requires at least: 5.5
  * Requires PHP: 7.4
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Copyright: 2025 Hasun Akash Bandara
@@ -30,6 +30,7 @@ define('FR_CACHE_OPTION', 'fr_stale_posts_cache');
 /* Includes */
 require_once FR_PLUGIN_DIR . 'includes/class-fr-cron.php';
 require_once FR_PLUGIN_DIR . 'src/Admin/class-fr-admin.php';
+require_once FR_PLUGIN_DIR . 'src/Utils/class-fr-logger.php';
 
 // Register custom cron schedules early
 add_filter('cron_schedules', array('FR_Cron', 'register_custom_schedules'));

@@ -10,7 +10,12 @@ if (! current_user_can('edit_posts')) {
 $defaults = FR_Cron::get_default();
 $settings = get_option(FR_OPTION_NAME, $defaults);
 
-$post_types = isset($_POST['post_types']) ? array_map('sanitize_text_field', array_keys($_POST['post_types'])) : array('post');
+if ( isset( $_POST['post_types'] ) && check_admin_referer( 'fresh_reminder_action', 'fresh_reminder_nonce' ) ) {
+    $raw_post_types = wp_unslash( $_POST['post_types'] ); // Unslash before sanitizing
+    $post_types = array_map( 'sanitize_text_field', array_keys( $raw_post_types ) );
+} else {
+    $post_types = array( 'post' );
+}
 
 $args = array(
     'post_type'      => $post_types,
@@ -104,12 +109,12 @@ foreach ($posts_data as $post) {
                         //profile image
                         $profile_image = get_avatar_url($curent_user->ID, array('size' => 32));
                         if ($profile_image) {
-                            echo '<img src="' . esc_url($profile_image) . '" alt="User Avatar" class="user-avatar">';
+                            echo '<img src="' . esc_url($profile_image) . '" alt="' . esc_attr__('Default User Avatar', 'fresh-reminder') . '" class="user-avatar">';
                         } else {
-                            echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                            echo '<img src="' . esc_url(FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp') . '" alt="' . esc_attr__('Default User Avatar', 'fresh-reminder') . '" class="user-avatar">';
                         }
                     } else {
-                        echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                        echo '<img src="' . esc_url(FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp') . '" alt="' . esc_attr__('Default User Avatar', 'fresh-reminder') . '" class="user-avatar">';
                     }
                     ?>
                 </div>
@@ -141,11 +146,17 @@ foreach ($posts_data as $post) {
                             <h5>Hello
                                 <?php
                                 $curent_user = wp_get_current_user();
-                                if ($curent_user) {
-                                    if ($curent_user->first_name && $curent_user->last_name) {
-                                        echo $curent_user->first_name . ' ' . $curent_user->last_name;
+
+                                if ($curent_user instanceof WP_User) {
+
+                                    $first_name = $curent_user->first_name;
+                                    $last_name  = $curent_user->last_name;
+                                    $display_name = $curent_user->display_name;
+
+                                    if (! empty($first_name) && ! empty($last_name)) {
+                                        echo esc_html($first_name . ' ' . $last_name);
                                     } else {
-                                        echo $curent_user->display_name;
+                                        echo esc_html($display_name);
                                     }
                                 }
                                 ?>
@@ -171,7 +182,7 @@ foreach ($posts_data as $post) {
                         <div class="col-md-4">
                             <div class="stats-card widget-skin">
                                 <div class="stats-icon-box stats-<?php echo esc_attr($post_type); ?>">
-                                    <img src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-' . esc_attr($post_type) . '-logo.webp'; ?>" alt="fresh reminder <?php echo esc_attr($post_type); ?> icon">
+                                    <img src="<?php echo esc_url( FR_PLUGIN_URL . '/assets/images/logo/fr-' . esc_attr($post_type) . '-logo.webp'); ?>" alt="fresh reminder <?php echo esc_attr($post_type); ?> icon">
                                 </div>
                                 <div class="stats-info-box">
                                     <span class="stats-number"><?php echo esc_html($counts['reviewed']); ?>/<?php echo esc_html($counts['total']); ?> reviewed</span>
@@ -211,7 +222,7 @@ foreach ($posts_data as $post) {
                                         }
                                     }
                                 }
-                
+
                                 if (! empty($taxonomy_name)) {
                                     $taxonomy_obj = get_taxonomy($taxonomy_name);
                                     $categories = get_terms(array(
@@ -237,7 +248,7 @@ foreach ($posts_data as $post) {
                                 <?php
                                     }
                                 }
-                
+
                                 ?>
                                 <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
                                 <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
@@ -246,7 +257,7 @@ foreach ($posts_data as $post) {
                                 </button>
                             </div>
                         </div>
-                
+
                         <!-- content -->
                         <div class="theme-content-box">
                             <div class="post-item-box post-item-template" id="post-item-box-<?php echo esc_attr($post_type); ?>">
@@ -290,7 +301,7 @@ foreach ($posts_data as $post) {
                                                             </button>
                                                         <?php
                                                         }
-                
+
                                                         if ($post->reviewed) {
                                                         ?>
                                                             <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr($post->ID); ?>" data-post-type="<?php echo esc_attr($post_type); ?>">
@@ -318,7 +329,7 @@ foreach ($posts_data as $post) {
                                 <p class="fw-semibold fs-6"><?php esc_html_e('No posts found for this filter.', 'fresh-reminder'); ?></p>
                             </div>
                         </div>
-                
+
                         <!-- pagination -->
                         <div class="theme-pagination-box">
                             <div class="demo-section">
@@ -374,7 +385,7 @@ foreach ($posts_data as $post) {
                                                     </button>
                                                 <?php
                                                 }
-                
+
                                                 if ($post->reviewed) {
                                                 ?>
                                                     <button type="button" class="review-action-btn btn-reviewed" data-post-id="<?php echo esc_attr($post->ID); ?>">
