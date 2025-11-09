@@ -27,6 +27,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.1.1] - 2025-11-09
+### ✨ Wordpress Standard Code update
+- Added the manual libraries for worspress plugin standards.
+- Created a new logging utility class FR_Logger to handle logging messages to a specified log file when WP_DEBUG is enabled.
+- Add Font Awesome v4 compatibility WOFF2 font file.
+
+---
+
 ## [1.2.0] - _Upcoming_
 ### ✨ Planned Enhancements 
 - Add daily cron job to email admin about stale posts.  
