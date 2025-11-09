@@ -125,7 +125,7 @@ class FR_admin
             // Enqueue Bootstrap CSS/JS
             wp_enqueue_style('bootstrap-css', FR_PLUGIN_URL . '/assets/css/cdn/bootstrap/bootstrap.min.css', array(), '5.3.0');
             //add font-awesome css
-            wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css', array(), '7.0.1');
+            wp_enqueue_style('font-awesome-css', FR_PLUGIN_URL . '/assets/css/cdn/font-awesome/fontawesome.min.css', array(), '7.0.1');
             wp_enqueue_script('popper-js', FR_PLUGIN_URL . '/assets/js/cdn/popper/popper.min.js', array(), '2.11.8', true);
             wp_enqueue_script('bootstrap-js', FR_PLUGIN_URL . '/assets/js/cdn/bootstrap/bootstrap.min.js', array('popper-js'), '5.3.0', true);
         }

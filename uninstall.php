@@ -7,6 +7,7 @@ delete_option( 'fr_settings' );
 delete_option( 'fr_stale_posts_cache' );
 
 // Remove review meta
+// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Necessary for Fresh Reminder freshness tracking
 $posts = get_posts( array(
     'post_type'   => 'any',
     'meta_key'    => '_fr_reviewed',

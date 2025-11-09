@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Fresh Reminder
  * Description: Flags posts older than a configurable threshold and reminds editors to update them.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: Hasun Akash Bandara
  * License: GPL-2.0-or-later
  * Text Domain: fresh-reminder
@@ -20,7 +20,7 @@
 defined('ABSPATH') || exit;
 
 /* Constants */
-define('FR_VERSION', '1.1.1');  // Hold the version of the plugin
+define('FR_VERSION', '1.1.2');  // Hold the version of the plugin
 define('FR_PLUGIN_FILE', __FILE__); // Hold the path of the plugin file "fresh-reminder.php"
 define('FR_PLUGIN_DIR', plugin_dir_path(__FILE__)); // Hold the absolute path of the plugin directory 
 define('FR_PLUGIN_URL', plugin_dir_url(__FILE__)); // Hold the web address (URL) of the plugin's directory. This is used to link to assets like CSS, JavaScript, or images.
