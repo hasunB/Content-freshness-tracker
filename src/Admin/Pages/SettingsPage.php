@@ -6,35 +6,39 @@ $settings = get_option(FR_OPTION_NAME, $defaults);
 
 if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) {
      
-    error_log("save settings triggerd");
+    FR_Logger::log('save settings triggerd', 'info');
     // Stale duration fields
     $stale_after_value = isset($_POST['stale_after_value']) ? absint($_POST['stale_after_value']) : $defaults['stale_after_value'];
-    $stale_after_unit  = isset($_POST['stale_after_unit']) ? sanitize_text_field($_POST['stale_after_unit']) : $defaults['stale_after_unit'];
+    $stale_after_unit  = isset($_POST['stale_after_unit']) ? sanitize_text_field(wp_unslash($_POST['stale_after_unit'])) : $defaults['stale_after_unit'];
 
     // Post types
     $post_types = isset($_POST['post_types'])
-        ? array_map('sanitize_text_field', array_keys($_POST['post_types']))
+        ? array_map('sanitize_text_field', array_keys(wp_unslash($_POST['post_types'])))
         : array('post');
 
     // Schedule (validate against allowed list)
     $allowed_schedules = array('every_five_minutes', 'every_fifteen_minutes', 'hourly', 'daily');
-    $schedule = isset($_POST['schedule']) && in_array($_POST['schedule'], $allowed_schedules, true)
-        ? $_POST['schedule']
-        : 'every_five_minutes';
 
-    error_log("schedule: {$schedule}");
+    $schedule = isset( $_POST['schedule'] )
+    ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) )
+    : '';
+
+    if ( ! in_array( $schedule, $allowed_schedules, true ) ) {
+        $schedule = 'every_five_minutes';
+    }
+
 
     // Email notify checkbox
     $email_notify = isset($_POST['email_notify']) ? 1 : 0;
 
     // Roles
     $roles = isset($_POST['roles'])
-        ? array_map('sanitize_text_field', array_keys($_POST['roles']))
+        ? array_map('sanitize_text_field', array_keys( wp_unslash($_POST['roles'])))
         : $defaults['roles'];
 
     // clear reviewed (never, daily, weekly, monthly)
     $clear_reviewed = isset($_POST['clear_reviewed'])
-        ? sanitize_text_field($_POST['clear_reviewed'])
+        ? sanitize_text_field( wp_unslash($_POST['clear_reviewed']))
         : 'never';
 
     // Build settings array
@@ -71,8 +75,6 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
 <?php
 
     $settings = $new;
-} else {
-    error_log("else save settings not trigered");
 }
 
 ?>
@@ -99,19 +101,19 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                     <button class="theme-action-btn goto-check-bucket-page" title="Check Bucket" ><i class="fas fa-bucket"></i></button>
                     <button class="theme-action-btn goto-help-page" title="Help"><i class="fas fa-question"></i></button>
                 </div>
-                <div class="logo">
+                <div class="logo" style="background: none;">
                     <?php
                     $curent_user = wp_get_current_user();
                     if ($curent_user) {
                         //profile image
                         $profile_image = get_avatar_url($curent_user->ID, array('size' => 32));
                         if ($profile_image) {
-                            echo '<img src="' . esc_url($profile_image) . '" alt="User Avatar" class="user-avatar">';
+                            echo '<img src="' . esc_url($profile_image) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
                         } else {
-                            echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                            echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
                         }
                     } else {
-                        echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                        echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
                     }
                     ?>
                 </div>
@@ -172,7 +174,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                         }
 
                                         ?>
-                                        <input class="settings-input filter-skin" type="number" name="stale_after_value" id="stale_after_value" value="<?php echo esc_attr($stale_value); ?>" <?php echo $min_attr; ?> <?php echo $max_attr; ?> min="1" />
+                                        <input class="settings-input filter-skin" type="number" name="stale_after_value" id="stale_after_value" value="<?php echo esc_attr($stale_value); ?>" <?php echo esc_attr($min_attr); ?> <?php echo esc_attr($max_attr); ?> min="1" />
                                         <select class="theme-settings-filter-select filter-skin" name="stale_after_unit" id="stale_after_unit">
                                             <option value="minutes" <?php selected($stale_unit, 'minutes'); ?>>Minutes</option>
                                             <option value="hours" <?php selected($stale_unit, 'hours'); ?>>Hours</option>
@@ -194,7 +196,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                             if (in_array($type->name, $allowed_types, true)) {
                                                 $checked = in_array($type->name, $settings['post_types']) ? 'checked' : '';
                                                 echo '<label class="fr-settings-label">
-                                                        <input class="fr-settings-input" type="checkbox" name="post_types[' . esc_attr($type->name) . ']" value="1" ' . $checked . ' />
+                                                        <input class="fr-settings-input" type="checkbox" name="post_types[' . esc_attr($type->name) . ']" value="1" ' . esc_attr($checked) . ' />
                                                         ' . esc_html($type->labels->singular_name) . '
                                                     </label>';
                                             }
@@ -252,7 +254,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                         $roles = wp_roles()->roles;
                                         foreach ($roles as $role_key => $role) {
                                             $checked = in_array($role_key, $settings['roles']) ? 'checked' : '';
-                                            echo '<label class="fr-settings-label"><input class="fr-settings-input" type="checkbox" name="roles[' . esc_attr($role_key) . ']" value="1" ' . $checked . ' /> ' . esc_html($role['name']) . '</label>';
+                                            echo '<label class="fr-settings-label"><input class="fr-settings-input" type="checkbox" name="roles[' . esc_attr($role_key) . ']" value="1" ' . esc_attr($checked) . ' /> ' . esc_html($role['name']) . '</label>';
                                         }
                                         ?>
                                     </td>

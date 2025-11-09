@@ -10,7 +10,12 @@ if (! current_user_can('edit_posts')) {
 $defaults = FR_Cron::get_default();
 $settings = get_option(FR_OPTION_NAME, $defaults);
 
-$post_types = isset($_POST['post_types']) ? array_map('sanitize_text_field', array_keys($_POST['post_types'])) : array('post');
+if ( isset( $_POST['post_types'] ) && check_admin_referer( 'fresh_reminder_action', 'fresh_reminder_nonce' ) ) {
+    $raw_post_types = wp_unslash( $_POST['post_types'] ); // Unslash before sanitizing
+    $post_types = array_map( 'sanitize_text_field', array_keys( $raw_post_types ) );
+} else {
+    $post_types = array( 'post' );
+}
 
 $args = array(
     'post_type'      => $post_types,
@@ -72,12 +77,12 @@ foreach ($post_ids as $post_id) {
                         //profile image
                         $profile_image = get_avatar_url($curent_user->ID, array('size' => 32));
                         if ($profile_image) {
-                            echo '<img src="' . esc_url($profile_image) . '" alt="User Avatar" class="user-avatar">';
+                            echo '<img src="' . esc_url($profile_image) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
                         } else {
-                            echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                            echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
                         }
                     } else {
-                        echo '<img src="' . FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp" alt="Default User Avatar" class="user-avatar">';
+                        echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
                     }
                     ?>
                 </div>
@@ -96,8 +101,8 @@ foreach ($post_ids as $post_id) {
                     <div class="col-4 d-flex align-items-center gap-2">
                         <span class="content-title">Check Bucket</span>
                         <img class="theme-warning-img" 
-                        src="<?php echo FR_PLUGIN_URL . '/assets/images/logo/fr-exclamation.png'; ?>" 
-                        alt="fr-waring-icon" role="button" 
+                        src="<?php echo esc_url(FR_PLUGIN_URL . '/assets/images/logo/fr-exclamation.png'); ?>" 
+                        alt="fr-warning-icon" role="button" 
                         data-bs-toggle="popover" 
                         data-bs-trigger="hover" 
                         data-bs-placement="right" 

@@ -2,6 +2,8 @@
 
 if (!defined('ABSPATH')) exit;
 
+use Fresh\Reminder\Utils\Logger;
+
 class FR_admin
 {
     public static function init()
@@ -88,7 +90,7 @@ class FR_admin
             ));
 
             // Enqueue Chart.js library
-            wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', array(), null, true);
+            wp_enqueue_script('chartjs', FR_PLUGIN_URL . 'assets/js/cdn/chart-js/chart.min.js', array(),'4.5.1', true);
             wp_enqueue_script('fr-charts-js', FR_PLUGIN_URL . '/assets/js/admin/charts.js', array('jquery'), FR_VERSION, true);
             wp_enqueue_script('fr-settings-js', FR_PLUGIN_URL . '/assets/js/admin/settings.js', array('jquery'), FR_VERSION, true);
 
@@ -121,11 +123,11 @@ class FR_admin
             wp_enqueue_style('fr-admin-css', FR_PLUGIN_URL . '/assets/css/admin.css', array(), FR_VERSION);
             wp_enqueue_style('fr-settings-css', FR_PLUGIN_URL . '/assets/css/settings.css', array(), FR_VERSION);
             // Enqueue Bootstrap CSS/JS
-            wp_enqueue_style('bootstrap-css', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css', array(), '5.3.0');
+            wp_enqueue_style('bootstrap-css', FR_PLUGIN_URL . '/assets/css/cdn/bootstrap/bootstrap.min.css', array(), '5.3.0');
             //add font-awesome css
-            wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css', array(), '7.0.1');
-            wp_enqueue_script('popper-js', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js', array(), '2.11.8', true);
-            wp_enqueue_script('bootstrap-js', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js', array('popper-js'), '5.3.0', true);
+            wp_enqueue_style('font-awesome-css', FR_PLUGIN_URL . '/assets/css/cdn/font-awesome/fontawesome.min.css', array(), '7.0.1');
+            wp_enqueue_script('popper-js', FR_PLUGIN_URL . '/assets/js/cdn/popper/popper.min.js', array(), '2.11.8', true);
+            wp_enqueue_script('bootstrap-js', FR_PLUGIN_URL . '/assets/js/cdn/bootstrap/bootstrap.min.js', array('popper-js'), '5.3.0', true);
         }
     }
 
@@ -238,7 +240,6 @@ class FR_admin
         update_post_meta($post_id, '_fr_reviewed', time());
 
         wp_send_json_success(array('post_id' => $post_id));
-        error_log('ajax_mark_reviewed' . $post_id);
     }
 
     // Unmark post as reviewed
@@ -252,7 +253,6 @@ class FR_admin
 
         delete_post_meta($post_id, '_fr_reviewed');
         wp_send_json_success(array('post_id' => $post_id));
-        error_log('ajax_unmark_reviewed');
     }
 
     // Mark post as pined
@@ -267,7 +267,6 @@ class FR_admin
         update_post_meta($post_id, '_fr_pined', true);
 
         wp_send_json_success(array('post_id' => $post_id));
-        error_log('ajax_mark_pined' . $post_id);
     }
 
     // Unmark post as pined
@@ -281,7 +280,6 @@ class FR_admin
 
         delete_post_meta($post_id, '_fr_pined');
         wp_send_json_success(array('post_id' => $post_id));
-        error_log('ajax_unmark_pined');
     }
 }
 
