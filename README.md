@@ -3,13 +3,13 @@
 </div>
 <br>
 <div align="center">
-    <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.0.0">Release</a> |
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip">Download</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.1.2">Release</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.2/fresh-reminder.1.1.2.zip">Download</a> |
     <a href="https://github.com/hasunB/fresh-reminder/discussions">Discussions</a>
 </div>
 <br>
 <div align="center">
-    <img alt="Static Badge" src="https://img.shields.io/badge/version-v1.1.1-blue">
+    <img alt="Static Badge" src="https://img.shields.io/badge/version-v1.1.2-blue">
     <img alt="Static Badge" src="https://img.shields.io/badge/dependencies-up_to_date-brightgreen">
     <img alt="Static Badge" src="https://img.shields.io/badge/Official_Repository-8A2BE2">
     <img alt="Static Badge" src="https://img.shields.io/badge/downloads-10+-brightgreen">
@@ -17,7 +17,7 @@
 </div>
 <br>
 <div align="center">
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip" target="_blank">
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.2/fresh-reminder.1.1.2.zip" target="_blank">
       <img alt="fresh-reminder-download-image" src="docs/images/fr-download.png" height="50px"/>
     </a>
 </div>
@@ -49,7 +49,7 @@ Stay on top of your content updates and keep your site relevant for readers and 
 - **Category & Status Filtering**
   - Admins can filter posts by:
   - Post category (e.g., News, Guides, Tutorials).
-  - Freshness status (Stale, Reviewed, Unreviwed).
+  - Freshness status (Stale, Reviewed, Unreviewed).
   - Helps quickly isolate content needing updates in specific topics.
 
 - **Search Function**
