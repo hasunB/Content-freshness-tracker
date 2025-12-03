@@ -3,7 +3,7 @@ jQuery(function ($) {
     $(document).ready(function () {
         $('.search-result-content').hide();
 
-        if (getCookie("fr_banner_closed") === "false" || getCookie("fr_banner_closed") === null) {
+        if (getCookie("fresre_banner_closed") === "false" || getCookie("fresre_banner_closed") === null) {
             $('.theme-banner').css('display', 'flex');
             $('.spliter.banner').css('display', 'block');
         } else {
@@ -18,7 +18,7 @@ jQuery(function ($) {
             const btn = $('.theme-minimize-btn[data-post-type="' + postType + '"]');
             if (box.length) {
                 box.addClass('minimized').css({ height: 75, overflow: 'hidden' });
-                btn.html('<i class="fas fa-plus"></i>');
+                btn.html('<i class="fas fa-caret-down"></i>');
                 filterBoxEnabled(box, false);
             }
         });
@@ -31,7 +31,7 @@ jQuery(function ($) {
     var itemsPerPage;
 
     function showPage(container, page) {
-        var posts = container.find('.post-item.fr-visible');
+        var posts = container.find('.post-item.fresre-visible');
         var startIndex = (page - 1) * itemsPerPage;
         var endIndex = startIndex + itemsPerPage;
 
@@ -45,7 +45,7 @@ jQuery(function ($) {
     }
 
     function setupPagination(container) {
-        var posts = container.find('.post-item.fr-visible');
+        var posts = container.find('.post-item.fresre-visible');
         var totalPosts = posts.length;
         var totalPages = Math.ceil(totalPosts / itemsPerPage);
         var paginationBox = container.find('.theme-pagination-box');
@@ -119,9 +119,9 @@ jQuery(function ($) {
             return;
         }
 
-        $.post(fr_ajax.ajax_url, {
-            action: 'fr_mark_reviewed',
-            nonce: fr_ajax.nonce,
+        $.post(fresre_ajax.ajax_url, {
+            action: 'fresre_mark_reviewed',
+            nonce: fresre_ajax.nonce,
             post_id: id
         }, function (resp) {
             if (resp && resp.success) {
@@ -129,7 +129,7 @@ jQuery(function ($) {
                     '<i class="fa-solid fa-check-double"></i>&nbsp;&nbsp;Reviewed' +
                     '</button>');
                 var postItem = btn.closest('.post-item');
-                postItem.removeClass('fr-unreviewed').addClass('fr-reviewed');
+                postItem.removeClass('fresre-unreviewed').addClass('fresre-reviewed');
                 btn.replaceWith(newBtn);
                 setupPagination(postItem.closest('.theme-stale-content'));
                 refreshStatsCard(postType, true);
@@ -153,9 +153,9 @@ jQuery(function ($) {
             return;
         }
 
-        $.post(fr_ajax.ajax_url, {
-            action: 'fr_unmark_reviewed',
-            nonce: fr_ajax.nonce,
+        $.post(fresre_ajax.ajax_url, {
+            action: 'fresre_unmark_reviewed',
+            nonce: fresre_ajax.nonce,
             post_id: id
         }, function (resp) {
             if (resp && resp.success) {
@@ -163,7 +163,7 @@ jQuery(function ($) {
                     '<i class="fa-solid fa-check"></i>&nbsp;&nbsp;Review' +
                     '</button>');
                 var postItem = btn.closest('.post-item');
-                postItem.removeClass('fr-reviewed').addClass('fr-unreviewed');
+                postItem.removeClass('fresre-reviewed').addClass('fresre-unreviewed');
                 btn.replaceWith(newBtn);
                 setupPagination(postItem.closest('.theme-stale-content'));
                 refreshStatsCard(postType, false);
@@ -188,9 +188,9 @@ jQuery(function ($) {
             return;
         }
 
-        $.post(fr_ajax.ajax_url, {
-            action: 'fr_mark_pined',
-            nonce: fr_ajax.nonce,
+        $.post(fresre_ajax.ajax_url, {
+            action: 'fresre_mark_pined',
+            nonce: fresre_ajax.nonce,
             post_id: id
         }, function (resp) {
             if (resp && resp.success) {
@@ -198,7 +198,7 @@ jQuery(function ($) {
                     '<i class="fas fa-thumbtack-slash"></i>' +
                     '</button>');
                 var postItem = btn.closest('.post-item');
-                postItem.addClass('fr-pined');
+                postItem.addClass('fresre-pined');
                 btn.replaceWith(newBtn);
             } else {
                 btn.prop('disabled', false);
@@ -220,9 +220,9 @@ jQuery(function ($) {
             return;
         }
 
-        $.post(fr_ajax.ajax_url, {
-            action: 'fr_unmark_pined',
-            nonce: fr_ajax.nonce,
+        $.post(fresre_ajax.ajax_url, {
+            action: 'fresre_unmark_pined',
+            nonce: fresre_ajax.nonce,
             post_id: id
         }, function (resp) {
             if (resp && resp.success) {
@@ -230,7 +230,7 @@ jQuery(function ($) {
                     '<i class="fas fa-thumbtack"></i>' +
                     '</button>');
                 var postItem = btn.closest('.post-item');
-                postItem.removeClass('fr-pined');
+                postItem.removeClass('fresre-pined');
                 if (postType === 'pined-post') {
                     postItem.remove(); //remove from the list if we are unpinning from pinned posts list
                 }
@@ -263,11 +263,11 @@ jQuery(function ($) {
         $(this).addClass('active');
 
         // Add/remove a class to mark which posts should be visible
-        posts.removeClass('fr-visible');
+        posts.removeClass('fresre-visible');
         if (filter === 'all') {
-            posts.addClass('fr-visible');
+            posts.addClass('fresre-visible');
         } else {
-            contentBox.find('.fr-' + filter).addClass('fr-visible');
+            contentBox.find('.fresre-' + filter).addClass('fresre-visible');
         }
 
         // Let pagination handle the show/hide
@@ -287,11 +287,11 @@ jQuery(function ($) {
         container.find('.theme-filter-btn[data-filter="all"]').addClass('active');
 
         // Add/remove a class to mark which posts should be visible
-        posts.removeClass('fr-visible');
+        posts.removeClass('fresre-visible');
         if (catId === '0') {
-            posts.addClass('fr-visible');
+            posts.addClass('fresre-visible');
         } else {
-            contentBox.find('.category-' + catId).addClass('fr-visible');
+            contentBox.find('.category-' + catId).addClass('fresre-visible');
         }
 
         // Let pagination handle the show/hide
@@ -301,19 +301,19 @@ jQuery(function ($) {
 
     //page navigation buttons
     $(document).on('click', '.goto-home-page', function () {
-        window.location.href = fr_admin_urls.home_page;
+        window.location.href = fresre_admin_urls.home_page;
     });
 
     $(document).on('click', '.goto-check-bucket-page', function () {
-        window.location.href = fr_admin_urls.check_bucket_page;
+        window.location.href = fresre_admin_urls.check_bucket_page;
     });
 
     $(document).on('click', '.goto-settings-page', function () {
-        window.location.href = fr_admin_urls.settings_page;
+        window.location.href = fresre_admin_urls.settings_page;
     });
 
     $(document).on('click', '.goto-help-page', function () {
-        window.open(fr_admin_urls.help_page, '_blank');
+        window.open(fresre_admin_urls.help_page, '_blank');
     });
 
     // Initial setup
@@ -327,15 +327,15 @@ jQuery(function ($) {
             itemsPerPage = 6;
         }
 
-        container.find('.post-item').addClass('fr-visible'); // Initially mark all posts as visible
+        container.find('.post-item').addClass('fresre-visible'); // Initially mark all posts as visible
         setupPagination(container);
     });
 
     //live dashboard updates
     function refreshStatsCard(postType, reviewed) {
         //update pie chart
-        if (typeof fr_PieChart !== 'undefined' && fr_PieChart) {
-            const chartDataSet = fr_PieChart.data.datasets[0];
+        if (typeof fresre_PieChart !== 'undefined' && fresre_PieChart) {
+            const chartDataSet = fresre_PieChart.data.datasets[0];
 
             let currentReviewed = chartDataSet.data[0];
             let currentUnreviewed = chartDataSet.data[1];
@@ -353,7 +353,7 @@ jQuery(function ($) {
             chartDataSet.data[1] = currentUnreviewed;
 
             // Redraw the chart with updated data
-            fr_PieChart.update();
+            fresre_PieChart.update();
 
             const total = currentReviewed + currentUnreviewed;
             const reviewedPct = Math.round((currentReviewed / total) * 100);
@@ -436,13 +436,13 @@ jQuery(function ($) {
                 var postItem = $(this);
                 var title = postItem.find('.post-title').text().toLowerCase();
                 if (title.includes(query)) {
-                    postItem.addClass('fr-visible');
+                    postItem.addClass('fresre-visible');
                 } else {
-                    postItem.removeClass('fr-visible');
+                    postItem.removeClass('fresre-visible');
                 }
             });
 
-            var visiblePosts = posts.filter('.fr-visible');
+            var visiblePosts = posts.filter('.fresre-visible');
             if (visiblePosts.length === 0) {
                 noPostsMessage.css('display', 'flex');
                 searchResultsBox.css('display', 'none');
@@ -461,7 +461,7 @@ jQuery(function ($) {
             spliterBox.show();
 
             // Reset search - show all posts
-            posts.addClass('fr-visible');
+            posts.addClass('fresre-visible');
             setupPagination(container);
         }
 
@@ -494,7 +494,7 @@ jQuery(function ($) {
         var expires = "expires=" + d.toUTCString();
 
         //Set cookie for this page path (or you can use path=/ to make it global)
-        document.cookie = "fr_banner_closed=true;" + expires + ";path=/";
+        document.cookie = "fresre_banner_closed=true;" + expires + ";path=/";
     });
 
     //content minize/maximize
@@ -514,7 +514,7 @@ jQuery(function ($) {
                     // after animation, reset to auto for flexibility
                     contentBox.css('height', 'auto');
                 });
-            btn.html('<i class="fas fa-minus"></i>');
+            btn.html('<i class="fas fa-caret-up"></i>');
             filterBoxEnabled(contentBox, true);
 
             // Remove from cookie list
@@ -528,7 +528,7 @@ jQuery(function ($) {
                 .animate({ height: 75 }, 300, function () {
                     contentBox.addClass('minimized');
                 });
-            btn.html('<i class="fas fa-plus"></i>');
+            btn.html('<i class="fas fa-caret-down"></i>');
             filterBoxEnabled(contentBox, false);
 
             // Add to cookie list if not already there
@@ -538,7 +538,7 @@ jQuery(function ($) {
         }
 
         //Update cookie
-        setCookie('fr_minimized_boxes', JSON.stringify(minimizedList), 7);
+        setCookie('fresre_minimized_boxes', JSON.stringify(minimizedList), 7);
     });
 
     function filterBoxEnabled(contentBox, status) {
@@ -581,7 +581,7 @@ jQuery(function ($) {
 
     function getMinimizedList() {
         try {
-            const cookie = getCookie('fr_minimized_boxes');
+            const cookie = getCookie('fresre_minimized_boxes');
             return cookie ? JSON.parse(cookie) : [];
         } catch (e) {
             return [];

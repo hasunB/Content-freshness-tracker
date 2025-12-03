@@ -1,5 +1,5 @@
 <div align="center">
-    <img alt="fresh-reminder-banner-image" src="docs/images/fr-banner.png"/>
+    <img alt="fresh-reminder-banner-image" src="docs/images/fresre-banner.png"/>
 </div>
 <br>
 <div align="center">
@@ -18,7 +18,7 @@
 <br>
 <div align="center">
     <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.2/fresh-reminder.1.1.2.zip" target="_blank">
-      <img alt="fresh-reminder-download-image" src="docs/images/fr-download.png" height="50px"/>
+      <img alt="fresh-reminder-download-image" src="docs/images/fresre-download.png" height="50px"/>
     </a>
 </div>
 
@@ -116,19 +116,19 @@ fresh-reminder/
 ## Screenshots
 ### 1. Front-end post Widget
 <div align="center">
-    <img alt="fresh-reminder-admin-widget-screenshot" src="docs/images/fr-admin-home-screenshot.png"/>
+    <img alt="fresh-reminder-admin-widget-screenshot" src="docs/images/fresre-admin-home-screenshot.png"/>
 </div>
 <br>
 
 ### 2. Check Bucket
 <div align="center">
-    <img alt="fresh-reminder-admin-dashboard-screenshot" src="docs/images/fr-admin-check-bucket-screenshot.png"/>
+    <img alt="fresh-reminder-admin-dashboard-screenshot" src="docs/images/fresre-admin-check-bucket-screenshot.png"/>
 </div>
 <br>
 
 ### 3. Settings
 <div align="center">
-    <img alt="fresh-reminder-settings-page-screenshot" src="docs/images/fr-admin-settings-screenshot.png"/>
+    <img alt="fresh-reminder-settings-page-screenshot" src="docs/images/fresre-admin-settings-screenshot.png"/>
 </div>
 <br>
 <br>

@@ -1,48 +1,51 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if (! current_user_can('manage_options')) return;
 
-$defaults = FR_Cron::get_default();
-$settings = get_option(FR_OPTION_NAME, $defaults);
+$fresre_defaults = FRESRE_Cron::get_default();
+$fresre_settings = get_option(FRESRE_OPTION_NAME, $fresre_defaults);
 
-if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) {
+if (isset($_POST['fresre_save']) && check_admin_referer('fresre_settings', 'fresre_nonce')) {
      
-    FR_Logger::log('save settings triggerd', 'info');
+    FRESRE_Logger::log('save settings triggerd', 'info');
     // Stale duration fields
-    $stale_after_value = isset($_POST['stale_after_value']) ? absint($_POST['stale_after_value']) : $defaults['stale_after_value'];
-    $stale_after_unit  = isset($_POST['stale_after_unit']) ? sanitize_text_field(wp_unslash($_POST['stale_after_unit'])) : $defaults['stale_after_unit'];
+    $fresre_stale_after_value = isset($_POST['stale_after_value']) ? absint($_POST['stale_after_value']) : $fresre_defaults['stale_after_value'];
+    $fresre_stale_after_unit  = isset($_POST['stale_after_unit']) ? sanitize_text_field(wp_unslash($_POST['stale_after_unit'])) : $fresre_defaults['stale_after_unit'];
 
     // Post types
-    $post_types = isset($_POST['post_types'])
+    $fresre_post_types = isset($_POST['post_types'])
         ? array_map('sanitize_text_field', array_keys(wp_unslash($_POST['post_types'])))
         : array('post');
 
     // Schedule (validate against allowed list)
-    $allowed_schedules = array('every_five_minutes', 'every_fifteen_minutes', 'hourly', 'daily');
+    $fresre_allowed_schedules = array('every_five_minutes', 'every_fifteen_minutes', 'hourly', 'daily');
 
-    $schedule = isset( $_POST['schedule'] )
+    $fresre_schedule = isset( $_POST['schedule'] )
     ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) )
     : '';
 
-    if ( ! in_array( $schedule, $allowed_schedules, true ) ) {
-        $schedule = 'every_five_minutes';
+    if ( ! in_array( $fresre_schedule, $fresre_allowed_schedules, true ) ) {
+        $fresre_schedule = 'every_five_minutes';
     }
 
 
     // Email notify checkbox
-    $email_notify = isset($_POST['email_notify']) ? 1 : 0;
+    $fresre_email_notify = isset($_POST['email_notify']) ? 1 : 0;
 
     // Roles
-    $roles = isset($_POST['roles'])
+    $fresre_roles = isset($_POST['roles'])
         ? array_map('sanitize_text_field', array_keys( wp_unslash($_POST['roles'])))
-        : $defaults['roles'];
+        : $fresre_defaults['roles'];
 
     // clear reviewed (never, daily, weekly, monthly)
-    $clear_reviewed = isset($_POST['clear_reviewed'])
+    $fresre_clear_reviewed = isset($_POST['clear_reviewed'])
         ? sanitize_text_field( wp_unslash($_POST['clear_reviewed']))
         : 'never';
 
     // Build settings array
-    $new = compact(
+    $fresre_new = compact(
         'stale_after_value',
         'stale_after_unit',
         'post_types',
@@ -53,11 +56,11 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
     );
 
     // Save to DB
-    update_option(FR_OPTION_NAME, $new);
+    update_option(FRESRE_OPTION_NAME, $fresre_new);
 
     // Reschedule cron
-    wp_clear_scheduled_hook('fr_check_event');
-    wp_schedule_event(time(), $schedule, 'fr_check_event');
+    wp_clear_scheduled_hook('fresre_check_event');
+    wp_schedule_event(time(), $fresre_schedule, 'fresre_check_event');
 
     // Success message
 ?>
@@ -74,7 +77,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
     </script>
 <?php
 
-    $settings = $new;
+    $fresre_settings = $fresre_new;
 }
 
 ?>
@@ -89,7 +92,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                     </div>
                     <div class="d-flex justify-content-start align-items-center mt-1">
                         <h3 class="plugin-name italic">Fresh Reminder
-                            <span>v<?php echo esc_html(FR_VERSION); ?>
+                            <span>v<?php echo esc_html(FRESRE_VERSION); ?>
                             </span>
                         </h3>
                     </div>
@@ -100,22 +103,6 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                     <button class="theme-action-btn goto-home-page" title="Home"><i class="fas fa-home"></i></button>
                     <button class="theme-action-btn goto-check-bucket-page" title="Check Bucket" ><i class="fas fa-bucket"></i></button>
                     <button class="theme-action-btn goto-help-page" title="Help"><i class="fas fa-question"></i></button>
-                </div>
-                <div class="logo" style="background: none;">
-                    <?php
-                    $curent_user = wp_get_current_user();
-                    if ($curent_user) {
-                        //profile image
-                        $profile_image = get_avatar_url($curent_user->ID, array('size' => 32));
-                        if ($profile_image) {
-                            echo '<img src="' . esc_url($profile_image) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
-                        } else {
-                            echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
-                        }
-                    } else {
-                        echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
-                    }
-                    ?>
                 </div>
             </div>
         </div>
@@ -155,31 +142,31 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                             </div>
                         </div>
                         <form method="post">
-                            <?php wp_nonce_field('fr_settings', 'fr_nonce'); ?>
+                            <?php wp_nonce_field('fresre_settings', 'fresre_nonce'); ?>
                             <table class="form-table">
                                 <tr>
                                     <th><?php esc_html_e('Stale after', 'fresh-reminder'); ?></th>
                                     <td>
                                         <?php
 
-                                        $stale_unit = $settings['stale_after_unit'] ?? 'months';
-                                        $stale_value = $settings['stale_after_value'] ?? 1;
+                                        $fresre_stale_unit = $fresre_settings['stale_after_unit'] ?? 'months';
+                                        $fresre_stale_value = $fresre_settings['stale_after_value'] ?? 1;
 
-                                        $min_attr = 'min="1"';
-                                        $max_attr = '';
-                                        if ($stale_unit == 'minutes') {
-                                            $min_attr = 'min="5"';
-                                        } else if ($stale_unit == 'months') {
-                                            $max_attr = 'max="12"';
+                                        $fresre_min_attr = 'min="1"';
+                                        $fresre_max_attr = '';
+                                        if ($fresre_stale_unit == 'minutes') {
+                                            $fresre_min_attr = 'min="5"';
+                                        } else if ($fresre_stale_unit == 'months') {
+                                            $fresre_max_attr = 'max="12"';
                                         }
 
                                         ?>
-                                        <input class="settings-input filter-skin" type="number" name="stale_after_value" id="stale_after_value" value="<?php echo esc_attr($stale_value); ?>" <?php echo esc_attr($min_attr); ?> <?php echo esc_attr($max_attr); ?> min="1" />
+                                        <input class="settings-input filter-skin" type="number" name="stale_after_value" id="stale_after_value" value="<?php echo esc_attr($fresre_stale_value); ?>" <?php echo esc_attr($fresre_min_attr); ?> <?php echo esc_attr($fresre_max_attr); ?> min="1" />
                                         <select class="theme-settings-filter-select filter-skin" name="stale_after_unit" id="stale_after_unit">
-                                            <option value="minutes" <?php selected($stale_unit, 'minutes'); ?>>Minutes</option>
-                                            <option value="hours" <?php selected($stale_unit, 'hours'); ?>>Hours</option>
-                                            <option value="days" <?php selected($stale_unit, 'days'); ?>>Days</option>
-                                            <option value="months" <?php selected($stale_unit, 'months'); ?>>Months</option>
+                                            <option value="minutes" <?php selected($fresre_stale_unit, 'minutes'); ?>>Minutes</option>
+                                            <option value="hours" <?php selected($fresre_stale_unit, 'hours'); ?>>Hours</option>
+                                            <option value="days" <?php selected($fresre_stale_unit, 'days'); ?>>Days</option>
+                                            <option value="months" <?php selected($fresre_stale_unit, 'months'); ?>>Months</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -187,16 +174,16 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                     <th><?php esc_html_e('Post types', 'fresh-reminder'); ?></th>
                                     <td>
                                         <?php
-                                        $types = get_post_types(array('public' => true), 'objects');
+                                        $fresre_types = get_post_types(array('public' => true), 'objects');
 
                                         // Define the allowed post types
-                                        $allowed_types = array('post', 'page', 'product');
+                                        $fresre_allowed_types = array('post', 'page', 'product');
 
-                                        foreach ($types as $type) {
-                                            if (in_array($type->name, $allowed_types, true)) {
-                                                $checked = in_array($type->name, $settings['post_types']) ? 'checked' : '';
-                                                echo '<label class="fr-settings-label">
-                                                        <input class="fr-settings-input" type="checkbox" name="post_types[' . esc_attr($type->name) . ']" value="1" ' . esc_attr($checked) . ' />
+                                        foreach ($fresre_types as $type) {
+                                            if (in_array($type->name, $fresre_allowed_types, true)) {
+                                                $fresre_checked = in_array($type->name, $fresre_settings['post_types']) ? 'checked' : '';
+                                                echo '<label class="fresre-settings-label">
+                                                        <input class="fresre-settings-input" type="checkbox" name="post_types[' . esc_attr($type->name) . ']" value="1" ' . esc_attr($fresre_checked) . ' />
                                                         ' . esc_html($type->labels->singular_name) . '
                                                     </label>';
                                             }
@@ -208,16 +195,16 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                     <th><?php esc_html_e('Schedule', 'fresh-reminder'); ?></th>
                                     <td>
                                         <select class="theme-settings-filter-select filter-skin" name="schedule" id="schedule">
-                                            <option value="every_five_minutes" <?php selected($settings['schedule'], 'every_five_minutes'); ?>>
+                                            <option value="every_five_minutes" <?php selected($fresre_settings['schedule'], 'every_five_minutes'); ?>>
                                                 <?php esc_html_e('Every 5 Minutes', 'fresh-reminder'); ?>
                                             </option>
-                                            <option value="every_fifteen_minutes" <?php selected($settings['schedule'], 'every_fifteen_minutes'); ?>>
+                                            <option value="every_fifteen_minutes" <?php selected($fresre_settings['schedule'], 'every_fifteen_minutes'); ?>>
                                                 <?php esc_html_e('Every 15 Minutes', 'fresh-reminder'); ?>
                                             </option>
-                                            <option value="hourly" <?php selected($settings['schedule'], 'hourly'); ?>>
+                                            <option value="hourly" <?php selected($fresre_settings['schedule'], 'hourly'); ?>>
                                                 <?php esc_html_e('Hourly', 'fresh-reminder'); ?>
                                             </option>
-                                            <option value="daily" <?php selected($settings['schedule'], 'daily'); ?>>
+                                            <option value="daily" <?php selected($fresre_settings['schedule'], 'daily'); ?>>
                                                 <?php esc_html_e('Daily', 'fresh-reminder'); ?>
                                             </option>
                                         </select>
@@ -228,16 +215,16 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                     <th><?php esc_html_e('Clear Reviewed', 'fresh-reminder'); ?><br><?php esc_html_e('Content', 'fresh-reminder'); ?><span class="reason-mark">*</span></th>
                                     <td>
                                         <select class="theme-settings-filter-select filter-skin" name="clear_reviewed" id="clear_reviewed">
-                                            <option value="every_30_minutes" <?php selected($settings['clear_reviewed'] ?? 'never', 'every_30_minutes'); ?>>
+                                            <option value="every_30_minutes" <?php selected($fresre_settings['clear_reviewed'] ?? 'never', 'every_30_minutes'); ?>>
                                                 <?php esc_html_e('Every 30 Minutes', 'fresh-reminder'); ?>
                                             </option>
-                                            <option value="hourly" <?php selected($settings['clear_reviewed'] ?? 'never', 'hourly'); ?>>
+                                            <option value="hourly" <?php selected($fresre_settings['clear_reviewed'] ?? 'never', 'hourly'); ?>>
                                                 <?php esc_html_e('Hourly', 'fresh-reminder'); ?>
                                             </option>
-                                            <option value="daily" <?php selected($settings['clear_reviewed'] ?? 'never', 'daily'); ?>>
+                                            <option value="daily" <?php selected($fresre_settings['clear_reviewed'] ?? 'never', 'daily'); ?>>
                                                 <?php esc_html_e('Daily', 'fresh-reminder'); ?>
                                             </option>
-                                            <option value="never" <?php selected($settings['clear_reviewed'] ?? 'never', 'never'); ?>>
+                                            <option value="never" <?php selected($fresre_settings['clear_reviewed'] ?? 'never', 'never'); ?>>
                                                 <?php esc_html_e('Never', 'fresh-reminder'); ?>
                                             </option>
                                         </select>
@@ -245,23 +232,23 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                 </tr>
                                 <tr>
                                     <th><?php esc_html_e('Email digest', 'fresh-reminder'); ?></th>
-                                    <td><label style="color: gray;"><input disabled type="checkbox" name="email_notify" value="1" <?php checked($settings['email_notify'], 1); ?> /> <?php esc_html_e('Send digest to selected roles', 'fresh-reminder'); ?></label></td>
+                                    <td><label style="color: gray;"><input disabled type="checkbox" name="email_notify" value="1" <?php checked($fresre_settings['email_notify'], 1); ?> /> <?php esc_html_e('Send digest to selected roles', 'fresh-reminder'); ?></label></td>
                                 </tr>
                                 <tr>
                                     <th><?php esc_html_e('Notify roles', 'fresh-reminder'); ?></th>
                                     <td>
                                         <?php
-                                        $roles = wp_roles()->roles;
-                                        foreach ($roles as $role_key => $role) {
-                                            $checked = in_array($role_key, $settings['roles']) ? 'checked' : '';
-                                            echo '<label class="fr-settings-label"><input class="fr-settings-input" type="checkbox" name="roles[' . esc_attr($role_key) . ']" value="1" ' . esc_attr($checked) . ' /> ' . esc_html($role['name']) . '</label>';
+                                        $fresre_roles = wp_roles()->roles;
+                                        foreach ($fresre_roles as $fresre_role_key => $role) {
+                                            $fresre_checked = in_array($fresre_role_key, $fresre_settings['roles']) ? 'checked' : '';
+                                            echo '<label class="fresre-settings-label"><input class="fresre-settings-input" type="checkbox" name="roles[' . esc_attr($fresre_role_key) . ']" value="1" ' . esc_attr($fresre_checked) . ' /> ' . esc_html($role['name']) . '</label>';
                                         }
                                         ?>
                                     </td>
                                 </tr>
                             </table>
                             <div class="sttings-btn-box">
-                                <p class="submit"><input class="fr-settings-save-btn" type="submit" name="fr_save" value="<?php esc_attr_e('Save Changes', 'fresh-reminder'); ?>" /></p>
+                                <p class="submit"><input class="fresre-settings-save-btn" type="submit" name="fresre_save" value="<?php esc_attr_e('Save Changes', 'fresh-reminder'); ?>" /></p>
                             </div>
                         </form>
                     </div>
@@ -279,7 +266,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                                 </tr>
                                 <tr>
                                     <th>Version</th>
-                                    <td>1.1.1</td>
+                                    <td><?php echo esc_attr(FRESRE_VERSION) ?></td>
                                 </tr>
                                 <tr>
                                     <th>Author</th>
@@ -309,9 +296,9 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                     <h5 class="chart-title">Freshness Tracking</h5>
                     <!-- content-box -->
                     <div class="w-100 h-100 chart-content-box" style="display: none;">
-                        <p class="chart-description ps-5 pe-5">Your saving continue to grow by 5.0% every month</p>
+                        <p class="chart-description ps-5 pe-5">A visual breakdown of content status.</p>
                         <div class="pie-chart">
-                            <canvas id="fr_piechart_canvas"></canvas>
+                            <canvas id="fresre_piechart_canvas"></canvas>
                         </div>
                         <div class="w-100 chart-legend">
                             <div class="w-50 h-100">
@@ -334,7 +321,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                             </div>
                         </div>
                         <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
-                            Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
+                            This chart displays the percentage of reviewed versus unreviewed content, providing a quick overview of your content's freshness.
                         </p>
                     </div>
                     <!-- no-content-box -->
@@ -344,9 +331,7 @@ if (isset($_POST['fr_save']) && check_admin_referer('fr_settings', 'fr_nonce')) 
                     </div>
                 </div>
             </div>
-
-            <!-- calendar-widget -->
-            <!-- <div class="theme-chart widget-skin"></div> -->
+            
         </div>
     </div>
     <!-- mobile responsive filter div -->

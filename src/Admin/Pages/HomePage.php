@@ -7,38 +7,31 @@ if (! current_user_can('edit_posts')) {
     return;
 }
 
-$defaults = FR_Cron::get_default();
-$settings = get_option(FR_OPTION_NAME, $defaults);
+$fresre_defaults = FRESRE_Cron::get_default();
+$fresre_settings = get_option(FRESRE_OPTION_NAME, $fresre_defaults);
 
 if ( isset( $_POST['post_types'] ) && check_admin_referer( 'fresh_reminder_action', 'fresh_reminder_nonce' ) ) {
-    $raw_post_types = wp_unslash( $_POST['post_types'] ); // Unslash before sanitizing
-    $post_types = array_map( 'sanitize_text_field', array_keys( $raw_post_types ) );
+    $fresre_raw_post_types = wp_unslash( $_POST['post_types'] ); // Unslash before sanitizing
+    $fresre_post_types = array_map( 'sanitize_text_field', array_keys( $fresre_raw_post_types ) );
 } else {
-    $post_types = array( 'post' );
+    $fresre_post_types = array( 'post' );
 }
 
-$args = array(
-    'post_type'      => $post_types,
+$fresre_args = array(
+    'post_type'      => $fresre_post_types,
     'post_status'    => 'publish',
     'fields'         => 'ids',
     'posts_per_page' => -1,
-);
+); 
 
-// //fetch data from DB
-// $q = new WP_Query( $args );
-// $ids = $q->posts ? $q->posts : array();
+$fresre_cache = get_option(FRESRE_CACHE_OPTION);
+$fresre_post_ids = isset($fresre_cache['post_ids']) ? array_unique($fresre_cache['post_ids']) : array();
 
-// //total post count
-// $total_posts = count( $ids );    
-
-$cache = get_option(FR_CACHE_OPTION);
-$post_ids = isset($cache['post_ids']) ? array_unique($cache['post_ids']) : array();
-
-$posts_data = array();
-foreach ($post_ids as $post_id) {
+$fresre_posts_data = array();
+foreach ($fresre_post_ids as $post_id) {
     $post = get_post($post_id);
     if ($post) {
-        $posts_data[] = (object) array(
+        $fresre_posts_data[] = (object) array(
             'ID'                => $post->ID,
             'post_title'        => $post->post_title,
             'post_author_id'    => $post->post_author,
@@ -46,38 +39,38 @@ foreach ($post_ids as $post_id) {
             'post_type'         => $post->post_type,
             'post_date'         => $post->post_date,
             'post_modified'     => $post->post_modified,
-            'reviewed'          => get_post_meta($post->ID, '_fr_reviewed', true) ? true : false,
-            'pined'             => get_post_meta($post->ID, '_fr_pined', true) ? true : false,
+            'reviewed'          => get_post_meta($post->ID, '_fresre_reviewed', true) ? true : false,
+            'pined'             => get_post_meta($post->ID, '_fresre_pined', true) ? true : false,
             'edit_link'         => get_edit_post_link($post->ID),
-            'featured_image'   => get_the_post_thumbnail_url($post->ID, 'thumbnail') ? get_the_post_thumbnail_url($post->ID, 'thumbnail') : FR_PLUGIN_URL . '/assets/images/logo/default-featured-' . $post->post_type . '.webp',
+            'featured_image'   => get_the_post_thumbnail_url($post->ID, 'thumbnail') ? get_the_post_thumbnail_url($post->ID, 'thumbnail') : FRESRE_PLUGIN_URL . '/assets/images/logo/default-featured-' . $post->post_type . '.webp',
             'category_ids'      => !empty(get_object_taxonomies($post->post_type)) ? wp_get_post_terms($post->ID, get_object_taxonomies($post->post_type)[0], array('fields' => 'ids')) : array(),
         );
     }
 }
 
-$total_stale_posts = count($posts_data);
-$reviewed_posts_count = count(array_filter($posts_data, function ($post) {
+$fresre_total_stale_posts = count($fresre_posts_data);
+$fresre_reviewed_posts_count = count(array_filter($fresre_posts_data, function ($post) {
     return $post->reviewed;
 }));
-$unreviewed_posts_count = $total_stale_posts - $reviewed_posts_count;
+$fresre_unreviewed_posts_count = $fresre_total_stale_posts - $fresre_reviewed_posts_count;
 
 
-$categorized_posts = array();
-foreach ($posts_data as $post) {
+$fresre_categorized_posts = array();
+foreach ($fresre_posts_data as $post) {
     $post_type = $post->post_type;
-    if (! isset($categorized_posts[$post_type])) {
-        $categorized_posts[$post_type] = array(
+    if (! isset($fresre_categorized_posts[$post_type])) {
+        $fresre_categorized_posts[$post_type] = array(
             'reviewed' => 0,
             'unreviewed' => 0,
             'total' => 0,
         );
     }
     if ($post->reviewed) {
-        $categorized_posts[$post_type]['reviewed']++;
+        $fresre_categorized_posts[$post_type]['reviewed']++;
     } else {
-        $categorized_posts[$post_type]['unreviewed']++;
+        $fresre_categorized_posts[$post_type]['unreviewed']++;
     }
-    $categorized_posts[$post_type]['total']++;
+    $fresre_categorized_posts[$post_type]['total']++;
 }
 
 
@@ -102,22 +95,6 @@ foreach ($posts_data as $post) {
                     <button class="theme-action-btn goto-settings-page" title="Settings"><i class="fas fa-cog"></i></button>
                     <button class="theme-action-btn goto-help-page" title="Help"><i class="fas fa-question"></i></button>
                 </div>
-                <div class="logo" style="background: none;">
-                    <?php
-                    $curent_user = wp_get_current_user();
-                    if ($curent_user) {
-                        //profile image
-                        $profile_image = get_avatar_url($curent_user->ID, array('size' => 32));
-                        if ($profile_image) {
-                            echo '<img src="' . esc_url($profile_image) . '" alt="' . esc_attr__('Default User Avatar', 'fresh-reminder') . '" class="user-avatar">';
-                        } else {
-                            echo '<img src="' . esc_url(FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp') . '" alt="' . esc_attr__('Default User Avatar', 'fresh-reminder') . '" class="user-avatar">';
-                        }
-                    } else {
-                        echo '<img src="' . esc_url(FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp') . '" alt="' . esc_attr__('Default User Avatar', 'fresh-reminder') . '" class="user-avatar">';
-                    }
-                    ?>
-                </div>
             </div>
         </div>
     </nav>
@@ -128,7 +105,7 @@ foreach ($posts_data as $post) {
         <div class="theme-left-column">
             <?php
 
-            if ($total_stale_posts == 0) {
+            if ($fresre_total_stale_posts == 0) {
             ?>
                 <div class="no-post-found-msg widget-skin">
                     <div>
@@ -145,18 +122,18 @@ foreach ($posts_data as $post) {
                         <div class="col-11 banner-text-box">
                             <h5>Hello
                                 <?php
-                                $curent_user = wp_get_current_user();
+                                $fresre_curent_user = wp_get_current_user();
 
-                                if ($curent_user instanceof WP_User) {
+                                if ($fresre_curent_user instanceof WP_User) {
 
-                                    $first_name = $curent_user->first_name;
-                                    $last_name  = $curent_user->last_name;
-                                    $display_name = $curent_user->display_name;
+                                    $fresre_first_name = $fresre_curent_user->first_name;
+                                    $fresre_last_name  = $fresre_curent_user->last_name;
+                                    $fresre_display_name = $fresre_curent_user->display_name;
 
-                                    if (! empty($first_name) && ! empty($last_name)) {
-                                        echo esc_html($first_name . ' ' . $last_name);
+                                    if (! empty($fresre_first_name) && ! empty($fresre_last_name)) {
+                                        echo esc_html($fresre_first_name . ' ' . $fresre_last_name);
                                     } else {
-                                        echo esc_html($display_name);
+                                        echo esc_html($fresre_display_name);
                                     }
                                 }
                                 ?>
@@ -177,15 +154,15 @@ foreach ($posts_data as $post) {
                 <!-- Stats Cards -->
                 <div class="row stats-cards-box">
                     <?php
-                    foreach ($categorized_posts as $post_type => $counts) {
+                    foreach ($fresre_categorized_posts as $post_type => $fresre_counts) {
                     ?>
                         <div class="col-md-4">
                             <div class="stats-card widget-skin">
                                 <div class="stats-icon-box stats-<?php echo esc_attr($post_type); ?>">
-                                    <img src="<?php echo esc_url( FR_PLUGIN_URL . '/assets/images/logo/fr-' . esc_attr($post_type) . '-logo.webp'); ?>" alt="fresh reminder <?php echo esc_attr($post_type); ?> icon">
+                                    <img src="<?php echo esc_url( FRESRE_PLUGIN_URL . '/assets/images/logo/fresre-' . esc_attr($post_type) . '-logo.webp'); ?>" alt="fresh reminder <?php echo esc_attr($post_type); ?> icon">
                                 </div>
                                 <div class="stats-info-box">
-                                    <span class="stats-number"><?php echo esc_html($counts['reviewed']); ?>/<?php echo esc_html($counts['total']); ?> reviewed</span>
+                                    <span class="stats-number"><?php echo esc_html($fresre_counts['reviewed']); ?>/<?php echo esc_html($fresre_counts['total']); ?> reviewed</span>
                                     <span class="stats-label"><?php echo esc_html(ucfirst($post_type)); ?>s</span>
                                 </div>
                             </div>
@@ -197,7 +174,7 @@ foreach ($posts_data as $post) {
                 <div class="spliter left"></div>
                 <!-- Stale Posts -->
                 <?php
-                foreach ($categorized_posts as $post_type => $counts) {
+                foreach ($fresre_categorized_posts as $post_type => $fresre_counts) {
                 ?>
                     <div class="theme-stale-content widget-skin" data-post-type="<?php echo esc_attr($post_type); ?>">
                         <!-- filters -->
@@ -206,36 +183,36 @@ foreach ($posts_data as $post) {
                                 <span class="content-title">Stale <?php echo esc_html(ucfirst($post_type)); ?>s</span>
                             </div>
                             <div class="col-8 align-items-center d-flex justify-content-end gap-2">
-                                <?php wp_nonce_field('fr_filter_posts_nonce', 'fr_filter_posts_nonce'); ?>
+                                <?php wp_nonce_field('fresre_filter_posts_nonce', 'fresre_filter_posts_nonce'); ?>
                                 <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
                                 <?php
                                 // Category filter dropdown - to be populated dynamically according to post type
-                                $taxonomy_name = '';
+                                $fresre_taxonomy_name = '';
                                 if ('product' === $post_type) {
-                                    $taxonomy_name = 'product_cat';
+                                    $fresre_taxonomy_name = 'product_cat';
                                 } else {
-                                    $taxonomies = get_object_taxonomies($post_type, 'objects');
-                                    foreach ($taxonomies as $taxonomy) {
+                                    $fresre_taxonomies = get_object_taxonomies($post_type, 'objects');
+                                    foreach ($fresre_taxonomies as $taxonomy) {
                                         if ($taxonomy->hierarchical && $taxonomy->public) {
-                                            $taxonomy_name = $taxonomy->name;
+                                            $fresre_taxonomy_name = $taxonomy->name;
                                             break;
                                         }
                                     }
                                 }
 
-                                if (! empty($taxonomy_name)) {
-                                    $taxonomy_obj = get_taxonomy($taxonomy_name);
-                                    $categories = get_terms(array(
-                                        'taxonomy'   => $taxonomy_name,
+                                if (! empty($fresre_taxonomy_name)) {
+                                    $fresre_taxonomy_obj = get_taxonomy($fresre_taxonomy_name);
+                                    $fresre_categories = get_terms(array(
+                                        'taxonomy'   => $fresre_taxonomy_name,
                                         'hide_empty' => false,
                                     ));
-                                    if (! empty($categories)) {
+                                    if (! empty($fresre_categories)) {
                                 ?>
-                                        <select class="theme-filter-select filter-skin" data-taxonomy="<?php echo esc_attr($taxonomy_name); ?>">
-                                            <option value="0">Select <?php echo esc_html($taxonomy_obj->labels->singular_name) ?></option>
+                                        <select class="theme-filter-select filter-skin" data-taxonomy="<?php echo esc_attr($fresre_taxonomy_name); ?>">
+                                            <option value="0">Select <?php echo esc_html($fresre_taxonomy_obj->labels->singular_name) ?></option>
                                             <?php
-                                            foreach ($categories as $category) {
-                                                echo '<option value="' . esc_attr($category->term_id) . '">' . esc_html($category->name) . '</option>';
+                                            foreach ($fresre_categories as $fresre_category) {
+                                                echo '<option value="' . esc_attr($fresre_category->term_id) . '">' . esc_html($fresre_category->name) . '</option>';
                                             }
                                             ?>
                                         </select>
@@ -243,7 +220,7 @@ foreach ($posts_data as $post) {
                                     } else {
                                     ?>
                                         <select class="theme-filter-select filter-skin" disabled>
-                                            <option value="0">Select <?php echo esc_html($taxonomy_obj->labels->singular_name) ?></option>
+                                            <option value="0">Select <?php echo esc_html($fresre_taxonomy_obj->labels->singular_name) ?></option>
                                         </select>
                                 <?php
                                     }
@@ -253,7 +230,7 @@ foreach ($posts_data as $post) {
                                 <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
                                 <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
                                 <button class="filter-skin theme-minimize-btn" type="button" data-post-type="<?php echo esc_attr($post_type); ?>">
-                                    <i class="fa-solid fa-minus"></i>
+                                    <i class="fa-solid fa-caret-up"></i>
                                 </button>
                             </div>
                         </div>
@@ -262,19 +239,19 @@ foreach ($posts_data as $post) {
                         <div class="theme-content-box">
                             <div class="post-item-box post-item-template" id="post-item-box-<?php echo esc_attr($post_type); ?>">
                                 <?php
-                                foreach ($posts_data as $post) {
+                                foreach ($fresre_posts_data as $post) {
                                     if ($post->post_type !== $post_type) {
                                         continue;
                                     } else {
-                                        $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
-                                        $category_classes = ' ';
+                                        $fresre_reviewed_class = $post->reviewed ? 'fresre-reviewed' : 'fresre-unreviewed';
+                                        $fresre_category_classes = ' ';
                                         if (! empty($post->category_ids)) {
-                                            foreach ($post->category_ids as $category_id) {
-                                                $category_classes .= ' category-' . $category_id;
+                                            foreach ($post->category_ids as $fresre_category_id) {
+                                                $fresre_category_classes .= ' category-' . $fresre_category_id;
                                             }
                                         }
                                 ?>
-                                        <div class="post-item <?php echo esc_attr($reviewed_class); ?><?php echo esc_attr($category_classes); ?>">
+                                        <div class="post-item <?php echo esc_attr($fresre_reviewed_class); ?><?php echo esc_attr($fresre_category_classes); ?>">
                                             <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
                                                 <div style="width: 35%; height: inherit;">
                                                     <div class="featured-image">
@@ -347,18 +324,13 @@ foreach ($posts_data as $post) {
                     <h5 class="fw-semibold text-center ps-5 pe-5 mt-3">Search Result for :
                         <span class="search-query"></span>
                     </h5>
-                    <!-- <div class="col-12 align-items-center d-flex justify-content-center gap-2 mt-2">
-                        <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
-                        <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
-                        <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
-                    </div> -->
                     <div class="theme-content-box">
                         <div class="post-item-box search-item-template">
                             <?php
-                            foreach ($posts_data as $post) {
-                                $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
+                            foreach ($fresre_posts_data as $post) {
+                                $fresre_reviewed_class = $post->reviewed ? 'fresre-reviewed' : 'fresre-unreviewed';
                             ?>
-                                <div class="post-item <?php echo esc_attr($reviewed_class); ?>">
+                                <div class="post-item <?php echo esc_attr($fresre_reviewed_class); ?>">
                                     <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
                                         <div style="width: 35%; height: inherit;">
                                             <div class="featured-image">
@@ -427,9 +399,9 @@ foreach ($posts_data as $post) {
                     <h5 class="chart-title">Freshness Tracking</h5>
                     <!-- content-box -->
                     <div class="w-100 h-100 chart-content-box" style="display: none;">
-                        <p class="chart-description ps-5 pe-5">Your saving continue to grow by 5.0% every month</p>
+                        <p class="chart-description ps-5 pe-5">A visual breakdown of content status.</p>
                         <div class="pie-chart">
-                            <canvas id="fr_piechart_canvas"></canvas>
+                            <canvas id="fresre_piechart_canvas"></canvas>
                         </div>
                         <div class="w-100 chart-legend">
                             <div class="w-50 h-100">
@@ -452,7 +424,7 @@ foreach ($posts_data as $post) {
                             </div>
                         </div>
                         <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
-                            Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
+                            This chart displays the percentage of reviewed versus unreviewed content, providing a quick overview of your content's freshness.
                         </p>
                     </div>
                     <!-- no-content-box -->
@@ -462,10 +434,6 @@ foreach ($posts_data as $post) {
                     </div>
                 </div>
             </div>
-            <!-- <div class="spliter"></div> -->
-
-            <!-- calendar-widget -->
-            <!-- <div class="theme-chart widget-skin"></div> -->
         </div>
     </div>
     <!-- mobile responsive filter div -->

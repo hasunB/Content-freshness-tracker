@@ -1,9 +1,9 @@
 jQuery(function ($) {
     $(document).ready(function () {
-        const chart = buildChartWidget(fr_chart_data.reviewed, fr_chart_data.unreviewed);
+        const chart = buildChartWidget(fresre_chart_data.reviewed, fresre_chart_data.unreviewed);
 
         //Expose chart globally for other scripts (like main.js)
-        window.fr_PieChart = chart.chartInstance;
+        window.fresre_PieChart = chart.chartInstance;
     });
 
     function buildChartWidget(reviewed, unreviewed) {
@@ -15,8 +15,8 @@ jQuery(function ($) {
             chartContentBox.css('display', 'flex');
             chartContentBox.css('flex-direction', 'column');
             
-            var ctx = document.getElementById("fr_piechart_canvas");
-            let fr_PieChart = null;
+            var ctx = document.getElementById("fresre_piechart_canvas");
+            let fresre_PieChart = null;
             
             if (ctx) {
                 var chartData = {
@@ -28,7 +28,7 @@ jQuery(function ($) {
                     }]
                 };
     
-                fr_PieChart = new Chart(ctx.getContext('2d'), {
+                fresre_PieChart = new Chart(ctx.getContext('2d'), {
                     type: "doughnut",
                     data: chartData,
                     options: {
@@ -55,7 +55,7 @@ jQuery(function ($) {
             $('.legend-percentage.unreviewed').text(unreviewedPct + '%');
             
             //Return the chart instance and percentages
-            return { chartInstance: fr_PieChart };
+            return { chartInstance: fresre_PieChart };
         } else {
             NoChartContentBox.css('display', 'flex');
             return { chartInstance: null };

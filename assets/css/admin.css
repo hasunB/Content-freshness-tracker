@@ -41,7 +41,7 @@
   overflow: hidden;
   border: 1px solid var(--primary-color);
   border-radius: 50%;
-  background: url(../images/logo/fr-main-logo.png);
+  background: url(../images/logo/fresre-main-logo.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -141,7 +141,7 @@
 .no-post-found-msg > div > div {
   width: 150px;
   height: 150px;
-  background: url(../images/fr-no-data-image.webp);
+  background: url(../images/fresre-no-data-image.webp);
   background-size: cover;
   background-position: center;
   margin-bottom: 15px;
@@ -149,7 +149,7 @@
 
 .theme-banner {
   width: 100%;
-  background-image: url(../images/fr-welcome-banner.webp);
+  background-image: url(../images/fresre-welcome-banner.webp);
   background-size: cover;
   background-position: center;
   display: none;
@@ -679,7 +679,7 @@ select.theme-filter-select {
 .no-chart-content-box > div {
   width: 80px;
   height: 100px;
-  background: url(../images/fr-no-chart-data-image.webp);
+  background: url(../images/fresre-no-chart-data-image.webp);
   background-size: cover;
   background-position: center;
   border-radius: 5px;
