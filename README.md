@@ -1,15 +1,15 @@
 <div align="center">
-    <img alt="fresh-reminder-banner-image" src="docs/images/fr-banner.png"/>
+    <img alt="fresh-reminder-banner-image" src="docs/images/fresre-banner.png"/>
 </div>
 <br>
 <div align="center">
-    <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.0.0">Release</a> |
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip">Download</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/releases/tag/v1.1.2">Release</a> |
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.2/fresh-reminder.1.1.2.zip">Download</a> |
     <a href="https://github.com/hasunB/fresh-reminder/discussions">Discussions</a>
 </div>
 <br>
 <div align="center">
-    <img alt="Static Badge" src="https://img.shields.io/badge/version-v1.1.1-blue">
+    <img alt="Static Badge" src="https://img.shields.io/badge/version-v1.1.2-blue">
     <img alt="Static Badge" src="https://img.shields.io/badge/dependencies-up_to_date-brightgreen">
     <img alt="Static Badge" src="https://img.shields.io/badge/Official_Repository-8A2BE2">
     <img alt="Static Badge" src="https://img.shields.io/badge/downloads-10+-brightgreen">
@@ -17,8 +17,8 @@
 </div>
 <br>
 <div align="center">
-    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.1/fresh-reminder-v1.1.1.zip" target="_blank">
-      <img alt="fresh-reminder-download-image" src="docs/images/fr-download.png" height="50px"/>
+    <a href="https://github.com/hasunB/fresh-reminder/releases/download/v1.1.2/fresh-reminder.1.1.2.zip" target="_blank">
+      <img alt="fresh-reminder-download-image" src="docs/images/fresre-download.png" height="50px"/>
     </a>
 </div>
 
@@ -49,7 +49,7 @@ Stay on top of your content updates and keep your site relevant for readers and 
 - **Category & Status Filtering**
   - Admins can filter posts by:
   - Post category (e.g., News, Guides, Tutorials).
-  - Freshness status (Stale, Reviewed, Unreviwed).
+  - Freshness status (Stale, Reviewed, Unreviewed).
   - Helps quickly isolate content needing updates in specific topics.
 
 - **Search Function**
@@ -116,19 +116,19 @@ fresh-reminder/
 ## Screenshots
 ### 1. Front-end post Widget
 <div align="center">
-    <img alt="fresh-reminder-admin-widget-screenshot" src="docs/images/fr-admin-home-screenshot.png"/>
+    <img alt="fresh-reminder-admin-widget-screenshot" src="docs/images/fresre-admin-home-screenshot.png"/>
 </div>
 <br>
 
 ### 2. Check Bucket
 <div align="center">
-    <img alt="fresh-reminder-admin-dashboard-screenshot" src="docs/images/fr-admin-check-bucket-screenshot.png"/>
+    <img alt="fresh-reminder-admin-dashboard-screenshot" src="docs/images/fresre-admin-check-bucket-screenshot.png"/>
 </div>
 <br>
 
 ### 3. Settings
 <div align="center">
-    <img alt="fresh-reminder-settings-page-screenshot" src="docs/images/fr-admin-settings-screenshot.png"/>
+    <img alt="fresh-reminder-settings-page-screenshot" src="docs/images/fresre-admin-settings-screenshot.png"/>
 </div>
 <br>
 <br>

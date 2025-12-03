@@ -7,31 +7,31 @@ if (! current_user_can('edit_posts')) {
     return;
 }
 
-$defaults = FR_Cron::get_default();
-$settings = get_option(FR_OPTION_NAME, $defaults);
+$fresre_defaults = FRESRE_Cron::get_default();
+$fresre_settings = get_option(FRESRE_OPTION_NAME, $fresre_defaults);
 
 if ( isset( $_POST['post_types'] ) && check_admin_referer( 'fresh_reminder_action', 'fresh_reminder_nonce' ) ) {
-    $raw_post_types = wp_unslash( $_POST['post_types'] ); // Unslash before sanitizing
-    $post_types = array_map( 'sanitize_text_field', array_keys( $raw_post_types ) );
+    $fresre_raw_post_types = wp_unslash( $_POST['post_types'] ); // Unslash before sanitizing
+    $fresre_post_types = array_map( 'sanitize_text_field', array_keys( $fresre_raw_post_types ) );
 } else {
-    $post_types = array( 'post' );
+    $fresre_post_types = array( 'post' );
 }
 
-$args = array(
-    'post_type'      => $post_types,
+$fresre_args = array(
+    'post_type'      => $fresre_post_types,
     'post_status'    => 'publish',
     'fields'         => 'ids',
     'posts_per_page' => -1,
 );
 
-$cache = get_option(FR_CACHE_OPTION);
-$post_ids = isset($cache['post_ids']) ? array_unique($cache['post_ids']) : array();
+$fresre_cache = get_option(FRESRE_CACHE_OPTION);
+$fresre_post_ids = isset($fresre_cache['post_ids']) ? array_unique($fresre_cache['post_ids']) : array();
 
-$posts_data = array();
-foreach ($post_ids as $post_id) {
+$fresre_posts_data = array();
+foreach ($fresre_post_ids as $post_id) {
     $post = get_post($post_id);
-    if ($post && get_post_meta($post->ID, '_fr_pined', true)) {
-        $posts_data[] = (object) array(
+    if ($post && get_post_meta($post->ID, '_fresre_pined', true)) {
+        $fresre_posts_data[] = (object) array(
             'ID'                => $post->ID,
             'post_title'        => $post->post_title,
             'post_author_id'    => $post->post_author,
@@ -39,10 +39,10 @@ foreach ($post_ids as $post_id) {
             'post_type'         => $post->post_type,
             'post_date'         => $post->post_date,
             'post_modified'     => $post->post_modified,
-            'reviewed'          => get_post_meta($post->ID, '_fr_reviewed', true) ? true : false,
-            'pined'             => get_post_meta($post->ID, '_fr_pined', true) ? true : false,
+            'reviewed'          => get_post_meta($post->ID, '_fresre_reviewed', true) ? true : false,
+            'pined'             => get_post_meta($post->ID, '_fresre_pined', true) ? true : false,
             'edit_link'         => get_edit_post_link($post->ID),
-            'featured_image'   => get_the_post_thumbnail_url($post->ID, 'thumbnail') ? get_the_post_thumbnail_url($post->ID, 'thumbnail') : FR_PLUGIN_URL . '/assets/images/logo/default-featured-' . $post->post_type . '.webp',
+            'featured_image'   => get_the_post_thumbnail_url($post->ID, 'thumbnail') ? get_the_post_thumbnail_url($post->ID, 'thumbnail') : FRESRE_PLUGIN_URL . '/assets/images/logo/default-featured-' . $post->post_type . '.webp',
             'category_ids'      => !empty(get_object_taxonomies($post->post_type)) ? wp_get_post_terms($post->ID, get_object_taxonomies($post->post_type)[0], array('fields' => 'ids')) : array(),
         );
     }
@@ -70,22 +70,6 @@ foreach ($post_ids as $post_id) {
                     <button class="theme-action-btn goto-settings-page" title="Settings"><i class="fas fa-cog"></i></button>
                     <button class="theme-action-btn goto-help-page" title="help"><i class="fas fa-question"></i></button>
                 </div>
-                <div class="logo" style="background: none;">
-                    <?php
-                    $curent_user = wp_get_current_user();
-                    if ($curent_user) {
-                        //profile image
-                        $profile_image = get_avatar_url($curent_user->ID, array('size' => 32));
-                        if ($profile_image) {
-                            echo '<img src="' . esc_url($profile_image) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
-                        } else {
-                            echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
-                        }
-                    } else {
-                        echo '<img src="' . esc_url( FR_PLUGIN_URL . '/assets/images/fr-default-user-profile.webp' ) . '" alt="' . esc_attr__( 'Default User Avatar', 'fresh-reminder' ) . '" class="user-avatar">';
-                    }
-                    ?>
-                </div>
             </div>
         </div>
     </nav>
@@ -101,8 +85,8 @@ foreach ($post_ids as $post_id) {
                     <div class="col-4 d-flex align-items-center gap-2">
                         <span class="content-title">Check Bucket</span>
                         <img class="theme-warning-img" 
-                        src="<?php echo esc_url(FR_PLUGIN_URL . '/assets/images/logo/fr-exclamation.png'); ?>" 
-                        alt="fr-warning-icon" role="button" 
+                        src="<?php echo esc_url(FRESRE_PLUGIN_URL . '/assets/images/logo/fresre-exclamation.png'); ?>" 
+                        alt="fresre-warning-icon" role="button" 
                         data-bs-toggle="popover" 
                         data-bs-trigger="hover" 
                         data-bs-placement="right" 
@@ -119,10 +103,10 @@ foreach ($post_ids as $post_id) {
                 <div class="theme-content-box">
                     <div class="post-item-box search-item-template">
                         <?php
-                        foreach ($posts_data as $post) {
-                                $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
+                        foreach ($fresre_posts_data as $post) {
+                                $fresre_reviewed_class = $post->reviewed ? 'fresre-reviewed' : 'fresre-unreviewed';
                         ?>
-                                <div class="post-item <?php echo esc_attr($reviewed_class); ?>">
+                                <div class="post-item <?php echo esc_attr($fresre_reviewed_class); ?>">
                                     <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
                                         <div style="width: 35%; height: inherit;">
                                             <div class="featured-image">
@@ -181,25 +165,18 @@ foreach ($post_ids as $post_id) {
             </div>
             <div class="spliter left"></div>
 
-
-
             <!-- search result content -->
             <div id="searchable-content-box" class="search-result-content widget-skin">
                 <h5 class="fw-semibold text-center ps-5 pe-5 mt-3">Search Result for :
                     <span class="search-query">hello world hello world</span>
                 </h5>
-                <!-- <div class="col-12 align-items-center d-flex justify-content-center gap-2 mt-2">
-                    <button class="filter-skin theme-filter-btn active" type="button" data-filter="all">All</button>
-                    <button class="filter-skin theme-filter-btn" type="button" data-filter="reviewed">Reviewed</button>
-                    <button class="filter-skin theme-filter-btn" type="button" data-filter="unreviewed">Unreviewed</button>
-                </div> -->
                 <div class="theme-content-box">
                     <div class="post-item-box">
                         <?php
-                        foreach ($posts_data as $post) {
-                            $reviewed_class = $post->reviewed ? 'fr-reviewed' : 'fr-unreviewed';
+                        foreach ($fresre_posts_data as $post) {
+                            $fresre_reviewed_class = $post->reviewed ? 'fresre-reviewed' : 'fresre-unreviewed';
                         ?>
-                            <div class="post-item <?php echo esc_attr($reviewed_class); ?>">
+                            <div class="post-item <?php echo esc_attr($fresre_reviewed_class); ?>">
                                 <div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
                                     <div style="width: 35%; height: inherit;">
                                         <div class="featured-image">
@@ -258,9 +235,9 @@ foreach ($post_ids as $post_id) {
                     <h5 class="chart-title">Freshness Tracking</h5>
                     <!-- content-box -->
                     <div class="w-100 h-100 chart-content-box" style="display: none;">
-                        <p class="chart-description ps-5 pe-5">Your saving continue to grow by 5.0% every month</p>
+                        <p class="chart-description ps-5 pe-5">A visual breakdown of content status.</p>
                         <div class="pie-chart">
-                            <canvas id="fr_piechart_canvas"></canvas>
+                            <canvas id="fresre_piechart_canvas"></canvas>
                         </div>
                         <div class="w-100 chart-legend">
                             <div class="w-50 h-100">
@@ -283,7 +260,7 @@ foreach ($post_ids as $post_id) {
                             </div>
                         </div>
                         <p class="chart-muted ps-5 pe-5 mt-3 mb-0">
-                            Your saving continue to grow by 5.0% every month. Your saving continue to grow by 5.0% every month.
+                            This chart displays the percentage of reviewed versus unreviewed content, providing a quick overview of your content's freshness.
                         </p>
                     </div>
                     <!-- no-content-box -->
@@ -294,8 +271,6 @@ foreach ($post_ids as $post_id) {
                 </div>
             </div>
 
-            <!-- calendar-widget -->
-            <!-- <div class="theme-chart widget-skin"></div> -->
         </div>
     </div>
     <!-- mobile responsive filter div -->
