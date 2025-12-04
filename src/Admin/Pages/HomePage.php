@@ -243,11 +243,26 @@ foreach ($fresre_posts_data as $post) {
                                     if ($post->post_type !== $post_type) {
                                         continue;
                                     } else {
+
                                         $fresre_reviewed_class = $post->reviewed ? 'fresre-reviewed' : 'fresre-unreviewed';
                                         $fresre_category_classes = ' ';
+
+                                        // Normal WP categories
                                         if (! empty($post->category_ids)) {
                                             foreach ($post->category_ids as $fresre_category_id) {
                                                 $fresre_category_classes .= ' category-' . $fresre_category_id;
+                                            }
+                                        }
+
+                                        // WooCommerce product categories
+                                        if ($post->post_type === 'product') {
+
+                                            $fresre_product_terms = wp_get_post_terms( $post->ID, 'product_cat', ['fields' => 'ids'] );
+
+                                            if ( ! empty( $fresre_product_terms ) ) {
+                                                foreach ( $fresre_product_terms as $cat_id ) {
+                                                    $fresre_category_classes .= ' category-' . $cat_id;
+                                                }
                                             }
                                         }
                                 ?>

@@ -262,6 +262,8 @@ jQuery(function ($) {
         container.find('.theme-filter-btn').removeClass('active');
         $(this).addClass('active');
 
+        container.find('select.filter-skin').val('0'); // Reset category filter when status filter changes
+
         // Add/remove a class to mark which posts should be visible
         posts.removeClass('fresre-visible');
         if (filter === 'all') {
@@ -284,7 +286,7 @@ jQuery(function ($) {
 
         // Reset status filters when category changes
         container.find('.theme-filter-btn').removeClass('active');
-        container.find('.theme-filter-btn[data-filter="all"]').addClass('active');
+        container.find('.theme-filter-btn[data-filter="all"]').removeClass('active');
 
         // Add/remove a class to mark which posts should be visible
         posts.removeClass('fresre-visible');
