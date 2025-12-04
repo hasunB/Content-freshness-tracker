@@ -1,84 +1,92 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-if (! current_user_can('manage_options')) return;
+if ( ! current_user_can( 'manage_options' ) ) {
+    return;
+}
 
-$fresre_defaults = FRESRE_Cron::get_default();
-$fresre_settings = get_option(FRESRE_OPTION_NAME, $fresre_defaults);
+if ( class_exists( 'FRESRE_Cron' ) ) {
+    $fresre_defaults = FRESRE_Cron::get_default();
+} else {
+    // safe fallback defaults
+    $fresre_defaults = [
+        'stale_after_value' => 1,
+        'stale_after_unit'  => 'months',
+        'post_types'        => [ 'post' ],
+        'schedule'          => 'every_five_minutes',
+        'clear_reviewed'    => 'never',
+        'email_notify'      => 0,
+        'roles'             => [],
+    ];
+}
 
-if (isset($_POST['fresre_save']) && check_admin_referer('fresre_settings', 'fresre_nonce')) {
-     
-    FRESRE_Logger::log('save settings triggerd', 'info');
+$fresre_settings = get_option( defined( 'FRESRE_OPTION_NAME' ) ? FRESRE_OPTION_NAME : 'fresre_settings', $fresre_defaults );
+$fresre_settings = wp_parse_args( $fresre_settings, $fresre_defaults );
+
+if ( isset( $_POST['fresre_save'] ) && check_admin_referer( 'fresre_settings', 'fresre_nonce' ) ) {
+
+    if ( class_exists( 'FRESRE_Logger' ) ) {
+        FRESRE_Logger::log( 'save settings triggered', 'info' );
+    }
+
     // Stale duration fields
-    $fresre_stale_after_value = isset($_POST['stale_after_value']) ? absint($_POST['stale_after_value']) : $fresre_defaults['stale_after_value'];
-    $fresre_stale_after_unit  = isset($_POST['stale_after_unit']) ? sanitize_text_field(wp_unslash($_POST['stale_after_unit'])) : $fresre_defaults['stale_after_unit'];
+    $fresre_stale_after_value = isset( $_POST['stale_after_value'] ) ? absint( wp_unslash( $_POST['stale_after_value'] ) ) : $fresre_defaults['stale_after_value'];
+    $fresre_stale_after_unit  = isset( $_POST['stale_after_unit'] ) ? sanitize_text_field( wp_unslash( $_POST['stale_after_unit'] ) ) : $fresre_defaults['stale_after_unit'];
 
     // Post types
-    $fresre_post_types = isset($_POST['post_types'])
-        ? array_map('sanitize_text_field', array_keys(wp_unslash($_POST['post_types'])))
-        : array('post');
+    $fresre_post_types = isset( $_POST['post_types'] ) && is_array( $_POST['post_types'] )
+        ? array_map( 'sanitize_text_field', array_keys( wp_unslash( $_POST['post_types'] ) ) )
+        : $fresre_defaults['post_types'];
 
-    // Schedule (validate against allowed list)
-    $fresre_allowed_schedules = array('every_five_minutes', 'every_fifteen_minutes', 'hourly', 'daily');
+    // Schedule (validate against allowed list and registered schedules)
+    $fresre_allowed_schedules = array( 'every_five_minutes', 'every_fifteen_minutes', 'hourly', 'daily' );
 
-    $fresre_schedule = isset( $_POST['schedule'] )
-    ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) )
-    : '';
+    $fresre_schedule = isset( $_POST['schedule'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule'] ) ) : $fresre_defaults['schedule'];
 
-    if ( ! in_array( $fresre_schedule, $fresre_allowed_schedules, true ) ) {
+    // also ensure it's registered in WP schedules
+    $fresre_registered = wp_get_schedules();
+    if ( ! in_array( $fresre_schedule, $fresre_allowed_schedules, true ) || ! isset( $fresre_registered[ $fresre_schedule ] ) ) {
         $fresre_schedule = 'every_five_minutes';
     }
 
-
     // Email notify checkbox
-    $fresre_email_notify = isset($_POST['email_notify']) ? 1 : 0;
+    $fresre_email_notify = isset( $_POST['email_notify'] ) ? 1 : 0;
 
     // Roles
-    $fresre_roles = isset($_POST['roles'])
-        ? array_map('sanitize_text_field', array_keys( wp_unslash($_POST['roles'])))
+    $fresre_roles = isset( $_POST['roles'] ) && is_array( $_POST['roles'] )
+        ? array_map( 'sanitize_text_field', array_keys( wp_unslash( $_POST['roles'] ) ) )
         : $fresre_defaults['roles'];
 
     // clear reviewed (never, daily, weekly, monthly)
-    $fresre_clear_reviewed = isset($_POST['clear_reviewed'])
-        ? sanitize_text_field( wp_unslash($_POST['clear_reviewed']))
-        : 'never';
+    $fresre_clear_reviewed = isset( $_POST['clear_reviewed'] ) ? sanitize_text_field( wp_unslash( $_POST['clear_reviewed'] ) ) : 'never';
 
     // Build settings array
-    $fresre_new = compact(
-        'stale_after_value',
-        'stale_after_unit',
-        'post_types',
-        'schedule',
-        'clear_reviewed',
-        'email_notify',
-        'roles'
-    );
+    $fresre_new = [
+        'stale_after_value' => $fresre_stale_after_value,
+        'stale_after_unit'  => $fresre_stale_after_unit,
+        'post_types'        => $fresre_post_types,
+        'schedule'          => $fresre_schedule,
+        'clear_reviewed'    => $fresre_clear_reviewed,
+        'email_notify'      => $fresre_email_notify,
+        'roles'             => $fresre_roles,
+    ];
 
     // Save to DB
-    update_option(FRESRE_OPTION_NAME, $fresre_new);
+    update_option( defined( 'FRESRE_OPTION_NAME' ) ? FRESRE_OPTION_NAME : 'fresre_settings', $fresre_new );
 
-    // Reschedule cron
-    wp_clear_scheduled_hook('fresre_check_event');
-    wp_schedule_event(time(), $fresre_schedule, 'fresre_check_event');
+    // Reschedule cron (clear then schedule only if schedule exists)
+    wp_clear_scheduled_hook( 'fresre_check_event' );
+    if ( isset( $fresre_registered[ $fresre_schedule ] ) ) {
+        wp_schedule_event( time(), $fresre_schedule, 'fresre_check_event' );
+    }
 
-    // Success message
-?>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            var successMsg = document.querySelector('.settings-msg.success');
-            if (successMsg) {
-                successMsg.classList.add('msg-visible');
-                setTimeout(function() {
-                    successMsg.classList.remove('msg-visible');
-                }, 4000);
-            }
-        });
-    </script>
-<?php
-
+    // Success JS (ok)
     $fresre_settings = $fresre_new;
 }
+
 
 ?>
 
@@ -209,7 +217,6 @@ if (isset($_POST['fresre_save']) && check_admin_referer('fresre_settings', 'fres
                                             </option>
                                         </select>
                                     </td>
-
                                 </tr>
                                 <tr>
                                     <th><?php esc_html_e('Clear Reviewed', 'fresh-reminder'); ?><br><?php esc_html_e('Content', 'fresh-reminder'); ?><span class="reason-mark">*</span></th>
@@ -266,7 +273,7 @@ if (isset($_POST['fresre_save']) && check_admin_referer('fresre_settings', 'fres
                                 </tr>
                                 <tr>
                                     <th>Version</th>
-                                    <td><?php echo esc_attr(FRESRE_VERSION) ?></td>
+                                    <td><?php echo esc_html(FRESRE_VERSION) ?></td>
                                 </tr>
                                 <tr>
                                     <th>Author</th>
